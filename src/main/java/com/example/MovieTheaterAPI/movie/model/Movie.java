@@ -1,5 +1,6 @@
 package com.example.MovieTheaterAPI.movie.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -7,11 +8,9 @@ import java.time.Duration;
 import java.time.LocalDate;
 
 @Entity
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
+@Data
 @Table(name = "movies")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Movie {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,4 +30,16 @@ public class Movie {
 
     @Column(name = "poster_url", nullable = false)
     private String posterUrl;
+
+    @Override
+    public String toString() {
+        return "Movie{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", description='" + description + '\'' +
+                ", duration=" + duration.toString() +
+                ", releaseDate=" + releaseDate.toString() +
+                ", posterUrl='" + posterUrl + '\'' +
+                '}';
+    }
 }

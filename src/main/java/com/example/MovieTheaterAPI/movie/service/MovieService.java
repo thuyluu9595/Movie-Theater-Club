@@ -1,7 +1,6 @@
 package com.example.MovieTheaterAPI.movie.service;
 
 import com.example.MovieTheaterAPI.movie.model.Movie;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 
