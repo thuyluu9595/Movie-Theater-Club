@@ -3,13 +3,12 @@ package com.example.MovieTheaterAPI.movie.controller;
 import com.example.MovieTheaterAPI.movie.model.Movie;
 import com.example.MovieTheaterAPI.movie.service.MovieServiceImpl;
 import com.example.MovieTheaterAPI.movie.utils.MovieValidator;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/movies")
-@Slf4j
+
 public class MovieController {
     private final MovieServiceImpl movieService;
     public MovieController(MovieServiceImpl movieService) {
@@ -30,7 +29,6 @@ public class MovieController {
     @GetMapping("/{id}")
     public ResponseEntity<Movie> getMovieById(@PathVariable Long id) {
         Movie movie = movieService.getMovieById(id);
-        log.info(movie.toString());
         if (movie != null)
             return ResponseEntity.ok(movie);
         else
