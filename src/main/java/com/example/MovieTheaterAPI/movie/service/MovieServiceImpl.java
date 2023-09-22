@@ -2,6 +2,8 @@ package com.example.MovieTheaterAPI.movie.service;
 
 import com.example.MovieTheaterAPI.movie.model.Movie;
 import com.example.MovieTheaterAPI.movie.repository.MovieRepository;
+import com.example.MovieTheaterAPI.movie.utils.MovieExistedException;
+import com.example.MovieTheaterAPI.movie.utils.MovieNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -30,15 +32,26 @@ public class MovieServiceImpl implements MovieService{
         if (movieRepository.findByTitle(movie.getTitle()).isEmpty())
             return movieRepository.save(movie);
         else
-            return null;
+            throw new MovieExistedException();
     }
 
     @Override
     public Movie updateMovie(Long id, Movie movie) {
-        if (movieRepository.findById(id).isPresent())
-            return movieRepository.save(movie);
-        else
-            return null;
+        Movie existingMovie = movieRepository.findById(id).orElseThrow(MovieNotFoundException::new);
+
+        if (movie.getTitle() != null && !movie.getTitle().equals("")) {
+            existingMovie.setTitle(movie.getTitle());
+        }
+        if (movie.getDuration() != null) {
+            existingMovie.setDuration(movie.getDuration());
+        }
+        if (movie.getReleaseDate() != null) {
+            existingMovie.setReleaseDate(movie.getReleaseDate());
+        }
+        if (movie.getPosterUrl() != null && !movie.getPosterUrl().isBlank()) {
+            existingMovie.setPosterUrl(movie.getPosterUrl());
+        }
+        return movieRepository.save(existingMovie);
     }
 
     @Override

@@ -2,6 +2,8 @@ package com.example.MovieTheaterAPI.movie.controller;
 
 import com.example.MovieTheaterAPI.movie.model.Movie;
 import com.example.MovieTheaterAPI.movie.service.MovieServiceImpl;
+import com.example.MovieTheaterAPI.movie.utils.MovieExistedException;
+import com.example.MovieTheaterAPI.movie.utils.MovieNotFoundException;
 import com.example.MovieTheaterAPI.movie.utils.MovieValidator;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -40,13 +42,13 @@ public class MovieController {
         if (movie == null || !MovieValidator.isValidMovie(movie)) { // Check if movie is valid
             return ResponseEntity.badRequest().build();
         }
-        else {
+
+        try {
             Movie createdMovie = movieService.createMovie(movie);
-            if (createdMovie != null) {
-                return ResponseEntity.ok(createdMovie);
-            } else {
-                return ResponseEntity.badRequest().build(); // Movie already exists
-            }
+            return ResponseEntity.ok(createdMovie);
+        }
+        catch (MovieExistedException e) {
+            return ResponseEntity.badRequest().build();
         }
     }
 
@@ -55,14 +57,14 @@ public class MovieController {
         if (movie == null || !MovieValidator.isValidMovie(movie)) { // Check if movie is valid
             return ResponseEntity.badRequest().build();
         }
-        else {
+        try {
             Movie updatedMovie = movieService.updateMovie(id, movie);
-            if (updatedMovie != null) {
-                return ResponseEntity.ok(updatedMovie);
-            } else {
-                return ResponseEntity.notFound().build(); // Movie does not exist
-            }
+            return ResponseEntity.ok(updatedMovie);
         }
+        catch (MovieNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
+
     }
 
     @DeleteMapping("/{id}")
