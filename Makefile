@@ -38,6 +38,4 @@ migrate-create:
 server:
 	mvn clean spring-boot:run
 
-
-
 .PHONY: postgres create-db drop-db migrate-up migrate-up-1 migrate-down migrate-down-1  server  run-db
