@@ -1,12 +1,12 @@
 DB_NAME = movie_theater
 NETWORK_NAME = theater-network
 CONTAINER_NAME = theater-db
-#SCHEMA_PATH = src/db/migration
+SCHEMA_PATH = src/db/migration
 DB_SOURCE = "postgresql://root:secret@localhost:5432/$(DB_NAME)?sslmode=disable"
 
 network:
 	docker network inspect $(NETWORK_NAME) >/dev/null 2>&1 || \
-	docker network create --driver bridge $(NETWORK_NAME)
+        docker network create --driver bridge $(NETWORK_NAME)
 
 postgres:
 	docker run -d --name $(CONTAINER_NAME) --network $(NETWORK_NAME) -p 5432:5432 -e POSTGRES_USER=root -e POSTGRES_PASSWORD=secret postgres:14-alpine

@@ -1,11 +1,6 @@
 com/example/MovieTheaterAPI/discount/Discount.class
-com/example/MovieTheaterAPI/MovieTheaterApiApplication.class
-com/example/MovieTheaterAPI/location/LocationServiceImpl.class
-com/example/MovieTheaterAPI/discount/DiscountServiceImpl.class
 com/example/MovieTheaterAPI/location/LocationService.class
-com/example/MovieTheaterAPI/discount/DiscountController.class
 com/example/MovieTheaterAPI/location/LocationController.class
 com/example/MovieTheaterAPI/discount/DiscountRepository.class
-com/example/MovieTheaterAPI/discount/DiscountService.class
 com/example/MovieTheaterAPI/location/Location.class
 com/example/MovieTheaterAPI/location/LocationRepository.class
