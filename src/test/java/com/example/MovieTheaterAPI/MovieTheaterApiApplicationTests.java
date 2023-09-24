@@ -10,4 +10,5 @@ class MovieTheaterApiApplicationTests {
 	void contextLoads() {
 	}
 
+
 }
