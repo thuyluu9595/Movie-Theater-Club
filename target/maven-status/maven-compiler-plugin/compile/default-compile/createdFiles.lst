@@ -1,3 +1,9 @@
+com/example/MovieTheaterAPI/discount/Discount.class
+com/example/MovieTheaterAPI/location/LocationService.class
+com/example/MovieTheaterAPI/location/LocationController.class
+com/example/MovieTheaterAPI/discount/DiscountRepository.class
+com/example/MovieTheaterAPI/location/Location.class
+com/example/MovieTheaterAPI/location/LocationRepository.class
 com/example/MovieTheaterAPI/user/Member.class
 com/example/MovieTheaterAPI/user/UserNotFoundException.class
 com/example/MovieTheaterAPI/user/MemberService.class
