@@ -7,6 +7,7 @@ import java.util.List;
 public interface ScreenService {
     List<Screen> getScreens();
     Screen getScreenById(Long id);
+    List<Screen> getScreensByLocationId(Long locationId);
     Screen createScreen(ScreenDTO screenDTO);
     Screen updateScreen(ScreenDTO screenDTO, Long id);
     void deleteScreen(Long id);

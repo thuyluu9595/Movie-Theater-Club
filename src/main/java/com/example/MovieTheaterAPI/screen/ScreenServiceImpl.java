@@ -4,14 +4,12 @@ import com.example.MovieTheaterAPI.location.Location;
 import com.example.MovieTheaterAPI.location.LocationRepository;
 import com.example.MovieTheaterAPI.movie.model.Movie;
 import com.example.MovieTheaterAPI.movie.repository.MovieRepository;
-import com.example.MovieTheaterAPI.movie.utils.*;
 import com.example.MovieTheaterAPI.screen.dto.ScreenDTO;
 import com.example.MovieTheaterAPI.screen.utils.ResourceNotFoundException;
 import com.example.MovieTheaterAPI.screen.utils.ScreenAlreadyExistsException;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class ScreenServiceImpl implements ScreenService{
@@ -33,6 +31,12 @@ public class ScreenServiceImpl implements ScreenService{
     @Override
     public Screen getScreenById(Long id) {
         return screenRepository.findById(id).orElseThrow(ResourceNotFoundException::new);
+    }
+
+    @Override
+    public List<Screen> getScreensByLocationId(Long locationId) {
+        Optional<Location> locationOptional = locationRepository.findById(locationId);
+        return locationOptional.map(screenRepository::findScreensByLocation).orElseGet(Collections::emptyList);
     }
 
     @Override
