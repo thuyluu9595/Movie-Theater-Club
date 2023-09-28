@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/movies")
-
 public class MovieController {
     private final MovieServiceImpl movieService;
     public MovieController(MovieServiceImpl movieService) {
