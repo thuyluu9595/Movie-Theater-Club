@@ -22,7 +22,7 @@ public class Screen {
     private String name;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @Column(name = "location")
+    @JoinColumn(name = "location_id")
     private Location location;
 
     @Column(name = "capacity")

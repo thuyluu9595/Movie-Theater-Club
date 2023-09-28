@@ -91,4 +91,9 @@ public class ScreenController {
         }
     }
 
+    @GetMapping("/locations/{locationId}")
+    public ResponseEntity<?> getScreensByLocationId(@PathVariable Long locationId) {
+        return ResponseEntity.ok(screenService.getScreensByLocationId(locationId));
+    }
+
 }
