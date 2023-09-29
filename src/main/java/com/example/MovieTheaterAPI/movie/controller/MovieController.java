@@ -1,5 +1,6 @@
 package com.example.MovieTheaterAPI.movie.controller;
 
+import com.example.MovieTheaterAPI.movie.MovieDTO;
 import com.example.MovieTheaterAPI.movie.model.Movie;
 import com.example.MovieTheaterAPI.movie.service.MovieServiceImpl;
 import com.example.MovieTheaterAPI.movie.utils.MovieExistedException;
@@ -38,7 +39,7 @@ public class MovieController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createMovie(@RequestBody Movie movie) {
+    public ResponseEntity<?> createMovie(@RequestBody MovieDTO movie) {
         if (movie == null || !MovieValidator.isValidMovie(movie)) { // Check if movie is valid
             return ResponseEntity.badRequest().build();
         }
@@ -53,7 +54,7 @@ public class MovieController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateMovie(@PathVariable Long id, @RequestBody Movie movie) {
+    public ResponseEntity<?> updateMovie(@PathVariable Long id, @RequestBody MovieDTO movie) {
         if (movie == null || !MovieValidator.isValidMovie(movie)) { // Check if movie is valid
             return ResponseEntity.badRequest().build();
         }

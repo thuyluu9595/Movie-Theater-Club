@@ -10,6 +10,7 @@ import java.time.LocalDate;
 @Entity
 @Data
 @Table(name = "movies")
+@NoArgsConstructor
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Movie {
     @Id
