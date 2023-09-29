@@ -8,7 +8,7 @@ import lombok.AllArgsConstructor;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/locations")
+@RequestMapping("/api/locations")
 public class LocationController {
   LocationService locationService;
 
@@ -26,6 +26,8 @@ public class LocationController {
   public List<Location> searchLocations(
     @RequestParam(required = false) String state,
     @RequestParam(required = false) String city) {
+
+      // Todo: need to refine search engine
       if (state != null) {
         return locationService.getLocationsByState(state);
       } else if (city != null) {
@@ -35,12 +37,12 @@ public class LocationController {
       }
     }
     
-    @PostMapping
-    public Location creLocation(@RequestBody Location location) {
+    @PostMapping("")
+    public Location createLocation(@RequestBody Location location) {
       return  locationService.createLocation(location);
     }
 
-    @PutMapping
+    @PutMapping("/{id}")
     public Location updatedLocation(@PathVariable Long id, @RequestBody Location location) {
       return locationService.updateLocation(id, location);
     }

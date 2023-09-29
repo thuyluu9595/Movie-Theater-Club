@@ -50,7 +50,6 @@ public class ScreenServiceImpl implements ScreenService{
         if (existingScreen != null && existingScreen.getLocation().getId().equals(screenDTO.getLocationId())) {
             throw new ScreenAlreadyExistsException();
         }
-
         Screen screen = new Screen(screenDTO.getName(), locationOptional.get(), screenDTO.getCapacity());
         return screenRepository.save(screen);
     }
