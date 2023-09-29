@@ -1,11 +1,13 @@
 package com.example.MovieTheaterAPI.movie.service;
 
+import com.example.MovieTheaterAPI.movie.MovieDTO;
 import com.example.MovieTheaterAPI.movie.model.Movie;
 import com.example.MovieTheaterAPI.movie.repository.MovieRepository;
 import com.example.MovieTheaterAPI.movie.utils.MovieExistedException;
 import com.example.MovieTheaterAPI.movie.utils.MovieNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
 import java.util.List;
 
 @Service
@@ -28,22 +30,25 @@ public class MovieServiceImpl implements MovieService{
     }
 
     @Override
-    public Movie createMovie(Movie movie) {
-        if (movieRepository.findByTitle(movie.getTitle()).isEmpty())
-            return movieRepository.save(movie);
-        else
+    public Movie createMovie(MovieDTO movie) {
+        if (movieRepository.findByTitle(movie.getTitle()).isEmpty()) {
+            Movie createdMovie = new Movie();
+            createdMovie.setTitle(movie.getTitle());
+            createdMovie.setDuration(Duration.ofMinutes(movie.getDurationInMinutes()));
+            return movieRepository.save(createdMovie);
+        }else
             throw new MovieExistedException();
     }
 
     @Override
-    public Movie updateMovie(Long id, Movie movie) {
+    public Movie updateMovie(Long id, MovieDTO movie) {
         Movie existingMovie = movieRepository.findById(id).orElseThrow(MovieNotFoundException::new);
 
         if (movie.getTitle() != null && !movie.getTitle().equals("")) {
             existingMovie.setTitle(movie.getTitle());
         }
-        if (movie.getDuration() != null) {
-            existingMovie.setDuration(movie.getDuration());
+        if (movie.getDurationInMinutes() != 0) {
+            existingMovie.setDuration(Duration.ofMinutes(movie.getDurationInMinutes()));
         }
         if (movie.getReleaseDate() != null) {
             existingMovie.setReleaseDate(movie.getReleaseDate());
