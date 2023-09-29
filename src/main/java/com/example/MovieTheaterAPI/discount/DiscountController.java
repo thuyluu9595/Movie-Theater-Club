@@ -29,5 +29,5 @@ public class DiscountController {
   public List<Discount> getDiscountByTuesday(@PathVariable boolean isTuesdayDiscount) {
     return discountService.getDiscountByTuesday(isTuesdayDiscount);
   }
-  
+
 }
