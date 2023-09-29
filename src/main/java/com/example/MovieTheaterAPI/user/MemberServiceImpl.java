@@ -8,7 +8,7 @@ import java.util.Optional;
 @Service
 @AllArgsConstructor
 public class MemberServiceImpl implements MemberService {
-    MemberRepository memberRepository;
+    private final MemberRepository memberRepository;
     @Override
     public Member createMember(User user) {
         Member member = new Member();
