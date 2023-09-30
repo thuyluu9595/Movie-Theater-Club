@@ -46,10 +46,9 @@ public class ShowTime {
     private double price;
 
     @NonNull
-    @ElementCollection
     @Setter(AccessLevel.NONE)
     @Column(name = "available_seat")
-    private List<Integer> availableSeat;
+    private Integer[] availableSeat;
 
     public ShowTime(Movie movie, Screen screen, LocalDate date, LocalTime startTime, double price) {
         this.movie = movie;
@@ -60,28 +59,33 @@ public class ShowTime {
         calculateEndTime();
         generateSeat();
     }
+
     public boolean bookSeat(int seatNumber) {
-        if (availableSeat.contains(seatNumber)) {
-            availableSeat.remove(Integer.valueOf(seatNumber));
+        if (isSeatAvailable(seatNumber)) {
+            availableSeat[seatNumber - 1] = null;
             return true;
         }
         return false;
     }
 
     public boolean returnSeat(int seatNumber) {
-        if (availableSeat.contains(seatNumber)) {
-            return false;
+        if (!isSeatAvailable(seatNumber)) {
+            availableSeat[seatNumber - 1] = seatNumber;
+            return true;
         }
-        availableSeat.add(seatNumber);
-        return true;
+        return false;
     }
-
-
 
     private void calculateEndTime() {
         setEndTime(startTime.plus(movie.getDuration()));
     }
+
     private void generateSeat() {
-        this.availableSeat = IntStream.range(1, screen.getCapacity() + 1).boxed().toList();
+        int capacity = screen.getCapacity();
+        availableSeat = IntStream.rangeClosed(1, capacity).boxed().toArray(Integer[]::new);
+    }
+
+    private boolean isSeatAvailable(int seatNumber) {
+        return seatNumber >= 1 && seatNumber <= availableSeat.length && availableSeat[seatNumber - 1] != null;
     }
 }
