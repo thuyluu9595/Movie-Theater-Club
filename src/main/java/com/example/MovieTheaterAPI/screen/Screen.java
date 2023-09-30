@@ -2,6 +2,7 @@ package com.example.MovieTheaterAPI.screen;
 
 import com.example.MovieTheaterAPI.location.Location;
 import com.example.MovieTheaterAPI.movie.model.Movie;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,6 +14,7 @@ import java.util.List;
 @Table(name = "screen")
 @Data
 @NoArgsConstructor
+@JsonIgnoreProperties({"hibernateLazyInitializer"})
 public class Screen {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
