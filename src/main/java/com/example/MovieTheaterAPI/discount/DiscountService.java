@@ -1,12 +1,13 @@
 package com.example.MovieTheaterAPI.discount;
 
+import org.springframework.stereotype.Service;
+
 import java.util.List;
 
 public interface DiscountService {
 
+  Discount updateTuedayDiscount(float percent);
+  Discount updateBefore6PMDiscount(float percent);
   List<Discount> getAllDiscount();
-  Discount getDiscountById(Long id);
-  List<Discount> getDiscountByHappyHour(float isHappyHourBefore6PM);
-  List<Discount> getDiscountByTuesday(boolean isTuesdayDiscount);
-  
+
 }

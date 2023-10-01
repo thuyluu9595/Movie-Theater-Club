@@ -1,7 +1,9 @@
 package com.example.MovieTheaterAPI.location;
 
 import java.util.List;
+import java.util.Optional;
 
+import com.example.MovieTheaterAPI.screen.utils.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 
 import lombok.AllArgsConstructor;
@@ -41,14 +43,14 @@ public class LocationServiceImpl implements LocationService{
   @Override
   public Location updateLocation(Long id, Location updatedLocation){
 
-    Location existLocation = locationRepository.findById(id).orElse(null);
-
-    if (existLocation != null) {
-      // Update the existing location
-      existLocation.setState(updatedLocation.getState());
-      existLocation.setCity(updatedLocation.getCity());return locationRepository.save(existLocation);
+    Optional<Location> existLocation = locationRepository.findById(id);
+    if (existLocation.isEmpty()) {
+      throw new ResourceNotFoundException();
     }
-    return null; // Handle the case where the location with the given Id not found
+    Location location = existLocation.get();
+    location.setState(updatedLocation.getState());
+    location.setCity(updatedLocation.getCity());
+    return locationRepository.save(location);
   }
 
   @Override
