@@ -1,31 +1,41 @@
 package com.example.MovieTheaterAPI.discount;
 
 import java.util.List;
+import java.util.Optional;
 
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
+@AllArgsConstructor
 public class DiscountServiceImpl implements DiscountService{
 
-  DiscountRepository discountRepository;
+    private final DiscountRepository discountRepository;
 
-  @Override
-  public List<Discount> getAllDiscount(){
-    return discountRepository.findAll();
-  }
+    @Override
+    public Discount updateTuedayDiscount(float percent) {
+        return updateDiscount(DiscountType.TuedaySpecial, percent);
+    }
 
-  @Override
-  public Discount getDiscountById(Long id){
-    return discountRepository.findById(id).orElse(null);
-  }
+    @Override
+    public Discount updateBefore6PMDiscount(float percent) {
+        return updateDiscount(DiscountType.Before6PM, percent);
+    }
 
-  @Override
-  public List<Discount> getDiscountByHappyHour(boolean isHappyHourBefore6PM){
-    return discountRepository.findByIsHappyHourBefore6PM(isHappyHourBefore6PM);
-  }
+    @Override
+    public List<Discount> getAllDiscount() {
+        return discountRepository.findAll();
+    }
 
-  @Override
-  public List<Discount> getDiscountByTuesday(boolean isTuesdayDiscount){
-    return discountRepository.findByIsTuesdayDiscount(isTuesdayDiscount);
-  }
+    private Discount updateDiscount(DiscountType type, float percent) {
+        Optional<Discount> entity = discountRepository.findById(type);
+        Discount discount;
+        if (entity.isPresent()) {
+            discount = entity.get();
+            discount.setPercentDiscount(percent);
+        } else {
+            discount = new Discount(type, percent);
+        }
+        return discountRepository.save(discount);
+    }
 }
