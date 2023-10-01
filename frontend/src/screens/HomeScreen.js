@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import data from "../data";
 
 export default function HomeScreen(){
@@ -7,13 +8,13 @@ export default function HomeScreen(){
           <div className='movies'>
             {data.movies.map((movie) => (
               <div className='movie' key={movie.slug}>
-                <a href={`/movie/${movie.slug}`}>
+                <Link to={`/movie/${movie.slug}`}>
                   <img src={movie.image} alt={movie.title} />
-                </a>
+                </Link>
                 <div className='movie-info'>
-                  <a href={`/movie/${movie.slug}`}>
+                  <Link to={`/movie/${movie.slug}`}>
                     <p>{movie.title}</p>
-                  </a>
+                  </Link>
                   <p><strong>{movie.price}</strong></p>
                   <button>Get Tickets</button>
                 </div>
