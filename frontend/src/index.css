@@ -15,7 +15,10 @@ code {
   min-height: 100vh;
 }
 main {
+  background-color: #404040;
   flex: 1;
+  color : white;
+  font-family: Luminari, fantasy;
 }
 .movies {
   display: flex;
@@ -33,6 +36,14 @@ main {
   padding: 1rem;
 }
 footer {
-  background-color: #404040;
+  background-color: #9d1010;
   color: aliceblue;
+  font-family: Luminari, fantasy;
+}
+.rating {
+  color: rgb(236, 181, 30);
+}
+.btn-primary {
+  background-color: rgb(236, 181, 30);
+  color: black;
 }

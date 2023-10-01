@@ -1,6 +1,9 @@
-import { Link } from "react-router-dom";
 import data from "../data";
 import React from "react";
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import Movie from "../components/Movie";
+
 // import axios from "axios";
 // import { useEffect, useState } from "react";
 
@@ -17,22 +20,15 @@ export default function HomeScreen(){
   return (
     <div>
       <h1>List Of Movies</h1>
-          <div className='movies'>
-            {data.movies.map((movie) => (
-              <div className='movie' key={movie.slug}>
-                <Link to={`/movie/${movie.slug}`}>
-                  <img src={movie.image} alt={movie.title} />
-                </Link>
-                <div className='movie-info'>
-                  <Link to={`/movie/${movie.slug}`}>
-                    <p>{movie.title}</p>
-                  </Link>
-                  <p><strong>{movie.price}</strong></p>
-                  <button>Get Tickets</button>
-                </div>
-              </div>
-            ))}
-          </div>
+      <div className='movies'>
+        <Row>
+          {data.movies.map((movie) => (
+            <Col key={movie.slug} sm={6} md={4} lg={3} className='mb-3'>
+              <Movie movie={movie}></Movie>
+            </Col>
+          ))}
+        </Row>
+      </div>
     </div>
   )
 }

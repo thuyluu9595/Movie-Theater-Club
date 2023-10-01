@@ -12,10 +12,10 @@ export default function App(){
     <BrowserRouter>
       <div className='d-flex flex-column site-container'>
         <header>
-          <Navbar bg='dark' variant='dark'>
+          <Navbar style={{backgroundColor: '#9d1010'}}>
             <Container>
               <LinkContainer to='/'>
-                <Navbar.Brand>THC Theater</Navbar.Brand>
+                <Navbar.Brand style={{fontFamily: 'Luminari, fantasy', color: 'white'}}>THC Theater</Navbar.Brand>
               </LinkContainer>
             </Container>
           </Navbar>

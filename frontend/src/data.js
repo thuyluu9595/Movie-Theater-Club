@@ -5,7 +5,7 @@ const data = {
       title: 'Movie 1',
       price: 10,
       description: 'Commedy film',
-      image: '/images/download.jpeg',
+      image: '/images/images (4).jpeg',
       rating: 4.5,
       numReviews: 5
     },
