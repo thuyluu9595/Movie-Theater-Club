@@ -11,8 +11,11 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+.site-container {
+  min-height: 100vh;
+}
 main {
-  padding: 1rem;
+  flex: 1;
 }
 .movies {
   display: flex;
@@ -28,4 +31,8 @@ main {
 }
 .movie-info{
   padding: 1rem;
+}
+footer {
+  background-color: #404040;
+  color: aliceblue;
 }

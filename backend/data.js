@@ -14,7 +14,7 @@ const data = {
       title: 'Movie 2',
       price: 10,
       description: 'Commedy film',
-      image: '/images/images (1).jpeg',
+      image: '/images/dowload (1).jpeg',
       rating: 4.5,
       numReviews: 5
     },
@@ -23,7 +23,7 @@ const data = {
       title: 'Movie 3',
       price: 10,
       description: 'Commedy film',
-      image: '/images/images (3).jpeg',
+      image: '/images/images (2).jpeg',
       rating: 4.5,
       numReviews: 5
     },

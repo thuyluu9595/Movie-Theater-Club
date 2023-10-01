@@ -1,7 +1,19 @@
 import { Link } from "react-router-dom";
 import data from "../data";
+import React from "react";
+// import axios from "axios";
+// import { useEffect, useState } from "react";
 
 export default function HomeScreen(){
+  // const [movies, setMovies] = useState([]);
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     const result = await axios.get('/api/movies');
+  //     setMovies(result.data);
+  //   };
+  //   fetchData();
+  // }, []);
+
   return (
     <div>
       <h1>List Of Movies</h1>
