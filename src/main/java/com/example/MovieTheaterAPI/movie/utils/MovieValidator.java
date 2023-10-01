@@ -1,9 +1,9 @@
 package com.example.MovieTheaterAPI.movie.utils;
 
-import com.example.MovieTheaterAPI.movie.model.Movie;
+import com.example.MovieTheaterAPI.movie.MovieDTO;
 
 public class MovieValidator {
-    public static boolean isValidMovie(Movie movie) {
-        return movie.getTitle() != null && movie.getReleaseDate() != null && movie.getDuration() != null;
+    public static boolean isValidMovie(MovieDTO movie) {
+        return movie.getTitle() != null && movie.getReleaseDate() != null && movie.getDurationInMinutes() != 0;
     }
 }
