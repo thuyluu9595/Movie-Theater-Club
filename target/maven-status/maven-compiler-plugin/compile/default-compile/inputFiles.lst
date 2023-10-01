@@ -26,6 +26,7 @@
 /Users/huyduong/Projects/CMPE/Movie-Theater-API/src/main/java/com/example/MovieTheaterAPI/movie/repository/MovieRepository.java
 /Users/huyduong/Projects/CMPE/Movie-Theater-API/src/main/java/com/example/MovieTheaterAPI/screen/Screen.java
 /Users/huyduong/Projects/CMPE/Movie-Theater-API/src/main/java/com/example/MovieTheaterAPI/showtime/dto/ShowTimeDTO.java
+/Users/huyduong/Projects/CMPE/Movie-Theater-API/src/main/java/com/example/MovieTheaterAPI/discount/dto/DiscountUpdateDTO.java
 /Users/huyduong/Projects/CMPE/Movie-Theater-API/src/main/java/com/example/MovieTheaterAPI/screen/ScreenService.java
 /Users/huyduong/Projects/CMPE/Movie-Theater-API/src/main/java/com/example/MovieTheaterAPI/showtime/ShowTime.java
 /Users/huyduong/Projects/CMPE/Movie-Theater-API/src/main/java/com/example/MovieTheaterAPI/screen/ScreenServiceImpl.java
