@@ -35,6 +35,9 @@ public class MovieServiceImpl implements MovieService{
             Movie createdMovie = new Movie();
             createdMovie.setTitle(movie.getTitle());
             createdMovie.setDuration(Duration.ofMinutes(movie.getDurationInMinutes()));
+            createdMovie.setDescription(movie.getDescription());
+            createdMovie.setPosterUrl(movie.getPosterUrl());
+            createdMovie.setReleaseDate(movie.getReleaseDate());
             return movieRepository.save(createdMovie);
         }else
             throw new MovieExistedException();
