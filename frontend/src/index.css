@@ -11,3 +11,21 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+main {
+  padding: 1rem;
+}
+.movies {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.movie {
+  border: 1px #404040 solid;
+  margin: 1rem;
+}
+.movie img {
+  width: 100%;
+}
+.movie-info{
+  padding: 1rem;
+}
