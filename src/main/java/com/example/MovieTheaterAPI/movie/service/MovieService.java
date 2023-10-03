@@ -13,4 +13,6 @@ public interface MovieService {
     void deleteMovie(Long id);
     List<Movie> getMoviesByReleaseDate();
     Movie getMovieByTitle(String title);
+    void updateProfileImage(Long movieId, byte[] image);
+
 }
