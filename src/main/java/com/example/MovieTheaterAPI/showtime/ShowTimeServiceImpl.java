@@ -1,5 +1,9 @@
 package com.example.MovieTheaterAPI.showtime;
 
+import com.example.MovieTheaterAPI.discount.Discount;
+import com.example.MovieTheaterAPI.discount.DiscountRepository;
+import com.example.MovieTheaterAPI.discount.DiscountService;
+import com.example.MovieTheaterAPI.discount.DiscountType;
 import com.example.MovieTheaterAPI.location.Location;
 import com.example.MovieTheaterAPI.location.LocationRepository;
 import com.example.MovieTheaterAPI.movie.model.Movie;
@@ -12,6 +16,7 @@ import com.example.MovieTheaterAPI.showtime.dto.ShowTimeDTO;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
@@ -24,6 +29,7 @@ public class ShowTimeServiceImpl implements ShowTimeService {
     private final MovieRepository movieRepository;
     private final ScreenRepository screenRepository;
     private final LocationRepository locationRepository;
+    private final DiscountRepository discountRepository;
 
     @Override
     public ShowTime createShowTime(ShowTimeDTO showTimeDTO) {
@@ -41,9 +47,10 @@ public class ShowTimeServiceImpl implements ShowTimeService {
         if (hasTimeOverlap(
                 showTimeRepository.findShowTimeByScreenAndDate(screen, showTime.getDate()),
                 showTime
-        ))
+        )) {
             throw new RuntimeException();
-
+        }
+        applyDiscount(showTime);
         return showTimeRepository.save(showTime);
     }
 
@@ -80,5 +87,15 @@ public class ShowTimeServiceImpl implements ShowTimeService {
                 return true;
         }
         return false; // No overlap found
+    }
+
+    private void applyDiscount(ShowTime showTime) {
+        Discount discount = null;
+        if (showTime.getDate().getDayOfWeek() == DayOfWeek.TUESDAY) {
+            discount = discountRepository.findById(DiscountType.TuedaySpecial).get();
+        } else if (showTime.getStartTime().isBefore(LocalTime.of(16, 0))) {
+            discount = discountRepository.findById(DiscountType.Before6PM).get();
+        }
+        showTime.setDiscount(discount);
     }
 }
