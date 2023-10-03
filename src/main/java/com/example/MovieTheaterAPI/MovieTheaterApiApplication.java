@@ -1,6 +1,7 @@
 package com.example.MovieTheaterAPI;
 
 import com.example.MovieTheaterAPI.movie.s3.S3Service;
+import com.example.MovieTheaterAPI.movie.service.MovieService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -12,14 +13,6 @@ import java.net.URL;
 public class MovieTheaterApiApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(MovieTheaterApiApplication.class, args);
-	}
-
-	@Bean
-	CommandLineRunner runner(S3Service s3Service) {
-		return args -> {
-			URL url = s3Service.PutObject("project-cmpe202", "foo", "Hello World!".getBytes());
-			System.out.println(url);
-		};
 	}
 
 }

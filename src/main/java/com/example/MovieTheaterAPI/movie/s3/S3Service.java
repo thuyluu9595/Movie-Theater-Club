@@ -1,6 +1,7 @@
 package com.example.MovieTheaterAPI.movie.s3;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import software.amazon.awssdk.core.exception.SdkClientException;
 import software.amazon.awssdk.core.sync.RequestBody;
@@ -15,13 +16,15 @@ import java.net.URL;
 @Slf4j
 public class S3Service {
 
+    @Value("${aws.s3.bucket.name}")
+    private String bucketName;
     private final S3Client s3Client;
 
     public S3Service(S3Client s3Client) {
         this.s3Client = s3Client;
     }
 
-    public URL PutObject(String bucketName, String key, byte[] file) {
+    public URL PutObject(String key, byte[] file) {
 
         try {
             PutObjectRequest objectRequest = PutObjectRequest.builder()
