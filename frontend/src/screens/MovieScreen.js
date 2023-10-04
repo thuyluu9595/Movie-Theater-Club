@@ -1,44 +1,108 @@
-import React, { useEffect, useState } from "react"; 
-import { useParams } from "react-router-dom";
-import { Card, Button } from 'react-bootstrap'
+import React, { useEffect, useReducer } from "react"; 
 import Rating from "../components/Rating";
-import data from "../data";
+import axios from "axios";
+import { Link, useParams } from "react-router-dom";
+import { Row, Col, ListGroup, Button, Badge } from 'react-bootstrap';
 
+
+const reducer = (state, action) => {
+  switch (action.type) {
+    case 'FETCH_REQUEST':
+      return {...state, loading: true};
+    case 'FETCH_SUCCESS':
+      return {...state, movie: action.payload, loading: false};
+    case 'FETCH_FAIL':
+      return {...state,loading:false, error: action.payload};
+    default:
+      return state;
+  }
+}
 
 export default function MovieScreen(){
-  const { slug } = useParams();
-  const movies = data.movies;
-  const [movie, setMovie] = useState(null);
+
+  const {slug } = useParams();
+
+  const  [{ loading, error, movie}, dispatch] = useReducer(reducer, {
+    movie: [],
+    loading : true, 
+    error: '',
+  });
 
   useEffect(() => {
-    
-    const selectedMovie = movies.find(movie => movie.slug === slug);
-
-    if(selectedMovie){
-      setMovie(selectedMovie);
-    } else {
-      console.log("Movie not found");
-    }
+    const fetchData = async () => {
+      dispatch({type: 'FETCH_REQUEST'});
+      try {
+        const result = await axios.get(`/api/movies/slug/${slug}`);
+        dispatch({type: 'FETCH_SUCCESS', payload: result.data});
+      } catch(err) {
+        dispatch({type: 'FETCH_FAIL', payload: err.message});
+      }
+    };
+    fetchData();
   }, [slug]);
-
-  if (!movie){
-    return<div>Loading...</div>
-  }
   
-  return (
-    <div>
-      <Card>
-        <Card.Img 
-          className='img-large' 
-          src={movie.image} 
-          alt={movie.title} />
-        <Card.Body>
-          <Card.Title>{movie.title}</Card.Title>
-          <Card.Price>${movie.price}</Card.Price>
-          <Rating rating={movie.rating} numReviews={movie.numReviews} />
-          <Button>Get Tickets</Button>
-        </Card.Body>
-      </Card>
-    </div>
-  )
+  return loading ? (
+      <div>Loading...</div>
+    ) :  error ? (
+      <div>{error}</div>
+    ) : (
+      <div>
+        <Row>
+          <Col md={3}>
+            <img 
+              className='img-large'
+              src={movie.image}
+              alt={movie.title}
+            />
+          </Col>
+          <Col md={5}>
+            <ListGroup variant="flush">
+              <ListGroup.Item>
+                <h1>{movie.title}</h1>
+              </ListGroup.Item>
+              <ListGroup.Item>
+                <Rating
+                  rating={movie.rating}
+                  numReviews={movie.numReviews}/>
+              </ListGroup.Item>
+              <ListGroup.Item>
+                Price: ${movie.price}
+              </ListGroup.Item>
+              <ListGroup.Item>
+                Decription: {movie.description}
+              </ListGroup.Item>
+              <ListGroup.Item>
+                Duration: {movie.duration}
+              </ListGroup.Item>
+              <Link to='/signin'>
+                <Button>Get Tickets</Button>
+              </Link>
+            </ListGroup>
+          </Col>
+          <Col md={3}>
+          <ListGroup variant="flush">
+            <ListGroup.Item>
+              <Row>
+                <Col>Price:</Col>
+                <Col>${movie.price}</Col>
+              </Row>
+            </ListGroup.Item>
+            <ListGroup.Item>
+              <Row>
+                <Col>Status</Col>
+                <Col>
+                  {movie.seats>0 ?(
+                    <Badge bg="success">Vaviable</Badge>
+                  ) : (
+                    <Badge bg="success">Unvariable</Badge>
+                  )}   
+                </Col>
+              </Row>
+            </ListGroup.Item>
+          </ListGroup>
+          </Col>
+        </Row>
+      </div>
+  );
+
 }

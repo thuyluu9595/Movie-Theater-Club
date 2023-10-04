@@ -6,6 +6,8 @@ const data = {
       price: 10,
       description: 'Commedy film',
       image: '/images/images1.jpeg',
+      duration: '1 hour 30 minutes',
+      seats: 10,
       rating: 4.5,
       numReviews: 5
     },
@@ -15,6 +17,8 @@ const data = {
       price: 10,
       description: 'Commedy film',
       image: '/images/images3.jpeg',
+      duration: '1 hour 45 minutes',
+      seats: 10,
       rating: 4.5,
       numReviews: 5
     },
@@ -24,6 +28,8 @@ const data = {
       price: 10,
       description: 'Commedy film',
       image: '/images/images2.jpeg',
+      duration: '2 hour 30 minutes',
+      seats: 10,
       rating: 4.5,
       numReviews: 5
     },
@@ -33,6 +39,8 @@ const data = {
       price: 10,
       description: 'Commedy film',
       image: '/images/images.jpeg',
+      duration: '1 hour 50 minutes',
+      seats: 9,
       rating: 4.5,
       numReviews: 5
     },
