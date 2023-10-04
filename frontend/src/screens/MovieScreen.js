@@ -3,6 +3,7 @@ import Rating from "../components/Rating";
 import axios from "axios";
 import { Link, useParams } from "react-router-dom";
 import { Row, Col, ListGroup, Button, Badge } from 'react-bootstrap';
+import { Helmet } from "react-helmet";
 
 
 const reducer = (state, action) => {
@@ -58,6 +59,9 @@ export default function MovieScreen(){
           <Col md={5}>
             <ListGroup variant="flush">
               <ListGroup.Item>
+                <Helmet>
+                  <title>{movie.title}</title>
+                </Helmet> 
                 <h1>{movie.title}</h1>
               </ListGroup.Item>
               <ListGroup.Item>
@@ -74,9 +78,6 @@ export default function MovieScreen(){
               <ListGroup.Item>
                 Duration: {movie.duration}
               </ListGroup.Item>
-              <Link to='/signin'>
-                <Button>Get Tickets</Button>
-              </Link>
             </ListGroup>
           </Col>
           <Col md={3}>
@@ -89,16 +90,25 @@ export default function MovieScreen(){
             </ListGroup.Item>
             <ListGroup.Item>
               <Row>
-                <Col>Status</Col>
+                <Col>Seats</Col>
                 <Col>
                   {movie.seats>0 ?(
                     <Badge bg="success">Vaviable</Badge>
                   ) : (
-                    <Badge bg="success">Unvariable</Badge>
+                    <Badge bg="danger">Unvariable</Badge>
                   )}   
                 </Col>
               </Row>
             </ListGroup.Item>
+            {movie.seats > 0 && (
+              <ListGroup.Item>
+                <div className='d-grid'>
+                  <Link to='/signin'>
+                    <Button variant='primary'>Get Tickets</Button>
+                  </Link>
+                </div>
+              </ListGroup.Item>
+            )}
           </ListGroup>
           </Col>
         </Row>

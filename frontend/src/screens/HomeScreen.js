@@ -3,6 +3,7 @@ import {Row, Col } from 'react-bootstrap';
 import Movie from "../components/Movie";
 import axios from "axios";
 import logger from "use-reducer-logger";
+import { Helmet } from "react-helmet";
 
 
 const reducer = (state, action) => {
@@ -42,6 +43,9 @@ export default function HomeScreen(props){
 
   return (
     <div>
+      <Helmet>
+        <title>THC Theather</title>
+      </Helmet>
       <h1>List Of Movies</h1>
       <div className='movies'>
         <Row>

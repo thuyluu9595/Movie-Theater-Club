@@ -7,7 +7,7 @@ const data = {
       description: 'Commedy film',
       image: '/images/images1.jpeg',
       duration: '1 hour 30 minutes',
-      seats: 10,
+      seats: 0,
       rating: 4.5,
       numReviews: 5
     },
