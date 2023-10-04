@@ -4,6 +4,8 @@ import Movie from "../components/Movie";
 import axios from "axios";
 import logger from "use-reducer-logger";
 import { Helmet } from "react-helmet";
+import LoadingBox from "../components/LoadingBox";
+import MessageBox from "../components/MessageBox";
 
 
 const reducer = (state, action) => {
@@ -51,9 +53,9 @@ export default function HomeScreen(props){
         <Row>
           {
             loading ? (
-              <div>...Loading</div>
+              <LoadingBox />
             ) : error ? (
-              <div>{error}</div>
+              <MessageBox variant='danger'>{error}</MessageBox>
             ) : (
             movies.map((movie) => (
             <Col key={movie.slug} sm={6} md={4} lg={3} className='mb-3'>
