@@ -2,7 +2,8 @@ import React from 'react';
 import { Link } from 'react-router-dom'; 
 import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
-import { Rating } from './Rating';
+import Rating from './Rating';
+
 
 
 export default function Movie(props){
@@ -18,7 +19,9 @@ export default function Movie(props){
         </Link>
         <Rating rating={movie.rating} numReviews={movie.numReviews}/>
         <Card.Text>${movie.price}</Card.Text>
-        <Button>Get Tickets</Button>
+        <Link to={`/showtime`}>
+          <Button>Get Tickets</Button>
+        </Link>
       </Card.Body>
     </Card>
   )

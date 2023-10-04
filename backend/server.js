@@ -4,8 +4,14 @@ import data from './data.js';
 const app = express();
 
 app.get('/api/movies', (req, res) => {
-  res.send(data.movies);
+  if (!data.movies){
+    res.status(404).send('Images not found');
+  } else {
+    res.status(200).send(data.movies);
+  }
 });
+
+
 
 const port = process.env.PORT || 4000;
 app.listen(port, () => {

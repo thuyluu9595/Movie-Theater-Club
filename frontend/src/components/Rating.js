@@ -1,5 +1,5 @@
 import React from "react";
-export function Rating(props){
+export default function Rating(props){
 
   const { rating, numReviews } = props;
 
