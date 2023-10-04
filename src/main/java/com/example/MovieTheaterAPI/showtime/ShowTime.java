@@ -1,10 +1,12 @@
 package com.example.MovieTheaterAPI.showtime;
 
+import com.example.MovieTheaterAPI.discount.Discount;
 import com.example.MovieTheaterAPI.movie.model.Movie;
 import com.example.MovieTheaterAPI.screen.Screen;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
@@ -49,6 +51,10 @@ public class ShowTime {
     @Setter(AccessLevel.NONE)
     @Column(name = "available_seat")
     private Integer[] availableSeat;
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "discount_id", referencedColumnName = "id")
+    private Discount discount;
 
     public ShowTime(Movie movie, Screen screen, LocalDate date, LocalTime startTime, double price) {
         this.movie = movie;

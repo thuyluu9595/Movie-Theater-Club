@@ -23,7 +23,3 @@ public class Discount {
   @Max(value = 100, message = "Percentage discount cannot be greater than 100")
   private float percentDiscount;
 }
-enum DiscountType {
-    TuedaySpecial,
-    Before6PM
-}
