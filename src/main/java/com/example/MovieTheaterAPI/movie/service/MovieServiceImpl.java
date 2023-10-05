@@ -31,7 +31,8 @@ public class MovieServiceImpl implements MovieService{
 
     @Override
     public Movie getMovieById(Long id) {
-        return movieRepository.getReferenceById(id);
+        Movie existingMovie = movieRepository.findById(id).orElseThrow(MovieNotFoundException::new);
+        return existingMovie;
     }
 
     @Override

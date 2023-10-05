@@ -34,11 +34,12 @@ public class MovieController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Movie> getMovieById(@PathVariable Long id) {
-        Movie movie = movieService.getMovieById(id);
-        if (movie != null)
+        try {
+            Movie movie = movieService.getMovieById(id);
             return ResponseEntity.ok(movie);
-        else
+        } catch (MovieNotFoundException e) {
             return ResponseEntity.notFound().build();
+        }
     }
 
     @PostMapping
