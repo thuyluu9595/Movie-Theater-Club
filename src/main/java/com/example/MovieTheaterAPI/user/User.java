@@ -7,10 +7,6 @@ import jakarta.persistence.*;
 import lombok.*;
 
 
-enum Role {
-    Employee,
-    Member
-}
 
 @Setter
 @Getter
