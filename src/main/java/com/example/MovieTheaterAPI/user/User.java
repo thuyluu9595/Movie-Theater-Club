@@ -1,6 +1,7 @@
 package com.example.MovieTheaterAPI.user;
 
 
+import com.example.MovieTheaterAPI.booking.Booking;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
@@ -54,6 +55,10 @@ public class User {
     @JsonIgnore
     @OneToOne(mappedBy = "user", optional = true)
     private Member member;
+
+    @JsonIgnore
+    @OneToOne(mappedBy = "user")
+    private Booking booking;
 
     @Override
     public String toString() {
