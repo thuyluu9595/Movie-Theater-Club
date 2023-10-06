@@ -20,6 +20,15 @@ app.get('/api/movies/slug/:slug', (req, res) => {
   }
 })
 
+app.get('/api/movies/:id', (req, res) => {
+  const movie = data.movies.find(m => m._id === req.params.id);
+  if (movie) {
+    res.status(200).send(movie);
+  } else {
+    res.status(404).send({message: 'Movie not found'})
+  }
+})
+
 const port = process.env.PORT || 4000;
 app.listen(port, () => {
   console.log(`serve at http://localhost:${port}`);

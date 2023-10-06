@@ -1,17 +1,19 @@
 const data = {
   movies: [
     {
+      _id: '1',
       title: 'Robson&Crane',
       slug: 'robson-&-crane',
       price: 10,
       description: 'Commedy film',
       image: '/images/images1.jpeg',
       duration: '1 hour 30 minutes',
-      seats: 0,
+      seats: 5,
       rating: 4.5,
       numReviews: 5
     },
     {
+      _id: '2',
       title: 'The Title Boy',
       slug: 'the-litle-boy',
       price: 10,
@@ -23,6 +25,7 @@ const data = {
       numReviews: 5
     },
     {
+      _id: '3',
       title: 'Hot Air Balloon',
       slug: 'hot-air-balloon',
       price: 10,
@@ -34,6 +37,7 @@ const data = {
       numReviews: 5
     },
     {
+      _id: '4',
       title: 'Hawaii',
       slug: 'hawaii',
       price: 10,

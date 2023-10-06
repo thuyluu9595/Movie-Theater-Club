@@ -47,10 +47,19 @@ export default function MovieScreen(){
   }, [slug]);
 
   const { state, dispatch: ctxDispatch} = useContext(Store);
-  const addToTicketHandler = () => {
+  const {ticket } = state;
+  const addToTicketHandler = async () => {
+    const existItem = ticket.ticketItems.find((x) => x._id === movie._id);
+    const quantity = existItem ? existItem.quantity + 1 : 1;
+    const {data} = await axios.get(`/api/movies/${movie._id}`);
+    if (data.seats < quantity) {
+      window.alert('Sorry. Movie is out of stock');
+      return;
+    }
+
     ctxDispatch({
       type: 'TICKET_ADD_ITEM', 
-      payload: {...movie, quatity: 1},
+      payload: {...movie, quantity},
     });
   };
   

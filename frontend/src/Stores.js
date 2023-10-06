@@ -12,13 +12,17 @@ function reducer(state, action) {
   switch (action.type) {
     case 'TICKET_ADD_ITEM':
       // add to ticket
-      return {
-        ...state, 
-        ticket: {
-          ...state.ticket, 
-          ticketItems:[...state.ticket.ticketItems, action.payload],
-        },
-      };
+      const  newItem =  action.payload;
+      const existItem = state.ticket.ticketItems.find(
+        (item) => item._id === newItem._id
+      );
+      const ticketItems = existItem
+      ? state.ticket.ticketItems.map((item) => 
+        item._id === existItem._id ? newItem : item
+        )
+      : [...state.ticket.ticketItems, newItem];
+      return {...state, ticket: {...state.ticket, ticketItems}};
+      
     default:
       return state;
   }

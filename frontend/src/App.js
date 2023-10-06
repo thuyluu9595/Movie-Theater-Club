@@ -38,7 +38,7 @@ export default function App(){
                   Show Time 
                   {ticket.ticketItems.length > 0 &&(
                     <Badge pill bg='danger'>
-                      {ticket.ticketItems.length}
+                      {ticket.ticketItems.reduce((a, c) => a + c.quantity, 0)}
                     </Badge>
                   )}
                 </Link>
