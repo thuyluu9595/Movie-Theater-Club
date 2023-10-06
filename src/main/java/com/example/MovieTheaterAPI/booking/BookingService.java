@@ -13,7 +13,7 @@ public interface BookingService {
     void cancelBooking(Long id);
     void payBooking(Long id);
     List<Booking> getBookingsByUserId(Long userId);
-    List<Booking> getBookingsByAfterBookingDate(LocalDate bookingDate);
+    List<Booking> getBookingsByAfterBookingDate(Long id, LocalDate bookingDate);
 //    List<Booking> getBookingsByShowTimeId(Long showTimeId);
 //    List<Booking> getBookingsByShowTimeIdAndUserId(Long showTimeId, Long userId);
 //    List<Booking> getBookingsByShowTimeIdAndUserIdAndStatus(Long showTimeId, Long userId, BookingStatus status);

@@ -6,11 +6,13 @@ import com.example.MovieTheaterAPI.showtime.ShowTimeRepository;
 import com.example.MovieTheaterAPI.user.Tier;
 import com.example.MovieTheaterAPI.user.User;
 import com.example.MovieTheaterAPI.user.UserRepository;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
+@Service
 public class BookingServiceImpl implements BookingService{
 
     private final float ONLINE_SERVICE_FEE = 1.50f;
@@ -85,6 +87,12 @@ public class BookingServiceImpl implements BookingService{
     @Override
     public void cancelBooking(Long id) {
         Booking booking = bookingRepository.findById(id).orElseThrow(BookingNotFoundException::new);
+
+        // Checking whether cancellation is requested before the showtime
+        if (LocalDate.now().isAfter(booking.getShowTime().getDate()) || LocalTime.now().isAfter(booking.getShowTime().getStartTime())) {
+            throw new BookingCannotBeCancelledException();
+        }
+
         booking.setStatus(BookingStatus.CANCELLED);
         // Update reward points
         User user = userRepository.findById(booking.getUser().getId()).orElseThrow(ResourceNotFoundException::new);
@@ -111,11 +119,13 @@ public class BookingServiceImpl implements BookingService{
 
     @Override
     public List<Booking> getBookingsByUserId(Long userId) {
+        userRepository.findById(userId).orElseThrow(ResourceNotFoundException::new);
         return bookingRepository.findByUserId(userId);
     }
 
     @Override
-    public List<Booking> getBookingsByAfterBookingDate(LocalDate bookingDate) {
-        return bookingRepository.getBookingsByBookingDateAfter(bookingDate);
+    public List<Booking> getBookingsByAfterBookingDate(Long id, LocalDate bookingDate) {
+        userRepository.findById(id).orElseThrow(ResourceNotFoundException::new);
+        return bookingRepository.getBookingsByUserIdAndBookingDateAfter(id, bookingDate);
     }
 }
