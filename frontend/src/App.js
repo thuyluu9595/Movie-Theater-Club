@@ -1,15 +1,19 @@
 import {BrowserRouter, Link, Route, Routes} from 'react-router-dom';
-import React from 'react';
-import { Navbar, Nav, Container, Form} from 'react-bootstrap';
+import React, { useContext } from 'react';
+import { Navbar, Nav, Container, Form, Badge} from 'react-bootstrap';
 import  LinkContainer from 'react-router-bootstrap/LinkContainer';
 import HomeScreen from './screens/HomeScreen';
 import MovieScreen from './screens/MovieScreen';
 import SigninScreen from './screens/SigninScreen';
 import ShowTimeScreen from './screens/ShowTimeScreen';
 import RegisterScreen from './screens/RegisterScreen';
+import { Store } from './Stores';
 
 
 export default function App(){
+  const { state } = useContext(Store);
+  const {ticket} = state;
+  
   return (
     <BrowserRouter>
       <div className='d-flex flex-column site-container'>
@@ -32,6 +36,11 @@ export default function App(){
               <Nav className='ms-auto'>
                 <Link to='/showtime' className='nav-Link'>
                   Show Time 
+                  {ticket.ticketItems.length > 0 &&(
+                    <Badge pill bg='danger'>
+                      {ticket.ticketItems.length}
+                    </Badge>
+                  )}
                 </Link>
               </Nav>
               <Nav className='ms-2'>
