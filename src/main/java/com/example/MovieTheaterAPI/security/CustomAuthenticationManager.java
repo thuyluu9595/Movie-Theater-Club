@@ -34,9 +34,18 @@ public class CustomAuthenticationManager implements AuthenticationManager {
         List<GrantedAuthority> authorities = new ArrayList<>();
         authorities.add(new SimpleGrantedAuthority("ROLE_" + user.getRole().toString().toUpperCase()));
 
-        return new UsernamePasswordAuthenticationToken(
+        return new CustomAuthentication(
+                user.getId(),
+                user.getRole().toString(),
+                user.getFirstname(),
+                user.getLastname(),
                 authentication.getName(),
                 user.getPassword(),
-                authorities);
+                authorities
+        );
+//        return new UsernamePasswordAuthenticationToken(
+//                authentication.getName(),
+//                user.getPassword(),
+//                authorities);
     }
 }

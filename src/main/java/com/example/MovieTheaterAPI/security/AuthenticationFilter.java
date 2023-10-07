@@ -44,18 +44,39 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
-        String token = JWT.create()
-                .withSubject(authResult.getName())
-                .withClaim("roles", authResult
-                        .getAuthorities()
-                        .stream()
-                        .map(GrantedAuthority::getAuthority)
-                        .collect(Collectors.toList()))
-                .withExpiresAt(new Date(System.currentTimeMillis() + SecurityConstants.TOKEN_EXPIRATION))
-                .sign(Algorithm.HMAC512(SecurityConstants.SECRET_KEY));
-        response.addHeader(SecurityConstants.AUTHORIZATION, SecurityConstants.BEARER + token);
-        response.getWriter().write(token);
-        response.getWriter().flush();
+        if (authResult instanceof CustomAuthentication) {
+            String token = JWT.create()
+                    .withSubject(authResult.getName())
+                    .withClaim("roles", authResult
+                            .getAuthorities()
+                            .stream()
+                            .map(GrantedAuthority::getAuthority)
+                            .collect(Collectors.toList()))
+                    .withExpiresAt(new Date(System.currentTimeMillis() + SecurityConstants.TOKEN_EXPIRATION))
+                    .sign(Algorithm.HMAC512(SecurityConstants.SECRET_KEY));
+
+            String JSONString = String.format("{\"id\":%d,\"role\":\"%s\",\"first_name\":\"%s\",\"last_name\":\"%s\",\"access_token\":\"%s\"}",
+                    ((CustomAuthentication) authResult).getId(),
+                    ((CustomAuthentication) authResult).getRole(),
+                    ((CustomAuthentication) authResult).getFirstName(),
+                    ((CustomAuthentication) authResult).getLastName(),
+                    token);
+
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
+
+            response.getWriter().write(JSONString);
+            response.getWriter().flush();
+        }
+
+
+//        response.addHeader(SecurityConstants.AUTHORIZATION, SecurityConstants.BEARER + token);
+//        response.setContentType("application/json");
+//        response.setCharacterEncoding("UTF-8");
+//
+//        response.getWriter().write(token);
+//        response.getWriter().flush();
+
 
     }
 }

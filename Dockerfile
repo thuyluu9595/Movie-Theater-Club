@@ -25,13 +25,13 @@ WORKDIR /app
 
 # Copy the built JAR file from the build container to the Alpine container
 COPY --from=build /app/target/movie-theater-api.jar .
-COPY start.sh .
-COPY wait-for.sh .
+#COPY start.sh .
+#COPY wait-for.sh .
 
 # Expose the port your Spring Boot app will run on (if needed)
 EXPOSE 8080
-RUN chmod +x start.sh
-RUN chmod +x wait-for.sh
+#RUN chmod +x start.sh
+#RUN chmod +x wait-for.sh
 
 # Command to run your Spring Boot application
 ENTRYPOINT ["java", "-jar", "movie-theater-api.jar"]
