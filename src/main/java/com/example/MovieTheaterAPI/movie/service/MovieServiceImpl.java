@@ -3,19 +3,24 @@ package com.example.MovieTheaterAPI.movie.service;
 import com.example.MovieTheaterAPI.movie.MovieDTO;
 import com.example.MovieTheaterAPI.movie.model.Movie;
 import com.example.MovieTheaterAPI.movie.repository.MovieRepository;
+import com.example.MovieTheaterAPI.movie.s3.S3Service;
 import com.example.MovieTheaterAPI.movie.utils.MovieExistedException;
 import com.example.MovieTheaterAPI.movie.utils.MovieNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.net.URL;
 import java.time.Duration;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class MovieServiceImpl implements MovieService{
     private final MovieRepository movieRepository;
+    private final S3Service s3Service;
 
-    public MovieServiceImpl(MovieRepository movieRepository) {
+    public MovieServiceImpl(MovieRepository movieRepository, S3Service s3Service) {
         this.movieRepository = movieRepository;
+        this.s3Service = s3Service;
     }
 
 
@@ -26,7 +31,8 @@ public class MovieServiceImpl implements MovieService{
 
     @Override
     public Movie getMovieById(Long id) {
-        return movieRepository.getReferenceById(id);
+        Movie existingMovie = movieRepository.findById(id).orElseThrow(MovieNotFoundException::new);
+        return existingMovie;
     }
 
     @Override
@@ -76,5 +82,14 @@ public class MovieServiceImpl implements MovieService{
     @Override
     public Movie getMovieByTitle(String title) {
         return movieRepository.findByTitle(title).orElse(null);
+    }
+
+    @Override
+    public void updateProfileImage(Long movieId, byte[] image) {
+        Movie movie = movieRepository.findById(movieId).orElseThrow(MovieNotFoundException::new);
+        String key = "%s%s".formatted(movieId, UUID.randomUUID().toString());
+        URL movie_url = s3Service.PutObject(key,image);
+        movie.setPosterUrl(String.valueOf(movie_url));
+        movieRepository.save(movie);
     }
 }
