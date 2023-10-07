@@ -26,7 +26,8 @@ public class SecurityConfig{
                 .headers((header) -> header.frameOptions((frame) -> frame.disable()))
                 .csrf((csrf) -> csrf.disable())
                 .authorizeHttpRequests((requests) -> requests
-                        .requestMatchers("/", "/home").permitAll()
+                        .requestMatchers("/", "/home", "/api/movies/").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/movies/**").permitAll()
                         .requestMatchers(HttpMethod.POST, SecurityConstants.REGISTER_PATH).permitAll()
                         .requestMatchers(HttpMethod.POST, SecurityConstants.ADMIN_REGISTER_PATH).permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/movies").hasRole(Role.Employee.toString().toUpperCase())
