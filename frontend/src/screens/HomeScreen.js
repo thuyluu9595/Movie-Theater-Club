@@ -22,18 +22,20 @@ const reducer = (state, action) => {
 }
 
 export default function HomeScreen(props){
+  const apiUrl = 'http://localhost:8080/api/movies';
+
   const  [{ loading, error, movies}, dispatch] = useReducer(logger(reducer), {
     movies: [],
     loading : true, 
     error: '',
   });
-//  const [movies, setMovies] = useState([]);
+
   useEffect(() => {
     const fetchData = async () => {
       dispatch({type: 'FETCH_REQUEST'});
       try {
-        const result = await axios.get('/api/movies');
-        dispatch({type: 'FETCH_SUCCESS', payload: result.data});
+        const response = await axios.get(apiUrl);
+        dispatch({type: 'FETCH_SUCCESS', payload: response.data});
       } catch(err) {
         dispatch({type: 'FETCH_FAIL', payload: err.message});
       }
@@ -58,7 +60,7 @@ export default function HomeScreen(props){
               <MessageBox variant='danger'>{error}</MessageBox>
             ) : (
             movies.map((movie) => (
-            <Col key={movie.slug} sm={6} md={4} lg={3} className='mb-3'>
+            <Col key={movie._id} sm={6} md={4} lg={3} className='mb-3'>
               <Movie movie={movie}></Movie>
             </Col>
           )))}

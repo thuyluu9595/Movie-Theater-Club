@@ -4,8 +4,14 @@ import { createContext, useReducer } from "react";
 export const Store = createContext();
 
 const initialState = {
+  userInfo: localStorage.getItem('userInfo')
+  ? JSON.parse(localStorage.getItem('userInfo'))
+  : null,
+  
   ticket: {
-    ticketItems: [],
+    ticketItems: localStorage.getItem('ticketItems')
+      ? JSON.parse(localStorage.getItem('ticketItems'))
+      : [],
   },
 };
 function reducer(state, action) {
@@ -22,7 +28,10 @@ function reducer(state, action) {
         )
       : [...state.ticket.ticketItems, newItem];
       return {...state, ticket: {...state.ticket, ticketItems}};
-      
+    case 'USER_SIGNIN':
+      return {...state, userInfo: action.payload};  
+    case 'USER_SIGNOUT':
+      return {...state, userInfo: null};
     default:
       return state;
   }

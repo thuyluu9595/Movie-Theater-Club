@@ -1,6 +1,6 @@
 import {BrowserRouter, Link, Route, Routes} from 'react-router-dom';
 import React, { useContext } from 'react';
-import { Navbar, Nav, Container, Form, Badge} from 'react-bootstrap';
+import { Navbar, Nav, Container, Form, Badge, NavDropdown} from 'react-bootstrap';
 import  LinkContainer from 'react-router-bootstrap/LinkContainer';
 import HomeScreen from './screens/HomeScreen';
 import MovieScreen from './screens/MovieScreen';
@@ -11,8 +11,13 @@ import { Store } from './Stores';
 
 
 export default function App(){
-  const { state } = useContext(Store);
-  const {ticket} = state;
+  const { state, dispatch: ctxDispatch} = useContext(Store);
+  const {ticket, userInfo} = state;
+
+  const signoutHandler = () => {
+    ctxDispatch({type: 'USER_SIGNOUT'});
+    localStorage.removeItem('userInfo');
+  }
   
   return (
     <BrowserRouter>
@@ -35,18 +40,34 @@ export default function App(){
             </Nav>
               <Nav className='ms-auto'>
                 <Link to='/showtime' className='nav-Link'>
-                  Show Time 
+                  Booking 
                   {ticket.ticketItems.length > 0 &&(
                     <Badge pill bg='danger'>
                       {ticket.ticketItems.reduce((a, c) => a + c.quantity, 0)}
                     </Badge>
                   )}
                 </Link>
-              </Nav>
-              <Nav className='ms-2'>
-                <Link to='/signin' className='nav-Link'>
-                  Sign In
-                </Link>
+                  {userInfo ? (
+                    <NavDropdown title={userInfo.username} id='basic-nav-dropdown'>
+                      <LinkContainer to='/profile'>
+                        <NavDropdown.Item>User Profile</NavDropdown.Item>
+                      </LinkContainer>
+                      <LinkContainer to='/history'>
+                        <NavDropdown.Item>History</NavDropdown.Item>
+                      </LinkContainer>
+                      <NavDropdown.Divider />
+                      <Link
+                        className='dropdown-item'
+                        to='#signout'
+                        onClick={signoutHandler}>
+                          Sign Out
+                        </Link>
+                    </NavDropdown>
+                  ) : (
+                    <Link to='/signin' className='nav-Link'>
+                      Sign In
+                    </Link>
+                  )}
               </Nav>
             </Container>
           </Navbar>
