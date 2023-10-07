@@ -2,6 +2,7 @@ package com.example.MovieTheaterAPI.screen;
 
 import com.example.MovieTheaterAPI.location.Location;
 import com.example.MovieTheaterAPI.movie.model.Movie;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -32,6 +33,7 @@ public class Screen {
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @Column(name = "movies")
+    @JsonIgnore
     List<Movie> movies = new ArrayList<>();
 
     public Screen(String name, Location location, Integer capacity) {

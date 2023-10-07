@@ -29,7 +29,7 @@ public class Movie {
     @Column(name = "release_date", nullable = false)
     private LocalDate releaseDate;
 
-    @Column(name = "poster_url", nullable = false)
+    @Column(name = "poster_url")
     private String posterUrl;
 
     @Override
