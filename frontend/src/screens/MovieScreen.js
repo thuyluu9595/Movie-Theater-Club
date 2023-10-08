@@ -36,15 +36,9 @@ export default function MovieScreen(){
     const fetchData = async () => {
       dispatch({type: 'FETCH_REQUEST'});
       try {
-        console.log(0);
         const result = await axios.get(`http://localhost:8080/api/movies/${id}`);
-        console.log(1);
-
         dispatch({type: 'FETCH_SUCCESS', payload: result.data});
-        console.log(3);
-
       } catch(err) {
-        console.log(err);
         dispatch({type: 'FETCH_FAIL', payload: getError(err)});
       }
     };
