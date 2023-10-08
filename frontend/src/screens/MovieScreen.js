@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useReducer } from "react"; 
 import Rating from "../components/Rating";
 import axios from "axios";
-import { useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { Row, Col, ListGroup, Button, Badge } from 'react-bootstrap';
 import { Helmet } from "react-helmet";
 import LoadingBox from "../components/LoadingBox";
@@ -24,44 +24,52 @@ const reducer = (state, action) => {
 }
 
 export default function MovieScreen(){
-
-  const {slug } = useParams();
+  const navigate = useNavigate();
+  const params = useParams();
+  const { id } = params;
 
   const  [{ loading, error, movie}, dispatch] = useReducer(reducer, {
-    movie: [],
+    movie: {},
     loading : true, 
     error: '',
   });
 
   useEffect(() => {
     const fetchData = async () => {
+      const apiUrl = `http://localhost:8080/api/movies/${id}`;
       dispatch({type: 'FETCH_REQUEST'});
       try {
-        const result = await axios.get(`/api/movies/`);
+        console.log(0);
+        const result = await axios.get(apiUrl);
+        console.log(1);
+
         dispatch({type: 'FETCH_SUCCESS', payload: result.data});
+        console.log(3);
+
       } catch(err) {
+        console.log(err);
         dispatch({type: 'FETCH_FAIL', payload: getError(err)});
       }
     };
     fetchData();
-  }, [slug]);
+  }, [id, navigate]);
 
-  const { state, dispatch: ctxDispatch} = useContext(Store);
-  const {ticket } = state;
-  const addToTicketHandler = async () => {
-    const existItem = ticket.ticketItems.find((x) => x._id === movie._id);
-    const quantity = existItem ? existItem.quantity + 1 : 1;
-    const {data} = await axios.get(`/api/movies/${movie._id}`);
-    if (data.seats < quantity) {
-      window.alert('Sorry. Movie is out of stock');
-      return;
-    }
+  // const { state, dispatch: ctxDispatch} = useContext(Store);
+  // const {ticket } = state;
+  // const addToTicketHandler = async () => {
+  //   const existItem = ticket.ticketItems.find((x) => x._id === movie._id);
+  //   const quantity = existItem ? existItem.quantity + 1 : 1;
+  //   const {data} = await axios.get(`/api/movies/${movie._id}`);
+  //   if (data.seats < quantity) {
+  //     window.alert('Sorry. Movie is out of stock');
+  //     return;
+  //   }
 
-    ctxDispatch({
-      type: 'TICKET_ADD_ITEM', 
-      payload: {...movie, quantity},
-    });
-  };
+  //   ctxDispatch({
+  //     type: 'TICKET_ADD_ITEM', 
+  //     payload: {...movie, quantity},
+  //   });
+  // };
   
   return loading ? (
       <LoadingBox/>
@@ -70,65 +78,36 @@ export default function MovieScreen(){
     ) : (
       <div>
         <Row>
-          <Col md={3}>
+          <Col md={4}>
             <img 
               className='img-large'
-              src={movie.image}
+              src='/images/images1.jpeg'
               alt={movie.title}
             />
           </Col>
-          <Col md={5}>
+          <Col md={8}>
             <ListGroup variant="flush">
               <ListGroup.Item>
                 <Helmet>
-                  <title>{movie.title}</title>
+                  <title></title>
                 </Helmet> 
-                <h1>{movie.title}</h1>
+                <h1></h1>
               </ListGroup.Item>
               <ListGroup.Item>
-                <Rating
-                  rating={movie.rating}
-                  numReviews={movie.numReviews}/>
+                Release Day: 
               </ListGroup.Item>
               <ListGroup.Item>
-                Price: ${movie.price}
+                Duration: 
               </ListGroup.Item>
               <ListGroup.Item>
-                Decription: {movie.description}
+                Decription: 
               </ListGroup.Item>
               <ListGroup.Item>
-                Duration: {movie.duration}
+                <Link to={`/showtime`}>
+                  <Button>Get Tickets</Button>
+                </Link>
               </ListGroup.Item>
             </ListGroup>
-          </Col>
-          <Col md={3}>
-          <ListGroup variant="flush">
-            <ListGroup.Item>
-              <Row>
-                <Col>Price</Col>
-                <Col>${movie.price}</Col>
-              </Row>
-            </ListGroup.Item>
-            <ListGroup.Item>
-              <Row>
-                <Col>Seats</Col>
-                <Col>
-                  {movie.seats>0 ?(
-                    <Badge bg="success">Vaviable</Badge>
-                  ) : (
-                    <Badge bg="danger">Unvariable</Badge>
-                  )}   
-                </Col>
-              </Row>
-            </ListGroup.Item>
-            {movie.seats > 0 && (
-              <ListGroup.Item>
-                <div className='d-grid'>
-                  <Button onClick={addToTicketHandler}variant='primary'>Get Tickets</Button>
-                </div>
-              </ListGroup.Item>
-            )}
-          </ListGroup>
           </Col>
         </Row>
       </div>

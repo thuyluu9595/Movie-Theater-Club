@@ -28,27 +28,15 @@ export default function App(){
               <LinkContainer to='/'>
                 <Navbar.Brand>THC Theater</Navbar.Brand>
               </LinkContainer>
-              <Nav className='me-auto'>
-                <Link to='/sidebar' className='nav-Link'>
-                  Side Bar
-                </Link>
-              </Nav>
               <Nav className='d-flex justify-content-center align-items-center flex-grow-1'>
                 <Form>
                   <input type='text' id='search' placeholder='Search...' className='form-control' />
                 </Form>
-            </Nav>
-              <Nav className='ms-auto'>
-                <Link to='/showtime' className='nav-Link'>
-                  Booking 
-                  {ticket.ticketItems.length > 0 &&(
-                    <Badge pill bg='danger'>
-                      {ticket.ticketItems.reduce((a, c) => a + c.quantity, 0)}
-                    </Badge>
-                  )}
-                </Link>
-                  {userInfo ? (
-                    <NavDropdown title={userInfo.username} id='basic-nav-dropdown'>
+              </Nav>
+              <Nav className='ms-2'>
+                {userInfo ? (
+                  <NavDropdown title={userInfo.first_name
+} id='basic-nav-dropdown'>
                       <LinkContainer to='/profile'>
                         <NavDropdown.Item>User Profile</NavDropdown.Item>
                       </LinkContainer>
@@ -67,7 +55,7 @@ export default function App(){
                     <Link to='/signin' className='nav-Link'>
                       Sign In
                     </Link>
-                  )}
+                  )} 
               </Nav>
             </Container>
           </Navbar>
