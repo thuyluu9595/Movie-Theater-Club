@@ -22,7 +22,6 @@ const reducer = (state, action) => {
 }
 
 export default function HomeScreen(props){
-  const apiUrl = 'http://localhost:8080/api/movies/';
 
   const  [{ loading, error, movies}, dispatch] = useReducer(logger(reducer), {
     movies: [],
@@ -34,7 +33,7 @@ export default function HomeScreen(props){
     const fetchData = async () => {
       dispatch({type: 'FETCH_REQUEST'});
       try {
-        const response = await axios.get(apiUrl);
+        const response = await axios.get('http://localhost:8080/api/movies/');
         dispatch({type: 'FETCH_SUCCESS', payload: response.data});
       } catch(err) {
         dispatch({type: 'FETCH_FAIL', payload: err.message});

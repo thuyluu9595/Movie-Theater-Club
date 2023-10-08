@@ -1,13 +1,11 @@
-import React, { useContext, useEffect, useReducer } from "react"; 
-import Rating from "../components/Rating";
+import React, { useEffect, useReducer } from "react"; 
 import axios from "axios";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { Row, Col, ListGroup, Button, Badge } from 'react-bootstrap';
+import { Row, Col, ListGroup, Button } from 'react-bootstrap';
 import { Helmet } from "react-helmet";
 import LoadingBox from "../components/LoadingBox";
 import MessageBox from "../components/MessageBox";
 import { getError } from "../utils";
-import { Store } from "../Stores";
 
 
 const reducer = (state, action) => {
@@ -36,11 +34,10 @@ export default function MovieScreen(){
 
   useEffect(() => {
     const fetchData = async () => {
-      const apiUrl = `http://localhost:8080/api/movies/${id}`;
       dispatch({type: 'FETCH_REQUEST'});
       try {
         console.log(0);
-        const result = await axios.get(apiUrl);
+        const result = await axios.get(`http://localhost:8080/api/movies/${id}`);
         console.log(1);
 
         dispatch({type: 'FETCH_SUCCESS', payload: result.data});
@@ -89,18 +86,18 @@ export default function MovieScreen(){
             <ListGroup variant="flush">
               <ListGroup.Item>
                 <Helmet>
-                  <title></title>
+                  <title>{movie.title}</title>
                 </Helmet> 
-                <h1></h1>
+                <h1>{movie.title}</h1>
               </ListGroup.Item>
               <ListGroup.Item>
-                Release Day: 
+                Release Day: {movie.releaseDate}
               </ListGroup.Item>
               <ListGroup.Item>
-                Duration: 
+                Duration: {movie.duration}
               </ListGroup.Item>
               <ListGroup.Item>
-                Decription: 
+                Decription: {movie.description}
               </ListGroup.Item>
               <ListGroup.Item>
                 <Link to={`/showtime`}>

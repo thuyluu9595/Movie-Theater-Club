@@ -18,30 +18,17 @@ export default function SigninScreen(){
   const { state, dispatch: ctxDispatch} = useContext(Store);
   const {userInfo} = state;
   
-  
-
-  
 
   const submitHandler = async (e) => {
-    const apiUrl = 'http://localhost:8080/api/authenticate';
     e.preventDefault();
     try {
-      console.log(1);
-      const { data } = await axios.post(apiUrl, {
+      const { data } = await axios.post('http://localhost:8080/api/authenticate', {
         username,  
         password,
       });
-      console.log(2);
-
       ctxDispatch({type: 'USER_SINGIN', payload: data});
-      console.log(3);
-
       localStorage.setItem('userInfo', JSON.stringify(data));
-      console.log(4);
-
       navigate(redirect || '/');
-      console.log(5);
-
     } catch (err) {
       alert('Invalid username or password');
     }

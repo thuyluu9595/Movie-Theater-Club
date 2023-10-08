@@ -1,6 +1,6 @@
 import {BrowserRouter, Link, Route, Routes} from 'react-router-dom';
 import React, { useContext } from 'react';
-import { Navbar, Nav, Container, Form, Badge, NavDropdown} from 'react-bootstrap';
+import { Navbar, Nav, Container, Form, NavDropdown} from 'react-bootstrap';
 import  LinkContainer from 'react-router-bootstrap/LinkContainer';
 import HomeScreen from './screens/HomeScreen';
 import MovieScreen from './screens/MovieScreen';
@@ -12,7 +12,7 @@ import { Store } from './Stores';
 
 export default function App(){
   const { state, dispatch: ctxDispatch} = useContext(Store);
-  const {ticket, userInfo} = state;
+  const {userInfo} = state;
 
   const signoutHandler = () => {
     ctxDispatch({type: 'USER_SIGNOUT'});
@@ -33,26 +33,25 @@ export default function App(){
                   <input type='text' id='search' placeholder='Search...' className='form-control' />
                 </Form>
               </Nav>
-              <Nav className='ms-2'>
+              <Nav className='me-auto'>
                 {userInfo ? (
-                  <NavDropdown title={userInfo.first_name
-} id='basic-nav-dropdown'>
-                      <LinkContainer to='/profile'>
-                        <NavDropdown.Item>User Profile</NavDropdown.Item>
-                      </LinkContainer>
-                      <LinkContainer to='/history'>
-                        <NavDropdown.Item>History</NavDropdown.Item>
-                      </LinkContainer>
-                      <NavDropdown.Divider />
-                      <Link
-                        className='dropdown-item'
-                        to='#signout'
-                        onClick={signoutHandler}>
-                          Sign Out
-                        </Link>
-                    </NavDropdown>
+                  <NavDropdown title={userInfo.first_name}id='basic-nav-dropdown'>
+                    <LinkContainer to='/profile'>
+                      <NavDropdown.Item>User Profile</NavDropdown.Item>
+                    </LinkContainer>
+                    <LinkContainer to='/history'>
+                      <NavDropdown.Item>History</NavDropdown.Item>
+                    </LinkContainer>
+                    <NavDropdown.Divider />
+                    <Link
+                      className='dropdown-item'
+                      to='#signout'
+                      onClick={signoutHandler}>
+                        Sign Out
+                      </Link>
+                  </NavDropdown>
                   ) : (
-                    <Link to='/signin' className='nav-Link'>
+                    <Link className='nav-Link' to='/signin'>
                       Sign In
                     </Link>
                   )} 
@@ -64,7 +63,7 @@ export default function App(){
           <Container className='mt-3'>
           <Routes>
             <Route path='/' element={<HomeScreen/>}/>
-            <Route path='/movie/:slug' element={<MovieScreen/>}/>
+            <Route path='/movie/:id' element={<MovieScreen/>}/>
             <Route path='/signin' element={<SigninScreen/>}/>
             <Route path='/showtime' element={<ShowTimeScreen/>}/>
             <Route path='/register' element={<RegisterScreen/>}/>
