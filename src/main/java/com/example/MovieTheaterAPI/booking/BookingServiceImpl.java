@@ -39,14 +39,21 @@ public class BookingServiceImpl implements BookingService{
 
     private double getTotalPrice(BookingDTO bookingDTO, User user, ShowTime showTime){
         double totalPrice = 0;
+        int numberOfSeats = bookingDTO.getSeats().length;
 
-        if(user.getMember().getMembershipTier() != Tier.Premium) {
-            totalPrice += ONLINE_SERVICE_FEE * bookingDTO.getSeats().length;
+        // Add online service fee
+        if (user.getMember().getMembershipTier() != Tier.Premium) {
+            // Need to clarify
+            totalPrice += ONLINE_SERVICE_FEE * numberOfSeats;
         }
 
-        for (int seat : bookingDTO.getSeats()) {
-            // Get price and update seats
+        // Add price of each seat
+        for (int seatNumber : bookingDTO.getSeats()) {
+            totalPrice += showTime.getPrice() * numberOfSeats;
+            showTime.bookSeat(seatNumber);
         }
+
+        // Add taxes
         totalPrice = totalPrice + totalPrice * TAXES;
 
         return totalPrice;
@@ -56,8 +63,8 @@ public class BookingServiceImpl implements BookingService{
     // Function to check available seats
     private boolean checkAvailableSeats(BookingDTO bookingDTO, ShowTime showTime) {
         Integer[] availableSeats = showTime.getAvailableSeat();
-        for (int seat : bookingDTO.getSeats()) {
-            if (availableSeats[seat] == 0) {
+        for (int seatNumber : bookingDTO.getSeats()) {
+            if (availableSeats[seatNumber-1] == null) {
                 return false;
             }
         }
@@ -69,6 +76,7 @@ public class BookingServiceImpl implements BookingService{
         User existingUser = userRepository.findById(bookingDTO.getUserId()).orElseThrow(ResourceNotFoundException::new);
         ShowTime existingShowTime = showTimeRepository.findById(bookingDTO.getShowTimeId()).orElseThrow(ResourceNotFoundException::new);
 
+        // Check seat availability
         if (!checkAvailableSeats(bookingDTO, existingShowTime)) {
             throw new SeatNotAvailableException();
         }
@@ -77,6 +85,7 @@ public class BookingServiceImpl implements BookingService{
 
         // Update reward points
         existingUser.getMember().setRewardPoint(existingUser.getMember().getRewardPoint() + (int)totalPrice);
+
         userRepository.save(existingUser);
         showTimeRepository.save(existingShowTime);
 
@@ -94,6 +103,7 @@ public class BookingServiceImpl implements BookingService{
         }
 
         booking.setStatus(BookingStatus.CANCELLED);
+
         // Update reward points
         User user = userRepository.findById(booking.getUser().getId()).orElseThrow(ResourceNotFoundException::new);
         user.getMember().setRewardPoint(user.getMember().getRewardPoint() - (int)booking.getTotalPrice());
@@ -101,7 +111,9 @@ public class BookingServiceImpl implements BookingService{
 
         // Update available seats
         ShowTime showTime = showTimeRepository.findById(booking.getShowTime().getId()).orElseThrow(ResourceNotFoundException::new);
-        // Need code to update available seats
+        for (int seatNumber : booking.getSeats()) {
+            showTime.returnSeat(seatNumber);
+        }
         showTimeRepository.save(showTime);
 
         // Handle refund
