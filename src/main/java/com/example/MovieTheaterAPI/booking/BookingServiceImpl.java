@@ -6,7 +6,6 @@ import com.example.MovieTheaterAPI.showtime.ShowTimeRepository;
 import com.example.MovieTheaterAPI.user.Tier;
 import com.example.MovieTheaterAPI.user.User;
 import com.example.MovieTheaterAPI.user.UserRepository;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -14,7 +13,6 @@ import java.time.LocalTime;
 import java.util.List;
 
 @Service
-@Slf4j
 public class BookingServiceImpl implements BookingService{
 
     private final float ONLINE_SERVICE_FEE = 1.50f;
@@ -99,7 +97,6 @@ public class BookingServiceImpl implements BookingService{
             }
             return savedBooking;
         } catch (Exception e) {
-            log.error(e.getMessage());
             throw e;
         }
 
