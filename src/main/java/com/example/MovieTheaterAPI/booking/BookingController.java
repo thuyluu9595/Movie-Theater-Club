@@ -23,7 +23,7 @@ public class BookingController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getBookingById(Long id) {
+    public ResponseEntity<?> getBookingById(@PathVariable Long id) {
         try {
             Booking booking = bookingService.getBookingById(id);
             return ResponseEntity.ok(booking);
@@ -34,7 +34,7 @@ public class BookingController {
     }
 
     @PostMapping("")
-    public ResponseEntity<?> createBooking(BookingDTO bookingDTO) {
+    public ResponseEntity<?> createBooking(@RequestBody BookingDTO bookingDTO) {
         try {
             Booking createdBooking = bookingService.createBooking(bookingDTO);
             return ResponseEntity.ok(createdBooking);
@@ -44,7 +44,7 @@ public class BookingController {
         }
     }
 
-    @PostMapping("/cancel/{id}")
+    @PutMapping("/cancel/{id}")
     public ResponseEntity<?> cancelBooking(@PathVariable Long id) {
         try {
             bookingService.cancelBooking(id);
@@ -55,7 +55,7 @@ public class BookingController {
         }
     }
 
-    @PostMapping("/paid/{id}")
+    @PutMapping("/paid/{id}")
     public ResponseEntity<?> payBooking(@PathVariable Long id) {
         try {
             bookingService.payBooking(id);

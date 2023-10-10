@@ -6,6 +6,7 @@ import com.example.MovieTheaterAPI.showtime.ShowTimeRepository;
 import com.example.MovieTheaterAPI.user.Tier;
 import com.example.MovieTheaterAPI.user.User;
 import com.example.MovieTheaterAPI.user.UserRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -13,6 +14,7 @@ import java.time.LocalTime;
 import java.util.List;
 
 @Service
+@Slf4j
 public class BookingServiceImpl implements BookingService{
 
     private final float ONLINE_SERVICE_FEE = 1.50f;
@@ -49,15 +51,13 @@ public class BookingServiceImpl implements BookingService{
 
         // Add price of each seat
         for (int seatNumber : bookingDTO.getSeats()) {
-            totalPrice += showTime.getPrice() * numberOfSeats;
+            totalPrice += showTime.getPrice();
             showTime.bookSeat(seatNumber);
         }
 
         // Add taxes
         totalPrice = totalPrice + totalPrice * TAXES;
-
         return totalPrice;
-
     }
 
     // Function to check available seats
@@ -89,8 +89,20 @@ public class BookingServiceImpl implements BookingService{
         userRepository.save(existingUser);
         showTimeRepository.save(existingShowTime);
 
-        Booking booking = new Booking(existingUser, existingShowTime, bookingDTO.getSeats(), LocalDate.now(), LocalTime.now(), totalPrice, BookingStatus.PENDING);
-        return bookingRepository.save(booking);
+        try {
+            Booking booking = new Booking(existingUser, existingShowTime, bookingDTO.getSeats(), LocalDate.now(), LocalTime.now(), totalPrice, BookingStatus.PENDING);
+            Booking savedBooking = bookingRepository.save(booking);
+
+            for (int seatNumber : bookingDTO.getSeats()) {
+                totalPrice += existingShowTime.getPrice();
+                existingShowTime.bookSeat(seatNumber);
+            }
+            return savedBooking;
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            throw e;
+        }
+
     }
 
     @Override
@@ -98,28 +110,30 @@ public class BookingServiceImpl implements BookingService{
         Booking booking = bookingRepository.findById(id).orElseThrow(BookingNotFoundException::new);
 
         // Checking whether cancellation is requested before the showtime
-        if (LocalDate.now().isAfter(booking.getShowTime().getDate()) || LocalTime.now().isAfter(booking.getShowTime().getStartTime())) {
+        if (LocalDate.now().isAfter(booking.getShowTime().getDate()) && LocalTime.now().isAfter(booking.getShowTime().getStartTime())) {
             throw new BookingCannotBeCancelledException();
+
         }
+        else {
+            booking.setStatus(BookingStatus.CANCELLED);
 
-        booking.setStatus(BookingStatus.CANCELLED);
+            // Update reward points
+            User user = userRepository.findById(booking.getUser().getId()).orElseThrow(ResourceNotFoundException::new);
+            user.getMember().setRewardPoint(user.getMember().getRewardPoint() - (int)booking.getTotalPrice());
+            userRepository.save(user);
 
-        // Update reward points
-        User user = userRepository.findById(booking.getUser().getId()).orElseThrow(ResourceNotFoundException::new);
-        user.getMember().setRewardPoint(user.getMember().getRewardPoint() - (int)booking.getTotalPrice());
-        userRepository.save(user);
+            // Update available seats
+            ShowTime showTime = showTimeRepository.findById(booking.getShowTime().getId()).orElseThrow(ResourceNotFoundException::new);
+            for (int seatNumber : booking.getSeats()) {
+                showTime.returnSeat(seatNumber);
+            }
+            showTimeRepository.save(showTime);
 
-        // Update available seats
-        ShowTime showTime = showTimeRepository.findById(booking.getShowTime().getId()).orElseThrow(ResourceNotFoundException::new);
-        for (int seatNumber : booking.getSeats()) {
-            showTime.returnSeat(seatNumber);
+            // Handle refund
+            // Need code to handle refund
+
+            bookingRepository.save(booking);
         }
-        showTimeRepository.save(showTime);
-
-        // Handle refund
-        // Need code to handle refund
-
-        bookingRepository.save(booking);
     }
 
     @Override
