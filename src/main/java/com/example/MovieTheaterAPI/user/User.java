@@ -7,6 +7,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 
 enum Role {
     Employee,
@@ -56,9 +58,9 @@ public class User {
     @OneToOne(mappedBy = "user", optional = true)
     private Member member;
 
-    @JsonIgnore
-    @OneToOne(mappedBy = "user")
-    private Booking booking;
+//    @JsonIgnore
+//    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+//    private List<Booking> bookings;
 
     @Override
     public String toString() {

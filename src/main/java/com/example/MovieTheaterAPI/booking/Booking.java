@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 
 @Entity
 @Table(name = "bookings")
@@ -19,11 +20,11 @@ public class Booking {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
-    @OneToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "showtime_id", referencedColumnName = "id")
     private ShowTime showTime;
 
@@ -42,7 +43,6 @@ public class Booking {
     @Column(name = "status", nullable = false)
     @Enumerated(EnumType.STRING)
     private BookingStatus status;
-
 
     public Booking(User existingUser, ShowTime existingShowTime, int[] seats, LocalDate date, LocalTime time, double totalPrice, BookingStatus bookingStatus) {
         this.user = existingUser;
