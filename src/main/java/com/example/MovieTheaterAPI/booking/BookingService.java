@@ -1,5 +1,7 @@
 package com.example.MovieTheaterAPI.booking;
 
+import com.example.MovieTheaterAPI.movie.model.Movie;
+
 import java.time.LocalDate;
 import java.util.List;
 
@@ -21,4 +23,5 @@ public interface BookingService {
 //    List<Booking> getBookingsByUserIdAndStatus(Long userId, BookingStatus status);
 //    List<Booking> getBookingsByStatus(BookingStatus status);
 //    List<Booking> getBookingsByShowTimeIdAndBookingDate(Long showTimeId, String bookingDate);
+    List<Movie> getBookingsByUserAndMovieDate(Long id);
 }
