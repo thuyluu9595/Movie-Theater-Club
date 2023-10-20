@@ -37,6 +37,9 @@ public class Booking {
     @Column(name = "booking-time", nullable = false)
     private LocalTime bookingTime;
 
+    @Column(name = "movie-date", nullable = false)
+    private LocalDate movieDate;
+
     @Column(name = "total-price", nullable = false)
     private double totalPrice;
 
@@ -44,12 +47,13 @@ public class Booking {
     @Enumerated(EnumType.STRING)
     private BookingStatus status;
 
-    public Booking(User existingUser, ShowTime existingShowTime, int[] seats, LocalDate date, LocalTime time, double totalPrice, BookingStatus bookingStatus) {
+    public Booking(User existingUser, ShowTime existingShowTime, int[] seats, LocalDate date, LocalTime time, LocalDate movieDate, double totalPrice, BookingStatus bookingStatus) {
         this.user = existingUser;
         this.showTime = existingShowTime;
         this.seats = seats;
         this.bookingDate = date;
         this.bookingTime = time;
+        this.movieDate = movieDate;
         this.totalPrice = totalPrice;
         this.status = bookingStatus;
     }

@@ -88,7 +88,14 @@ public class BookingServiceImpl implements BookingService{
         showTimeRepository.save(existingShowTime);
 
         try {
-            Booking booking = new Booking(existingUser, existingShowTime, bookingDTO.getSeats(), LocalDate.now(), LocalTime.now(), totalPrice, BookingStatus.PENDING);
+            Booking booking = new Booking(existingUser,
+                                        existingShowTime,
+                                        bookingDTO.getSeats(),
+                                        LocalDate.now(),
+                                        LocalTime.now(),
+                                        existingShowTime.getDate(),
+                                        totalPrice,
+                                        BookingStatus.PENDING);
             Booking savedBooking = bookingRepository.save(booking);
 
             for (int seatNumber : bookingDTO.getSeats()) {
@@ -109,7 +116,6 @@ public class BookingServiceImpl implements BookingService{
         // Checking whether cancellation is requested before the showtime
         if (LocalDate.now().isAfter(booking.getShowTime().getDate()) && LocalTime.now().isAfter(booking.getShowTime().getStartTime())) {
             throw new BookingCannotBeCancelledException();
-
         }
         else {
             booking.setStatus(BookingStatus.CANCELLED);
