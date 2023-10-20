@@ -1,5 +1,6 @@
 package com.example.MovieTheaterAPI.booking;
 
+import com.example.MovieTheaterAPI.movie.model.Movie;
 import com.example.MovieTheaterAPI.screen.utils.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -87,6 +88,12 @@ public class BookingController {
             return ResponseEntity.notFound().build();
         }
 
+    }
+
+    @GetMapping("/watched-movie-30")
+    public ResponseEntity<?> getBookingsByUserIn30Days(@RequestParam Long id) {
+        List<Movie> movies = bookingService.getBookingsByUserAndMovieDate(id);
+        return ResponseEntity.ok(movies);
     }
 
 }

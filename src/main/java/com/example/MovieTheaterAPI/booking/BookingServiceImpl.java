@@ -1,5 +1,6 @@
 package com.example.MovieTheaterAPI.booking;
 
+import com.example.MovieTheaterAPI.movie.model.Movie;
 import com.example.MovieTheaterAPI.screen.utils.ResourceNotFoundException;
 import com.example.MovieTheaterAPI.showtime.ShowTime;
 import com.example.MovieTheaterAPI.showtime.ShowTimeRepository;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -156,5 +158,15 @@ public class BookingServiceImpl implements BookingService{
     public List<Booking> getBookingsByAfterBookingDate(Long id, LocalDate bookingDate) {
         userRepository.findById(id).orElseThrow(ResourceNotFoundException::new);
         return bookingRepository.getBookingsByUserIdAndBookingDateAfter(id, bookingDate);
+    }
+
+    @Override
+    public List<Movie> getBookingsByUserAndMovieDate(Long userId) {
+        List<Booking> bookingList = bookingRepository.findBookingsByUserIdAndMovieDateAfterAndAndStatus(userId, LocalDate.now().minusDays(30), BookingStatus.PAID);
+        List<Movie> movies = new ArrayList<>();
+        for (Booking b : bookingList) {
+            movies.add(b.getShowTime().getMovie());
+        }
+        return movies;
     }
 }

@@ -37,7 +37,7 @@ public class Booking {
     @Column(name = "booking-time", nullable = false)
     private LocalTime bookingTime;
 
-    @Column(name = "movie-date", nullable = false)
+    @Column(name = "movie-date")
     private LocalDate movieDate;
 
     @Column(name = "total-price", nullable = false)
