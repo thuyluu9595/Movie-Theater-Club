@@ -22,4 +22,6 @@ public interface ShowTimeRepository extends JpaRepository<ShowTime, Long> {
     @Query("SELECT s FROM ShowTime s JOIN s.screen sc WHERE sc.location = :location")
     List<ShowTime> findShowTimeByLocation(@Param("location") Location location);
 
+    List<ShowTime> findAllByDateAfter(LocalDate date);
+
 }
