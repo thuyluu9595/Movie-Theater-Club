@@ -1,10 +1,13 @@
 package com.example.MovieTheaterAPI.user;
 
 
+import com.example.MovieTheaterAPI.booking.Booking;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.List;
 
 
 
@@ -50,6 +53,10 @@ public class User {
     @JsonIgnore
     @OneToOne(mappedBy = "user", optional = true)
     private Member member;
+
+//    @JsonIgnore
+//    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+//    private List<Booking> bookings;
 
     @Override
     public String toString() {

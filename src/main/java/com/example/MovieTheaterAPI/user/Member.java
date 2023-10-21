@@ -3,10 +3,6 @@ package com.example.MovieTheaterAPI.user;
 import jakarta.persistence.*;
 import lombok.*;
 
-enum Tier {
-    Regular,
-    Premium
-}
 @Entity
 @NoArgsConstructor
 @Getter
