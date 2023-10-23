@@ -38,7 +38,7 @@ public class AnalyticService {
             occupancyLocationMap.put(l.getId(), new double[]{0.0, 0.0});
         }
 
-        List<ShowTime> showTimes = showTimeRepository.findAllByDateAfter(LocalDate.now().plusDays(days));
+        List<ShowTime> showTimes = showTimeRepository.findAllByDateAfter(LocalDate.now().minusDays(days));
 
         for (ShowTime s : showTimes) {
             double percentage = getOccupiedPercentage(s);
@@ -60,8 +60,7 @@ public class AnalyticService {
     public List<Occupancy> getOccupancyByMovieAndDates(long days){
         HashMap<Movie, double[]> occupancyMovieMap = new HashMap<>();
         List<Occupancy> occupancies = new ArrayList<>();
-        List<ShowTime> showTimes = showTimeRepository.findAllByDateAfter(LocalDate.now().plusDays(days));
-
+        List<ShowTime> showTimes = showTimeRepository.findAllByDateAfter(LocalDate.now().minusDays(days));
         for (ShowTime s : showTimes) {
             double percentage = getOccupiedPercentage(s);
 
