@@ -43,6 +43,7 @@ public class SecurityConfig{
                         .requestMatchers(HttpMethod.GET, "/api/movies/**").permitAll()
                         .requestMatchers(HttpMethod.POST, SecurityConstants.REGISTER_PATH).permitAll()
                         .requestMatchers(HttpMethod.POST, SecurityConstants.ADMIN_REGISTER_PATH).permitAll()
+                        .requestMatchers(HttpMethod.PUT, "/api/user/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/movies").hasRole(Role.Employee.toString().toUpperCase())
                         .anyRequest().authenticated()
                 )
