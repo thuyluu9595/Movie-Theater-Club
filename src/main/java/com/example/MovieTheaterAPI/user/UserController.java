@@ -1,5 +1,6 @@
 package com.example.MovieTheaterAPI.user;
 
+import com.example.MovieTheaterAPI.user.dto.UpgradeAccountDTO;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import org.springframework.http.HttpStatus;
@@ -65,12 +66,15 @@ public class UserController {
 
 
     @PutMapping("/{id}/upgradeAccount")
-    public ResponseEntity<HttpStatus> upgradeToPremium(@PathVariable long id) {
+    public ResponseEntity<HttpStatus> upgradeToPremium(
+        @PathVariable long id,
+        @RequestBody(required = true) UpgradeAccountDTO req) {
         try {
-            memberService.upgradePremium(id);
+            memberService.upgradePremium(id, req);
         } catch (MemberNotFoundException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } catch (RuntimeException e) {
+            System.out.println(e.getMessage());
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>(HttpStatus.ACCEPTED);

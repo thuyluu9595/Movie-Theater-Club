@@ -24,8 +24,13 @@ public class Member{
     @Enumerated(EnumType.STRING)
     private Tier membershipTier = Tier.Regular;
 
-    @NonNull
     @Column(name = "reward_point", nullable = false)
     private int rewardPoint = 0;
+
+    @Column(name = "stripe_customer_id")
+    private String stripeCustomerId;
+
+    @Column(name = "subscription_id")
+    private String subscriptionId;
 }
 
