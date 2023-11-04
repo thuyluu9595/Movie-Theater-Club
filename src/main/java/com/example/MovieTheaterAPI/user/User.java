@@ -35,10 +35,12 @@ public class User {
 
     @NonNull
     @Column(name = "first_name", nullable = false)
+    @JsonProperty("first_name")
     private String firstname;
 
     @NonNull
     @Column(name = "last_name", nullable = false)
+    @JsonProperty("last_name")
     private String lastname;
 
     @NonNull
