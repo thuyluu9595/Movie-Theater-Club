@@ -10,7 +10,12 @@ export default function Movie(props){
   return (
     <Card>
       <Link to={`/movie/${movie.id}`}>
-        <img src={movie.image} className='card-img-top' alt={movie.title} />
+        <img 
+          src={movie.posterUrl} 
+          className='card-img-top' 
+          alt={movie.title} 
+          width="500" height="500"
+          />
       </Link>
       <Card.Body>
         <Link to={`/movie/${movie.id}`}>

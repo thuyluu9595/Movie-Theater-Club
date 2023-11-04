@@ -32,8 +32,8 @@ export default function App(){
               <SearchBox />
               <Nav className='me-auto'>
                 {userInfo ? (
-                  <NavDropdown title={userInfo.isAdmin ? 'Admin' : userInfo.first_name}id='basic-nav-dropdown'>
-                    {userInfo.isAdmin ? (
+                  <NavDropdown title={userInfo.role==="Employee" ? 'Admin' : userInfo.first_name}id='basic-nav-dropdown'>
+                    {userInfo.role==="Employee" ? (
                       <LinkContainer to='/location'>
                         <NavDropdown.Item>Location</NavDropdown.Item>
                       </LinkContainer>
@@ -42,7 +42,7 @@ export default function App(){
                         <NavDropdown.Item>User Profile</NavDropdown.Item>
                       </LinkContainer>
                     )}
-                    {userInfo.isAdmin ? (
+                    {userInfo.role==="Employee" ? (
                       <LinkContainer to='/theater'>
                         <NavDropdown.Item>Theater</NavDropdown.Item>
                       </LinkContainer>

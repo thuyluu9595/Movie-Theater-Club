@@ -72,8 +72,9 @@ export default function MovieScreen(){
           <Col md={4}>
             <img 
               className='img-large'
-              src='/images/images1.jpeg'
+              src={movie.posterUrl}
               alt={movie.title}
+              width="300" height="400"
             />
           </Col>
           <Col md={8}>

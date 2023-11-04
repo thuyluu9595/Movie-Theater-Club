@@ -1,4 +1,4 @@
-FROM node:14-alpile
+FROM node:14-alpine
 WORKDIR /app/frontend
 
 COPY package.json ./
