@@ -8,6 +8,7 @@ import SigninScreen from './screens/SigninScreen';
 import ShowTimeScreen from './screens/ShowTimeScreen';
 import RegisterScreen from './screens/RegisterScreen';
 import { Store } from './Stores';
+import SearchBox from './components/SearchBox';
 
 
 export default function App(){
@@ -28,20 +29,30 @@ export default function App(){
               <LinkContainer to='/'>
                 <Navbar.Brand>THC Theater</Navbar.Brand>
               </LinkContainer>
-              <Nav className='d-flex justify-content-center align-items-center flex-grow-1'>
-                <Form>
-                  <input type='text' id='search' placeholder='Search...' className='form-control' />
-                </Form>
+              <Nav >
+                <SearchBox />
               </Nav>
               <Nav className='me-auto'>
                 {userInfo ? (
-                  <NavDropdown title={userInfo.first_name}id='basic-nav-dropdown'>
-                    <LinkContainer to='/profile'>
-                      <NavDropdown.Item>User Profile</NavDropdown.Item>
-                    </LinkContainer>
-                    <LinkContainer to='/history'>
-                      <NavDropdown.Item>History</NavDropdown.Item>
-                    </LinkContainer>
+                  <NavDropdown title={userInfo.isAdmin ? 'Admin' : userInfo.first_name}id='basic-nav-dropdown'>
+                    {userInfo.isAdmin ? (
+                      <LinkContainer to='/location'>
+                        <NavDropdown.Item>Location</NavDropdown.Item>
+                      </LinkContainer>
+                    ) : (
+                      <LinkContainer to='/profile'>
+                        <NavDropdown.Item>User Profile</NavDropdown.Item>
+                      </LinkContainer>
+                    )}
+                    {userInfo.isAdmin ? (
+                      <LinkContainer to='/theater'>
+                        <NavDropdown.Item>Theater</NavDropdown.Item>
+                      </LinkContainer>
+                    ) : (
+                      <LinkContainer to='/history'>
+                        <NavDropdown.Item>History</NavDropdown.Item>
+                      </LinkContainer>
+                    )}
                     <NavDropdown.Divider />
                     <Link
                       className='dropdown-item'

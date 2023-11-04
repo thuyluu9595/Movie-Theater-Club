@@ -32,7 +32,7 @@ export default function ShowTimeScreen() {
     async function fetchData() {
       dispatch({ type: 'FETCH_REQUEST' });
       try {
-        const response = await axios.get('http://localhost:8080/api/showtimes');
+        const response = await axios.get('http://localhost:8080/api/showtime');
         dispatch({ type: 'FETCH_SUCCESS', payload: response.data });
       } catch (error) {
         dispatch({ type: 'FETCH_FAIL', payload: error });
