@@ -29,9 +29,7 @@ export default function App(){
               <LinkContainer to='/'>
                 <Navbar.Brand>THC Theater</Navbar.Brand>
               </LinkContainer>
-              <Nav >
-                <SearchBox />
-              </Nav>
+              <SearchBox />
               <Nav className='me-auto'>
                 {userInfo ? (
                   <NavDropdown title={userInfo.isAdmin ? 'Admin' : userInfo.first_name}id='basic-nav-dropdown'>
