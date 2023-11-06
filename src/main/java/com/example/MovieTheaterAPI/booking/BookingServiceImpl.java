@@ -49,9 +49,13 @@ public class BookingServiceImpl implements BookingService{
             totalPrice += ONLINE_SERVICE_FEE * numberOfSeats;
         }
 
+        float discount = 0;
+        if (showTime.getDiscount() != null) {
+            discount = showTime.getDiscount().getPercentDiscount() / 100;
+        }
         // Add price of each seat
         for (int seatNumber : bookingDTO.getSeats()) {
-            totalPrice += showTime.getPrice();
+            totalPrice += showTime.getPrice() * (1 - discount);
             showTime.bookSeat(seatNumber);
         }
 
