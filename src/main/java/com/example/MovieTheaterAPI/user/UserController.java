@@ -1,5 +1,6 @@
 package com.example.MovieTheaterAPI.user;
 
+import com.example.MovieTheaterAPI.user.dto.ChangePasswordDTO;
 import com.example.MovieTheaterAPI.user.dto.UpgradeAccountDTO;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
@@ -33,9 +34,9 @@ public class UserController {
     }
 
     @PutMapping("/{id}/changepw")
-    public ResponseEntity<HttpStatus> changePassword(
+    public ResponseEntity<?> changePassword(
             @PathVariable long id,
-            @RequestBody PasswordChangeRequest req) {
+            @RequestBody ChangePasswordDTO req) {
         //Todo: verify old password
         User user;
         try {
@@ -43,9 +44,12 @@ public class UserController {
         } catch (UserNotFoundException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        if (!user.getPassword().equals(req.getPassword())) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
-        userService.changePassword(user, req.getNewPassword());
+        try {
+            userService.changePassword(user, req);
+        } catch (RuntimeException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
 
         return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
@@ -93,18 +97,7 @@ public class UserController {
     }
 }
 
-@Getter
-@Setter
-@NoArgsConstructor
-class PasswordChangeRequest {
-    @NonNull
-    @JsonProperty("password")
-    private String password;
 
-    @NonNull
-    @JsonProperty("new-password")
-    private String newPassword;
-}
 
 @Getter
 @Setter
