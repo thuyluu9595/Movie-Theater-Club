@@ -16,7 +16,7 @@ public class ScreenController {
         this.screenService = screenService;
     }
 
-    @GetMapping
+    @GetMapping("")
     public ResponseEntity<?> getAllScreens() {
         return ResponseEntity.ok(screenService.getScreens());
     }
@@ -30,7 +30,7 @@ public class ScreenController {
             return ResponseEntity.notFound().build();
     }
 
-    @PostMapping
+    @PostMapping("")
     public ResponseEntity<?> createScreen(@RequestBody ScreenDTO screenDTO) {
         if (screenDTO == null || !ScreenValidator.isValidScreen(screenDTO)) {
             return ResponseEntity.badRequest().build();

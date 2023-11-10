@@ -3,6 +3,7 @@ package com.example.MovieTheaterAPI.discount;
 import java.util.List;
 import java.util.Optional;
 
+import jakarta.annotation.PostConstruct;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -12,6 +13,18 @@ public class DiscountServiceImpl implements DiscountService{
 
     private final DiscountRepository discountRepository;
 
+    @PostConstruct
+    public void init() {
+        Optional<Discount> entity;
+
+        entity = discountRepository.findById(DiscountType.TuedaySpecial);
+        if (!entity.isPresent())
+            discountRepository.save(new Discount(DiscountType.TuedaySpecial, 10));
+
+        entity = discountRepository.findById(DiscountType.Before6PM);
+        if (!entity.isPresent())
+            discountRepository.save(new Discount(DiscountType.Before6PM, 5));
+    }
     @Override
     public Discount updateTuedayDiscount(float percent) {
         return updateDiscount(DiscountType.TuedaySpecial, percent);
