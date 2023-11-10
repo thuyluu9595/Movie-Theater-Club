@@ -8,15 +8,12 @@ import lombok.NonNull;
 @Data
 public class UpgradeAccountDTO {
     @NonNull
-    @JsonProperty("card_number")
     private String cardNumber;
 
     @NonNull
-    @JsonProperty("exp_month")
     private String expMonth;
 
     @NonNull
-    @JsonProperty("exp_year")
     private String expYear;
 
     @NonNull

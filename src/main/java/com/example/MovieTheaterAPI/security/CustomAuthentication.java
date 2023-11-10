@@ -12,14 +12,14 @@ import java.util.Collection;
 public class CustomAuthentication extends UsernamePasswordAuthenticationToken {
     private long id;
     private String role;
-    private String firstName;
-    private String lastName;
+    private String firstname;
+    private String lastname;
 
-    public CustomAuthentication(long id, String role, String firstName, String lastName, String username, String password, Collection<? extends GrantedAuthority> authorities){
+    public CustomAuthentication(long id, String role, String firstname, String lastname, String username, String password, Collection<? extends GrantedAuthority> authorities){
         super(username, password, authorities);
         this.id = id;
         this.role = role;
-        this.firstName = firstName;
-        this.lastName = lastName;
+        this.firstname = firstname;
+        this.lastname = lastname;
     }
 }
