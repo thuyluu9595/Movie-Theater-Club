@@ -1,5 +1,6 @@
 package com.example.MovieTheaterAPI.user;
 
+import com.example.MovieTheaterAPI.user.dto.ChangePasswordDTO;
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -49,9 +50,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User changePassword(User user, String password) {
+    public User changePassword(User user, ChangePasswordDTO dto) {
         // Todo: generate hashed password
-        user.setPassword(bCryptPasswordEncoder.encode(password));
+        if (!bCryptPasswordEncoder.matches(dto.getPassword(), user.getPassword())) {
+            throw new RuntimeException("Unable to change password");
+        }
+        user.setPassword(bCryptPasswordEncoder.encode(dto.getNewPassword()));
         return userRepository.save(user);
     }
 
@@ -74,5 +78,4 @@ class UserNotFoundException extends RuntimeException {
     public UserNotFoundException() {
         super("The user does not exist in our records");
     }
-
 }
