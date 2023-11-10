@@ -55,11 +55,11 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
                     .withExpiresAt(new Date(System.currentTimeMillis() + SecurityConstants.TOKEN_EXPIRATION))
                     .sign(Algorithm.HMAC512(SecurityConstants.SECRET_KEY));
 
-            String JSONString = String.format("{\"id\":%d,\"role\":\"%s\",\"first_name\":\"%s\",\"last_name\":\"%s\",\"access_token\":\"%s\"}",
+            String JSONString = String.format("{\"id\":%d,\"role\":\"%s\",\"firstname\":\"%s\",\"lastname\":\"%s\",\"token\":\"%s\"}",
                     ((CustomAuthentication) authResult).getId(),
                     ((CustomAuthentication) authResult).getRole(),
-                    ((CustomAuthentication) authResult).getFirstName(),
-                    ((CustomAuthentication) authResult).getLastName(),
+                    ((CustomAuthentication) authResult).getFirstname(),
+                    ((CustomAuthentication) authResult).getLastname(),
                     token);
 
             response.setContentType("application/json");
