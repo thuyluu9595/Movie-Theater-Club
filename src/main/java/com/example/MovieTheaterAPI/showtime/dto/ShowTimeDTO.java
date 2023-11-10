@@ -16,11 +16,9 @@ import java.time.LocalTime;
 @Data
 @NoArgsConstructor
 public class ShowTimeDTO {
-    @JsonProperty("movie_id")
     @Positive(message = "movie_id must be positive")
     private long movieId;
 
-    @JsonProperty("screen_id")
     @Positive(message = "screen_id must be positive")
     private long screenId;
 
@@ -29,7 +27,6 @@ public class ShowTimeDTO {
     private LocalDate date;
 
     @JsonFormat(pattern = "HH:mm:ss")
-    @JsonProperty("start_time")
     @NonNull
     private LocalTime startTime;
 
