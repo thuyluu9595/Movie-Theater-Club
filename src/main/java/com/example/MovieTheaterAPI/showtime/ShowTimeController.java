@@ -30,6 +30,16 @@ public class ShowTimeController {
         }
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getShowTimeById(@PathVariable long id) {
+        try {
+            ShowTime showTime = showTimeService.getShowTimeById(id);
+            return ResponseEntity.ok(showTime);
+        } catch (ResourceNotFoundException e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
     @GetMapping("/{id}/movie")
     public ResponseEntity<?> getShowTimeByMovie(@PathVariable long id) {
         try {
