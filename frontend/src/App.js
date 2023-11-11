@@ -15,6 +15,7 @@ import PaymentScreen from './screens/PaymentScreen';
 import ProfileScreen from './screens/ProfileScreen';
 import PremiumScreen from './screens/PremiumScreen';
 import HistoryScreen from './screens/HistoryScreen';
+import ScreenScreen from './screens/ScreenScreen';
 
 
 
@@ -95,9 +96,11 @@ export default function App() {
             <Route path='/bookings/:id' element={<BookingScreen/>}/>
             <Route path='/locations' element={<LocationScreen/>}/>
             <Route path='/payment' element={<PaymentScreen/>}/>
-            <Route path='/profile' element={<ProfileScreen/>}/>
+           
+              <Route path='/profile' element={<ProfileScreen/>}/>
             <Route path='/premium' element={<PremiumScreen/>}/>
             <Route path='/history' element={<HistoryScreen/>}/>
+            <Route path='/locations/:id' element={<ScreenScreen/>}/>
           </Routes>
           </Container>
         </main>

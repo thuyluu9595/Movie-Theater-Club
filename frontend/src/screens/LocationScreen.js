@@ -1,9 +1,11 @@
-import React, { useEffect, useReducer, useState } from "react";
-import axios from "axios";
-import { Helmet } from "react-helmet";
-import { Container, Table, Button, Form, Row, Col } from "react-bootstrap";
-import LoadingBox from "../components/LoadingBox";
-import MessageBox from "../components/MessageBox";
+import React, { useEffect, useReducer, useState, useContext } from 'react';
+import axios from 'axios';
+import { Helmet } from 'react-helmet';
+import { Container, Table, Button, Form, Row, Col } from 'react-bootstrap';
+import LoadingBox from '../components/LoadingBox';
+import MessageBox from '../components/MessageBox';
+import { URL } from '../Constants';
+import { Store } from '../Stores';
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -20,7 +22,11 @@ const reducer = (state, action) => {
     case 'CREATE_SUCCESS':
       return { ...state, creatingLocation: false };
     case 'CREATE_FAIL':
-      return { ...state, creatingLocation: false, createLocationError: action.payload };
+      return {
+        ...state,
+        creatingLocation: false,
+        createLocationError: action.payload
+      };
     case 'FETCH_FAIL':
       return { ...state, loading: false, error: action.payload };
     default:
@@ -34,12 +40,16 @@ const initialState = {
   loading: false,
   creatingLocation: false,
   createLocationError: null,
-  error: null,
+  error: null
 };
 
-export function  LocationScreen() {
+export function LocationScreen() {
+  const { state: webState } = useContext(Store);
+  const { userInfo } = webState;
+
   const [state, dispatch] = useReducer(reducer, initialState);
-  const [name, setName] = useState('');
+  const [city, setCity] = useState('');
+  const [locationState, setState] = useState('');
 
   useEffect(() => {
     fetchLocations();
@@ -48,7 +58,7 @@ export function  LocationScreen() {
   const fetchLocations = async () => {
     dispatch({ type: 'FETCH_REQUEST' });
     try {
-      const response = await axios.get('http://localhost:8080/api/locations');
+      const response = await axios.get(`${URL}/locations`);
       dispatch({ type: 'FETCH_SUCCESS', payload: response.data });
     } catch (error) {
       dispatch({ type: 'FETCH_FAIL', payload: error.message });
@@ -58,7 +68,9 @@ export function  LocationScreen() {
   const fetchLocationById = async (id) => {
     dispatch({ type: 'FETCH_BY_ID_REQUEST' });
     try {
-      const response = await axios.get(`http://localhost:8080/api/locations/${id}`);
+      const response = await axios.get(
+        `http://localhost:8080/api/locations/${id}`
+      );
       dispatch({ type: 'FETCH_BY_ID_SUCCESS', payload: response.data });
     } catch (error) {
       dispatch({ type: 'FETCH_FAIL', payload: error.message });
@@ -68,16 +80,33 @@ export function  LocationScreen() {
   const createLocation = async () => {
     dispatch({ type: 'CREATE_REQUEST' });
     try {
-      await axios.post('http://localhost:8080/api/locations');
+      await axios.post(
+        `${URL}/locations`,
+        {
+          city,
+          state: locationState
+        },
+        {
+          headers: { Authorization: `Bearer ${userInfo.token}` }
+        }
+      );
       await fetchLocations();
-      setName('');
+      setCity('');
+      setState('');
       dispatch({ type: 'CREATE_SUCCESS' });
     } catch (error) {
       dispatch({ type: 'CREATE_FAIL', payload: error.message });
     }
   };
 
-  const { locations, location, loading, creatingLocation, createLocationError, error } = state;
+  const {
+    locations,
+    location,
+    loading,
+    creatingLocation,
+    createLocationError,
+    error
+  } = state;
 
   return (
     <Container>
@@ -88,7 +117,7 @@ export function  LocationScreen() {
       {loading ? (
         <LoadingBox />
       ) : error ? (
-        <MessageBox variant='danger'>{error}</MessageBox>
+        <MessageBox variant="danger">{error}</MessageBox>
       ) : (
         <div>
           {/* Display existing locations */}
@@ -97,21 +126,23 @@ export function  LocationScreen() {
             <thead>
               <tr>
                 <th>ID</th>
-                <th>Name</th>
+                <th>City</th>
+                <th>State</th>
                 <th>Action</th>
               </tr>
             </thead>
             <tbody>
               {locations.map((loc) => (
-                <tr key={loc._id}>
-                  <td>{loc._id}</td>
-                  <td>{loc.name}</td>
+                <tr key={loc.id}>
+                  <td>{loc.id}</td>
+                  <td>{loc.city}</td>
+                  <td>{loc.state}</td>
                   <td>
                     <Button
                       variant="info"
                       onClick={() => fetchLocationById(loc._id)}
                     >
-                      View
+                      Add Screen
                     </Button>
                   </td>
                 </tr>
@@ -125,12 +156,21 @@ export function  LocationScreen() {
             <Col md={6}>
               <Form>
                 <Form.Group controlId="locationName">
-                  <Form.Label>Name</Form.Label>
+                  <Form.Label>City</Form.Label>
                   <Form.Control
                     type="text"
-                    placeholder="Enter location name"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
+                    placeholder="Enter location city"
+                    value={city}
+                    onChange={(e) => setCity(e.target.value)}
+                  />
+                </Form.Group>
+                <Form.Group controlId="locationName">
+                  <Form.Label>State</Form.Label>
+                  <Form.Control
+                    type="text"
+                    placeholder="Enter location state"
+                    value={locationState}
+                    onChange={(e) => setState(e.target.value)}
                   />
                 </Form.Group>
                 <Button
@@ -141,7 +181,9 @@ export function  LocationScreen() {
                   {creatingLocation ? 'Creating...' : 'Create Location'}
                 </Button>
                 {createLocationError && (
-                  <MessageBox variant='danger'>{createLocationError}</MessageBox>
+                  <MessageBox variant="danger">
+                    {createLocationError}
+                  </MessageBox>
                 )}
               </Form>
             </Col>
@@ -159,6 +201,4 @@ export function  LocationScreen() {
       )}
     </Container>
   );
-};
-
-
+}
