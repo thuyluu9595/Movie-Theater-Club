@@ -55,6 +55,12 @@ public class ShowTimeServiceImpl implements ShowTimeService {
     }
 
     @Override
+    public ShowTime getShowTimeById(long showtimeId) {
+        ShowTime showTime = getEntityOrThrow(showTimeRepository.findById(showtimeId));
+        return showTime;
+    }
+
+    @Override
     public List<ShowTime> getShowTimeByMovie(long movieId) {
         Movie movie = getEntityOrThrow(movieRepository.findById(movieId));
         return showTimeRepository.findShowTimeByDateAfterAndMovie(LocalDate.now(), movie);
