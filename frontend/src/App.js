@@ -1,6 +1,6 @@
 import {BrowserRouter, Link, Route, Routes} from 'react-router-dom';
 import React, { useContext } from 'react';
-import { Navbar, Nav, Container, Form, NavDropdown} from 'react-bootstrap';
+import { Navbar, Nav, Container, NavDropdown} from 'react-bootstrap';
 import  LinkContainer from 'react-router-bootstrap/LinkContainer';
 import HomeScreen from './screens/HomeScreen';
 import MovieScreen from './screens/MovieScreen';
@@ -9,6 +9,9 @@ import ShowTimeScreen from './screens/ShowTimeScreen';
 import RegisterScreen from './screens/RegisterScreen';
 import { Store } from './Stores';
 import SearchBox from './components/SearchBox';
+import BookingScreen from './screens/BookingScreen';
+import { LocationScreen } from './screens/LocationScreen';
+import PaymentScreen from './screens/PaymentScreen';
 
 
 export default function App(){
@@ -34,7 +37,7 @@ export default function App(){
                 {userInfo ? (
                   <NavDropdown title={userInfo.role==="Employee" ? 'Admin' : userInfo.first_name}id='basic-nav-dropdown'>
                     {userInfo.role==="Employee" ? (
-                      <LinkContainer to='/location'>
+                      <LinkContainer to='/locations'>
                         <NavDropdown.Item>Location</NavDropdown.Item>
                       </LinkContainer>
                     ) : (
@@ -43,8 +46,8 @@ export default function App(){
                       </LinkContainer>
                     )}
                     {userInfo.role==="Employee" ? (
-                      <LinkContainer to='/theater'>
-                        <NavDropdown.Item>Theater</NavDropdown.Item>
+                      <LinkContainer to='/'>
+                        <NavDropdown.Item>Movies</NavDropdown.Item>
                       </LinkContainer>
                     ) : (
                       <LinkContainer to='/history'>
@@ -74,8 +77,11 @@ export default function App(){
             <Route path='/' element={<HomeScreen/>}/>
             <Route path='/movie/:id' element={<MovieScreen/>}/>
             <Route path='/signin' element={<SigninScreen/>}/>
-            <Route path='/showtime' element={<ShowTimeScreen/>}/>
+            <Route path='/showtimes' element={<ShowTimeScreen/>}/>
             <Route path='/register' element={<RegisterScreen/>}/>
+            <Route path='/bookings' element={<BookingScreen/>}/>
+            <Route path='/locations' element={<LocationScreen/>}/>
+            <Route path='/payment' element={<PaymentScreen/>}/>
           </Routes>
           </Container>
         </main>

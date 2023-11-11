@@ -21,7 +21,7 @@ export default function Movie(props){
         <Link to={`/movie/${movie.id}`}>
           <Card.Title>{movie.title}</Card.Title>
         </Link>
-        <Link to={`/showtime`}>
+        <Link to={`/showtimes`}>
           <Button>Get Tickets</Button>
         </Link>
       </Card.Body>

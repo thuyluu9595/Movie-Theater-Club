@@ -11,8 +11,8 @@ export default function RegisterScreen(){
   const redirectInUrl = new URLSearchParams(search).get('redirect');
   const redirect = redirectInUrl ? redirectInUrl : '/';
 
-  const [firstname, setFirstName] = useState('');
-  const [lastname, setLastName] = useState('');
+  const [first_name, setFirstName] = useState('');
+  const [last_name, setLastName] = useState('');
   const [username, setUserName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -24,8 +24,8 @@ export default function RegisterScreen(){
     e.preventDefault();
     try {
       const { data } = await axios.post('http://localhost:8080/api/user/', {
-        firstname,
-        lastname,
+        first_name,
+        last_name,
         username, 
         email, 
         password,
@@ -51,7 +51,7 @@ export default function RegisterScreen(){
     </Helmet>
     <h1>Create an Account</h1>
     <Form onSubmit={submitHandler}>
-    <Form.Group controlId="firstname">
+    <Form.Group controlId="first_name">
           <Form.Label>First Name</Form.Label>
           <Form.Control
             type="text"
@@ -60,7 +60,7 @@ export default function RegisterScreen(){
             required
           />
         </Form.Group>
-        <Form.Group controlId="lastname">
+        <Form.Group controlId="last_name">
           <Form.Label>Last Name</Form.Label>
           <Form.Control
             type="text"

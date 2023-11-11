@@ -1,83 +1,159 @@
-import React, { useEffect, useReducer } from "react";
-import { Helmet } from "react-helmet";
-import { Container } from "react-bootstrap";
-import { Link } from "react-router-dom";
-import axios from "axios";
-import LoadingBox from "../components/LoadingBox";
-import MessageBox from "../components/MessageBox";
+import React, { useContext, useEffect, useReducer, useState } from "react";
+import { Button, Container, Form, Table } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
+import Helmet from 'react-helmet';
+import axios from 'axios';
+import { Store } from "../Stores";
 
 const reducer = (state, action) => {
   switch (action.type) {
     case 'FETCH_REQUEST':
-      return {...state, loading: true};
+      return { ...state, loading: true };
     case 'FETCH_SUCCESS':
-      return {...state, movies: action.payload, loading: false};
+      return { ...state, showtimes: action.payload, loading: false };
     case 'FETCH_FAIL':
-      return {...state,loading:false, error: action.payload};
+      return { ...state, loading: false, error: action.payload };
+    case 'ADD_SHOWTIME_REQUEST':
+      return { ...state, adding: true };
+    case 'ADD_SHOWTIME_SUCCESS':
+      return { ...state, adding: false };
+    case 'ADD_SHOWTIME_FAIL':
+      return { ...state, adding: false, addError: action.payload };
     default:
       return state;
   }
-};
+}
 
 const initialState = {
   showtimes: [],
-  loading: false,
-  error: null,
-}
+  loading: true,
+  error: '',
+  adding: false,
+  addError: '',
+};
 
 export default function ShowTimeScreen() {
-  const [state, dispatch ] = useReducer(reducer, initialState);
+  const navigate = useNavigate();
+  const { state } = useContext(Store);
+  const { userInfo } = state;
+  const [movieId, setMovieId] = useState('');
+  const [locationId, setLocationId] = useState('');
+  const [showDate, setShowDate] = useState('');
+  const [showTime, setShowTime] = useState('');
+
+  const [{ showtimes, loading, error, adding, addError }, dispatch] = useReducer(reducer, initialState);
+
+  const isAdmin = userInfo && userInfo.role === "Employee";
+
+  const fetchShowtimes = async () => {
+    dispatch({ type: 'FETCH_REQUEST' });
+    try {
+      const response = await axios.get('http://localhost:8080/api/showtime');
+      dispatch({ type: 'FETCH_SUCCESS', payload: response.data });
+    } catch (err) {
+      dispatch({ type: 'FETCH_FAIL', payload: err.message });
+    }
+  };
+
+  const addShowtime = async () => {
+    dispatch({ type: 'ADD_SHOWTIME_REQUEST' });
+    try {
+      await axios.post('http://localhost:8080/api/showtime', {
+        movieId,
+        locationId,
+        showDate,
+        showTime,
+      });
+      dispatch({ type: 'ADD_SHOWTIME_SUCCESS' });
+      fetchShowtimes(); // Refresh showtimes after adding a new one
+    } catch (err) {
+      dispatch({ type: 'ADD_SHOWTIME_FAIL', payload: err.message });
+    }
+  };
 
   useEffect(() => {
-    async function fetchData() {
-      dispatch({ type: 'FETCH_REQUEST' });
-      try {
-        const response = await axios.get('http://localhost:8080/api/showtime');
-        dispatch({ type: 'FETCH_SUCCESS', payload: response.data });
-      } catch (error) {
-        dispatch({ type: 'FETCH_FAIL', payload: error });
-      }
-    }
-    fetchData();
+    fetchShowtimes();
   }, []);
 
-  const {showtimes, loading, error } = state;
-
   return (
-    <Container>
+    <Container className='mt-3'>
       <Helmet>
-        <title>Show Time</title>
+        <title>Showtimes</title>
       </Helmet>
-      <h1>Movie Showtimes</h1>
-      { loading ? (
-        <LoadingBox />
+      <h1>Showtimes</h1>
+
+      {isAdmin && (
+        <Form onSubmit={(e) => {
+          e.preventDefault();
+          addShowtime();
+        }}>
+          <Form.Group controlId="movieId">
+            <Form.Label>Movie ID</Form.Label>
+            <Form.Control
+              type="text"
+              placeholder="Enter Movie ID"
+              onChange={(e) => setMovieId(e.target.value)}
+              required
+            />
+          </Form.Group>
+          <Form.Group controlId="locationId">
+            <Form.Label>Location ID</Form.Label>
+            <Form.Control
+              type="text"
+              placeholder="Enter Location ID"
+              onChange={(e) => setLocationId(e.target.value)}
+              required
+            />
+          </Form.Group>
+          <Form.Group controlId="showDate">
+            <Form.Label>Show Date</Form.Label>
+            <Form.Control
+              type="date"
+              onChange={(e) => setShowDate(e.target.value)}
+              required
+            />
+          </Form.Group>
+          <Form.Group controlId="showTime">
+            <Form.Label>Show Time</Form.Label>
+            <Form.Control
+              type="time"
+              onChange={(e) => setShowTime(e.target.value)}
+              required
+            />
+          </Form.Group>
+          <Button type="submit" disabled={adding}>
+            {adding ? 'Adding...' : 'Add Showtime'}
+          </Button>
+          {addError && <div className="text-danger">{addError}</div>}
+        </Form>
+      )}
+
+      {loading ? (
+        <div>Loading...</div>
       ) : error ? (
-        <MessageBox variant='danger'>{error}</MessageBox>
+        <div className="text-danger">{error}</div>
       ) : (
-        <table className="table table-bordered table-striped">
-          <thead className="thead">
+        <Table striped bordered hover>
+          <thead>
             <tr>
-                <th>Movie</th>
-                <th>Showtime</th>
-                <th>Location</th>
-                <th>Tickets</th>
+              <th>Movie ID</th>
+              <th>Location ID</th>
+              <th>Show Date</th>
+              <th>Show Time</th>
             </tr>
           </thead>
-          <tbody className="tbody">
-            {showtimes.map((showtime, id) =>(
-              <tr key={id}>
-                <td>{showtime.movie}</td>
-                <td>{showtime.showtime}</td>
-                <td>{showtime.location}</td>
-                <td>
-                  <Link to='/'>Buy Tickets</Link>
-                </td>
+          <tbody>
+            {showtimes.map((showtime) => (
+              <tr key={showtime._id}>
+                <td>{showtime.movieId}</td>
+                <td>{showtime.locationId}</td>
+                <td>{showtime.showDate}</td>
+                <td>{showtime.showTime}</td>
               </tr>
             ))}
           </tbody>
-        </table>
-        )}
+        </Table>
+      )}
     </Container>
-
-  )
+  );
 }

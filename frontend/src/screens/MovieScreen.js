@@ -44,23 +44,6 @@ export default function MovieScreen(){
     };
     fetchData();
   }, [id, navigate]);
-
-  // const { state, dispatch: ctxDispatch} = useContext(Store);
-  // const {ticket } = state;
-  // const addToTicketHandler = async () => {
-  //   const existItem = ticket.ticketItems.find((x) => x._id === movie._id);
-  //   const quantity = existItem ? existItem.quantity + 1 : 1;
-  //   const {data} = await axios.get(`/api/movies/${movie._id}`);
-  //   if (data.seats < quantity) {
-  //     window.alert('Sorry. Movie is out of stock');
-  //     return;
-  //   }
-
-  //   ctxDispatch({
-  //     type: 'TICKET_ADD_ITEM', 
-  //     payload: {...movie, quantity},
-  //   });
-  // };
   
   return loading ? (
       <LoadingBox/>
@@ -95,7 +78,7 @@ export default function MovieScreen(){
                 Decription: {movie.description}
               </ListGroup.Item>
               <ListGroup.Item>
-                <Link to={`/showtime`}>
+                <Link to={`/showtimes`}>
                   <Button>Get Tickets</Button>
                 </Link>
               </ListGroup.Item>
