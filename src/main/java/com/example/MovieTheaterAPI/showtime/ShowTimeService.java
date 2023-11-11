@@ -9,6 +9,6 @@ public interface ShowTimeService {
     ShowTime createShowTime(ShowTimeDTO showTimeDTO);
     List<ShowTime> getShowTimeByMovie(long movieId);
     List<ShowTime> getShowTimeByLocation(long locationId);
-
+    ShowTime getShowTimeById(long showtimeId);
     List<ShowTime> getShowTimeByDate(LocalDate date);
 }
