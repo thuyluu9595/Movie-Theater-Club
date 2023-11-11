@@ -11,8 +11,8 @@ export default function RegisterScreen(){
   const redirectInUrl = new URLSearchParams(search).get('redirect');
   const redirect = redirectInUrl ? redirectInUrl : '/';
 
-  const [first_name, setFirstName] = useState('');
-  const [last_name, setLastName] = useState('');
+  const [firstname, setFirstName] = useState('');
+  const [lastname, setLastName] = useState('');
   const [username, setUserName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -24,8 +24,8 @@ export default function RegisterScreen(){
     e.preventDefault();
     try {
       const { data } = await axios.post('http://localhost:8080/api/user/', {
-        first_name,
-        last_name,
+        firstname,
+        lastname,
         username, 
         email, 
         password,

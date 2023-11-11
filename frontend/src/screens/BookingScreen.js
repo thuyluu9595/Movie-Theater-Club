@@ -53,7 +53,7 @@ export default function BookingScreen() {
   const fetchBookings = async () => {
     dispatch({ type: 'FETCH_REQUEST' });
     try {
-      const response = await axios.get('http://localhost:8080/api/bookings');
+      const response = await axios.get(`${URL}/bookings`);
       dispatch({ type: 'FETCH_SUCCESS', payload: response.data });
     } catch (error) {
       dispatch({ type: 'FETCH_FAIL', payload: error.message || 'Error fetching bookings' });
@@ -62,7 +62,7 @@ export default function BookingScreen() {
 
   const handleBooking = async () => {
     try {
-      await axios.post('http://localhost:8080/api/bookings', {
+      await axios.post(`${URL}/bookings`, {
         userId,
         movie: selectedMovie,
         showtime: selectedShowtime,
@@ -75,7 +75,7 @@ export default function BookingScreen() {
 
   const getBookingsByUserId = async () => {
     try {
-      const response = await axios.get(`http://localhost:8080/api/bookings/user/${userId}`);
+      const response = await axios.get(`${URL}/bookings/user/${userId}`);
       dispatch({ type: 'FETCH_SUCCESS', payload: response.data });
     } catch (error) {
       dispatch({ type: 'FETCH_FAIL', payload: error.message || 'Error fetching bookings by user ID' });
@@ -84,7 +84,7 @@ export default function BookingScreen() {
 
   const getWatchedMoviesIn30Days = async () => {
     try {
-      const response = await axios.get(`http://localhost:8080/api/bookings/watched-movie-30?id=${userId}`);
+      const response = await axios.get(`${URL}/bookings/watched-movie-30?id=${userId}`);
       dispatch({ type: 'FETCH_SUCCESS', payload: response.data });
     } catch (error) {
       dispatch({ type: 'FETCH_FAIL', payload: error.message || 'Error fetching watched movies in 30 days' });
@@ -93,7 +93,7 @@ export default function BookingScreen() {
 
   const cancelBooking = async (bookingId) => {
     try {
-      await axios.delete(`http://localhost:8080/api/bookings/${bookingId}`);
+      await axios.delete(`${URL}/bookings/${bookingId}`);
       fetchBookings();
     } catch (error) {
       dispatch({ type: 'FETCH_FAIL', payload: error.message || 'Error canceling booking' });

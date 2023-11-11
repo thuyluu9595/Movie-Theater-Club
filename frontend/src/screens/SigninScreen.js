@@ -4,6 +4,8 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import Helmet from 'react-helmet';
 import axios from 'axios';
 import { Store } from "../Stores";
+import { URL } from "../Constants"
+
 
 export default function SigninScreen(){
   const navigate = useNavigate();
@@ -22,7 +24,7 @@ export default function SigninScreen(){
   const submitHandler = async (e) => {
     e.preventDefault();
     try {
-      const { data } = await axios.post('http://localhost:8080/api/authenticate', {
+      const { data } = await axios.post(`${URL}/authenticate`, {
         username,  
         password,
       });

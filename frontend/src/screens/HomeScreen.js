@@ -7,6 +7,8 @@ import { Helmet } from "react-helmet";
 import LoadingBox from "../components/LoadingBox";
 import MessageBox from "../components/MessageBox";
 
+import { URL } from "../Constants"
+
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -33,7 +35,7 @@ export default function HomeScreen(props){
     const fetchData = async () => {
       dispatch({type: 'FETCH_REQUEST'});
       try {
-        const response = await axios.get('http://localhost:8080/api/movies/');
+        const response = await axios.get(`${URL}/movies/`);
         dispatch({type: 'FETCH_SUCCESS', payload: response.data});
       } catch(err) {
         dispatch({type: 'FETCH_FAIL', payload: err.message});
