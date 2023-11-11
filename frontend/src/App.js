@@ -14,6 +14,7 @@ import { LocationScreen } from './screens/LocationScreen';
 import PaymentScreen from './screens/PaymentScreen';
 
 
+
 export default function App() {
   const { state, dispatch: ctxDispatch } = useContext(Store);
   const { userInfo } = state;
@@ -21,7 +22,9 @@ export default function App() {
   const signoutHandler = () => {
     ctxDispatch({ type: 'USER_SIGNOUT' });
     localStorage.removeItem('userInfo');
+    localStorage.removeItem('paymenMethod');
   }
+
 
   return (
     <BrowserRouter>
@@ -48,10 +51,9 @@ export default function App() {
                           <NavDropdown.Item>Showtime</NavDropdown.Item>
                         </LinkContainer>
                       </div>
-
                     ) : (
                       <div>
-                        git <LinkContainer to='/profile'>
+                        <LinkContainer to='/profile'>
                           <NavDropdown.Item>User Profile</NavDropdown.Item>
                         </LinkContainer>
                         <LinkContainer to='/history'>
@@ -61,9 +63,7 @@ export default function App() {
                           <NavDropdown.Item>Premium</NavDropdown.Item>
                         </LinkContainer>
                       </div>
-
                     )}
-
                     <NavDropdown.Divider />
                     <Link
                       className='dropdown-item'
@@ -83,16 +83,16 @@ export default function App() {
         </header>
         <main>
           <Container className='mt-3'>
-            <Routes>
-              <Route path='/' element={<HomeScreen />} />
-              <Route path='/movie/:id' element={<MovieScreen />} />
-              <Route path='/signin' element={<SigninScreen />} />
-              <Route path='/showtimes' element={<ShowTimeScreen />} />
-              <Route path='/register' element={<RegisterScreen />} />
-              <Route path='/bookings' element={<BookingScreen />} />
-              <Route path='/locations' element={<LocationScreen />} />
-              <Route path='/payment' element={<PaymentScreen />} />
-            </Routes>
+          <Routes>
+            <Route path='/' element={<HomeScreen/>}/>
+            <Route path='/movie/:id' element={<MovieScreen/>}/>
+            <Route path='/signin' element={<SigninScreen/>}/>
+            <Route path='/showtimes/:id' element={<ShowTimeScreen/>}/>
+            <Route path='/register' element={<RegisterScreen/>}/>
+            <Route path='/bookings/:id' element={<BookingScreen/>}/>
+            <Route path='/locations' element={<LocationScreen/>}/>
+            <Route path='/payment' element={<PaymentScreen/>}/>
+          </Routes>
           </Container>
         </main>
         <footer>

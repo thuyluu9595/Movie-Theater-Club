@@ -14,6 +14,10 @@ const initialState = {
       ? JSON.parse(localStorage.getItem('ticketItems'))
       : [],
   },
+
+  payment: {
+    method: null,
+  },
 };
 function reducer(state, action) {
   switch (action.type) {
@@ -33,6 +37,8 @@ function reducer(state, action) {
       return {...state, userInfo: action.payload};  
     case 'USER_SIGNOUT':
       return {...state, userInfo: null};
+    case 'SAVE_PAYMENT_METHOD':
+      return {...state, payment: action.payload};
     default:
       return state;
   }
