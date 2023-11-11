@@ -15,13 +15,16 @@ import PaymentScreen from './screens/PaymentScreen';
 
 
 export default function App(){
+
   const { state, dispatch: ctxDispatch} = useContext(Store);
   const {userInfo} = state;
 
   const signoutHandler = () => {
     ctxDispatch({type: 'USER_SIGNOUT'});
     localStorage.removeItem('userInfo');
+    localStorage.removeItem('paymenMethod');
   }
+
   
   return (
     <BrowserRouter>
@@ -35,7 +38,7 @@ export default function App(){
               <SearchBox />
               <Nav className='me-auto'>
                 {userInfo ? (
-                  <NavDropdown title={userInfo.role==="Employee" ? 'Admin' : userInfo.first_name}id='basic-nav-dropdown'>
+                  <NavDropdown title={userInfo.role==="Employee" ? 'Admin': userInfo.firstname}id='basic-nav-dropdown'>
                     {userInfo.role==="Employee" ? (
                       <LinkContainer to='/locations'>
                         <NavDropdown.Item>Location</NavDropdown.Item>
@@ -77,9 +80,9 @@ export default function App(){
             <Route path='/' element={<HomeScreen/>}/>
             <Route path='/movie/:id' element={<MovieScreen/>}/>
             <Route path='/signin' element={<SigninScreen/>}/>
-            <Route path='/showtimes' element={<ShowTimeScreen/>}/>
+            <Route path='/showtimes/:id' element={<ShowTimeScreen/>}/>
             <Route path='/register' element={<RegisterScreen/>}/>
-            <Route path='/bookings' element={<BookingScreen/>}/>
+            <Route path='/bookings/:id' element={<BookingScreen/>}/>
             <Route path='/locations' element={<LocationScreen/>}/>
             <Route path='/payment' element={<PaymentScreen/>}/>
           </Routes>
