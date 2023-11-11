@@ -12,6 +12,7 @@ import SearchBox from './components/SearchBox';
 import BookingScreen from './screens/BookingScreen';
 import { LocationScreen } from './screens/LocationScreen';
 import PaymentScreen from './screens/PaymentScreen';
+import ScreenScreen from './screens/ScreenScreen';
 
 
 
@@ -92,6 +93,7 @@ export default function App() {
             <Route path='/bookings/:id' element={<BookingScreen/>}/>
             <Route path='/locations' element={<LocationScreen/>}/>
             <Route path='/payment' element={<PaymentScreen/>}/>
+            <Route path='/locations/:id' element={<ScreenScreen/>}/>
           </Routes>
           </Container>
         </main>
