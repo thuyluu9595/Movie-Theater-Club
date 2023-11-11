@@ -5,6 +5,8 @@ import { Button, Form } from 'react-bootstrap'
 import { Store } from '../Stores';
 
 export default function PaymentScreen() {
+    //TODO: connect backend
+
 
   const { state, dispatch: ctxDispatch } = useContext(Store);
   const [paymentMethodName, setPaymentMethod] = useState('');
