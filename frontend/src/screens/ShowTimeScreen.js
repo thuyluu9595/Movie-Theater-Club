@@ -1,9 +1,10 @@
 import React, { useContext, useEffect, useReducer, useState } from "react";
 import { Button, Container, Form, Table } from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import Helmet from 'react-helmet';
 import axios from 'axios';
 import { Store } from "../Stores";
+import {URL} from "../Constants";
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -41,6 +42,9 @@ export default function ShowTimeScreen() {
   const [showDate, setShowDate] = useState('');
   const [showTime, setShowTime] = useState('');
 
+  const params = useParams();
+  const { id } = params;
+
   const [{ showtimes, loading, error, adding, addError }, dispatch] = useReducer(reducer, initialState);
 
   const isAdmin = userInfo && userInfo.role === "Employee";
@@ -48,7 +52,7 @@ export default function ShowTimeScreen() {
   const fetchShowtimes = async () => {
     dispatch({ type: 'FETCH_REQUEST' });
     try {
-      const response = await axios.get('http://localhost:8080/api/showtime');
+      const response = await axios.get(`${URL}/showtime/${id}/movie`);
       dispatch({ type: 'FETCH_SUCCESS', payload: response.data });
     } catch (err) {
       dispatch({ type: 'FETCH_FAIL', payload: err.message });
@@ -58,7 +62,7 @@ export default function ShowTimeScreen() {
   const addShowtime = async () => {
     dispatch({ type: 'ADD_SHOWTIME_REQUEST' });
     try {
-      await axios.post('http://localhost:8080/api/showtime', {
+      await axios.post(`${URL}/showtime`, {
         movieId,
         locationId,
         showDate,
@@ -136,19 +140,27 @@ export default function ShowTimeScreen() {
         <Table striped bordered hover>
           <thead>
             <tr>
-              <th>Movie ID</th>
-              <th>Location ID</th>
+              <th>Movie Name</th>
+              <th>Location</th>
+              <th>Room</th>
               <th>Show Date</th>
               <th>Show Time</th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
             {showtimes.map((showtime) => (
-              <tr key={showtime._id}>
-                <td>{showtime.movieId}</td>
-                <td>{showtime.locationId}</td>
-                <td>{showtime.showDate}</td>
-                <td>{showtime.showTime}</td>
+              <tr key={showtime.id}>
+                <td>{showtime.movie.title}</td>
+                <td>{showtime.screen.location.city}, {showtime.screen.location.state}</td>
+                <td>{showtime.screen.name}</td>
+                <td>{showtime.date}</td>
+                <td>{showtime.startTime}</td>
+                <td>
+                  <Button>
+                    <Link to={`/bookings/${showtime.id}`}>Book</Link>
+                  </Button>
+                </td>
               </tr>
             ))}
           </tbody>

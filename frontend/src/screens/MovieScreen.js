@@ -6,6 +6,7 @@ import { Helmet } from "react-helmet";
 import LoadingBox from "../components/LoadingBox";
 import MessageBox from "../components/MessageBox";
 import { getError } from "../utils";
+import { URL } from "../Constants";
 
 
 const reducer = (state, action) => {
@@ -36,7 +37,7 @@ export default function MovieScreen(){
     const fetchData = async () => {
       dispatch({type: 'FETCH_REQUEST'});
       try {
-        const result = await axios.get(`http://localhost:8080/api/movies/${id}`);
+        const result = await axios.get(`${URL}/movies/${id}`);
         dispatch({type: 'FETCH_SUCCESS', payload: result.data});
       } catch(err) {
         dispatch({type: 'FETCH_FAIL', payload: getError(err)});
@@ -78,7 +79,7 @@ export default function MovieScreen(){
                 Decription: {movie.description}
               </ListGroup.Item>
               <ListGroup.Item>
-                <Link to={`/showtimes`}>
+                <Link to={`/showtimes/${movie.id}`}>
                   <Button>Get Tickets</Button>
                 </Link>
               </ListGroup.Item>
