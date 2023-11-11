@@ -25,6 +25,7 @@ public class DiscountServiceImpl implements DiscountService{
         if (!entity.isPresent())
             discountRepository.save(new Discount(DiscountType.Before6PM, 5));
     }
+
     @Override
     public Discount updateTuedayDiscount(float percent) {
         return updateDiscount(DiscountType.TuedaySpecial, percent);
