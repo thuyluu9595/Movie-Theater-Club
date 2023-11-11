@@ -20,7 +20,7 @@ export default function SearchBox() {
             id='q'
             onChange={(e) => setQuery(e.target.value)}
             placeholder='search...'
-            aria-label='Search MOvies'
+            aria-label='Search Movies'
             aria-describedby='button-search'
           ></FormControl>
           <Button variant='outline-primary' type='submit' id='button-search'>

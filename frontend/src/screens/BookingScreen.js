@@ -41,6 +41,8 @@ const BookingList = ({ bookings, cancelBooking }) => {
 };
 
 export default function BookingScreen() {
+    //TODO: connect backend
+
   const [state, dispatch] = useReducer(reducer, initialState);
   const [userId, setUserId] = useState('');
   const [selectedMovie, setSelectedMovie] = useState('');
