@@ -28,8 +28,9 @@ export default function SigninScreen(){
         username,  
         password,
       });
-      ctxDispatch({type: 'USER_SINGIN', payload: data});
+      ctxDispatch({type: 'USER_SIGNIN', payload: data});
       localStorage.setItem('userInfo', JSON.stringify(data));
+      console.log(data);
       navigate(redirect || '/');
     } catch (err) {
       alert('Invalid username or password');

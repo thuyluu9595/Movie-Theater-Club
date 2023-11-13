@@ -42,7 +42,7 @@ export default function App() {
               <SearchBox />
               <Nav className='me-auto'>
                 {userInfo ? (
-                  <NavDropdown title={userInfo.role === "Employee" ? 'Admin' : userInfo.firstname} id='basic-nav-dropdown'>
+                  <NavDropdown title={userInfo.role === "Employee" ? 'Admin' : userInfo.first_name} id='basic-nav-dropdown'>
                     {userInfo.role === "Employee" ? (
                       <div>
                         <LinkContainer to='/locations'>
