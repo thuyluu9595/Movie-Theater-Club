@@ -16,6 +16,7 @@ import ProfileScreen from './screens/ProfileScreen';
 import PremiumScreen from './screens/PremiumScreen';
 import HistoryScreen from './screens/HistoryScreen';
 import ScreenScreen from './screens/ScreenScreen';
+import Analytics from "./screens/Analytics";
 
 
 
@@ -53,6 +54,9 @@ export default function App() {
                         </LinkContainer>
                         <LinkContainer to='/showtimes'>
                           <NavDropdown.Item>Showtime</NavDropdown.Item>
+                        </LinkContainer>
+                        <LinkContainer to='/analytics'>
+                          <NavDropdown.Item>Analytics</NavDropdown.Item>
                         </LinkContainer>
                       </div>
                     ) : (
@@ -96,6 +100,7 @@ export default function App() {
             <Route path='/bookings/:id' element={<BookingScreen/>}/>
             <Route path='/locations' element={<LocationScreen/>}/>
             <Route path='/payment' element={<PaymentScreen/>}/>
+            <Route path='/analytics' element={<Analytics/>}/>
            
               <Route path='/profile' element={<ProfileScreen/>}/>
             <Route path='/premium' element={<PremiumScreen/>}/>
