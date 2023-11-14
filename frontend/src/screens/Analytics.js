@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useReducer, useContext} from 'react';
+import React, {useEffect, useReducer, useContext} from 'react';
 import { Pie } from 'react-chartjs-2';
 import { Chart as ChartJS} from "chart.js/auto";
 import {Col, Form, Row} from 'react-bootstrap';
@@ -13,6 +13,16 @@ const reducer = (state, action) => {
     switch (action.type) {
         case 'FETCH_REQUEST':
             return {...state, loading: true};
+        case '30_DAYS':
+            return {...state, days: 30};
+        case '60_DAYS':
+            return {...state, days: 60};
+        case '90_DAYS':
+            return {...state, days: 90};
+        case 'LOCATIONS':
+            return {...state, category: 'locations'};
+        case 'MOVIES':
+            return {...state, category: 'movies'};
         case 'FETCH_SUCCESS':
             return {...state, plots: action.payload, loading: false};
         case 'FETCH_FAIL':
@@ -22,12 +32,12 @@ const reducer = (state, action) => {
     }
 }
 const Analytics = () => {
-    const [days, setDays] = useState(30);
-    const [category, setCategory] = useState('locations');
     const {state} = useContext(Store);
     const {userInfo} = state;
-    const [{plots, loading, error}, dispatch] = useReducer(reducer, {
+    const [{plots, days, category, loading, error}, dispatch] = useReducer(reducer, {
         plots: [],
+        days: 30,
+        category: 'locations',
         loading : true,
         error: '',
     });
@@ -44,24 +54,23 @@ const Analytics = () => {
                 dispatch({type: 'FETCH_FAIL', payload: err.message});
             }
         };
-        console.log(plots);
         fetchData();
 
-    }, [days, category]);
+    }, [days, category, userInfo.access_token]);
 
     const handleDaysChange = (e) => {
         e.preventDefault();
-        setDays(e.target.value);
+        dispatch({type: e.target.value === '30' ? '30_DAYS' : e.target.value === '60' ? '60_DAYS' : '90_DAYS'});
     };
 
     const handleCategoryChange = (e) => {
         e.preventDefault();
-        setCategory(e.target.value);
+        dispatch({type: e.target.value === 'locations' ? 'LOCATIONS' : 'MOVIES'});
     };
 
     return (
         <div>
-            <h1>Analytics</h1>
+            <h1>Analytics </h1>
             <Form.Control as="select" value={days} onChange={handleDaysChange}>
                 <option value={30}>30 Days</option>
                 <option value={60}>60 Days</option>
@@ -78,38 +87,40 @@ const Analytics = () => {
                     ) : error ? (
                         <MessageBox variant='danger'>{error}</MessageBox>
                     ) : (
-                                 plots.length > 0 ? (plots.map((plot) => {
-                                     let data = [0, 0, 100];
-                                     if (plot.occupiedPercent !=='NaN') {
-                                         data = [parseFloat(plot.occupiedPercent), 100 - parseFloat(plot.occupiedPercent), 0];
-                                     }
+                        // <h2>{console.log(plots)}</h2>
 
-                                    const chartData = {
-                                        labels: ['Occupied', 'Unoccupied', 'No Data'],
-                                        datasets: [
-                                            {
-                                                data: data,
-                                                backgroundColor: ['green', 'red', 'grey']
-                                            }
-                                        ]
-                                    };
-                                    const pieChartColor = `rgb(${plot.id * 50}, ${plot.id * 50}, ${plot.id * 50})`
+                        plots.length > 0 ? (plots.map((plot) => {
+                                let data = [0, 0, 100];
+                                if (plot.occupiedPercent !=='NaN') {
+                                    data = [parseFloat(plot.occupiedPercent), 100 - parseFloat(plot.occupiedPercent), 0];
+                                }
 
-                                    return (
-                                        plot.movie || plot.location ? (
-                                            <Col key={1} sm={6} md={4} lg={3} style={{ backgroundColor: pieChartColor }}>
-                                                {/*<h2>{category === 'locations' ? plot.location.city : plot.movie.title}</h2>*/}
-                                                <h2>{plot.location.city}</h2>
-                                                <Pie data={chartData} />
-                                            </Col>) : null
+                                const chartData = {
+                                    labels: ['Occupied', 'Unoccupied', 'No Data'],
+                                    datasets: [
+                                        {
+                                            data: data,
+                                            backgroundColor: ['green', 'red', 'grey']
+                                        }
+                                    ]
+                                };
+                                const pieChartColor = `rgb(${plot.id * 50}, ${plot.id * 50}, ${plot.id * 50})`
 
-                                    );
-                                })
-                                 ) : (
-                                     <MessageBox variant='danger'>No data</MessageBox>
-                                 )
+                                return (
+                                    plot.movie || plot.location ? (
+                                        <Col key={1} sm={6} md={4} lg={3} style={{ backgroundColor: pieChartColor }}>
+                                            <h2>{category === 'locations' ? plot.location.city : plot.movie.title}</h2>
+                                            {/*<h2>{plot.location.city}</h2>*/}
+                                            <Pie data={chartData} />
+                                        </Col>) : null
 
-                        )}
+                                );
+                            })
+                        ) : (
+                            <MessageBox variant='danger'>No data</MessageBox>
+                        )
+
+                    )}
             </Row>
 
         </div>
