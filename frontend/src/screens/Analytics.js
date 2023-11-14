@@ -56,15 +56,15 @@ const Analytics = () => {
         };
         fetchData();
 
-    }, [days, category, userInfo.access_token]);
+    }, [days, category]);
 
     const handleDaysChange = (e) => {
-        e.preventDefault();
+        // e.preventDefault();
         dispatch({type: e.target.value === '30' ? '30_DAYS' : e.target.value === '60' ? '60_DAYS' : '90_DAYS'});
     };
 
     const handleCategoryChange = (e) => {
-        e.preventDefault();
+        // e.preventDefault();
         dispatch({type: e.target.value === 'locations' ? 'LOCATIONS' : 'MOVIES'});
     };
 
@@ -77,7 +77,7 @@ const Analytics = () => {
                 <option value={90}>90 Days</option>
             </Form.Control>
             <Form.Control as="select" value={category} onChange={handleCategoryChange}>
-                <option value="location">Location</option>
+                <option value="locations">Location</option>
                 <option value="movies">Movies</option>
             </Form.Control>
             <Row>
@@ -87,7 +87,6 @@ const Analytics = () => {
                     ) : error ? (
                         <MessageBox variant='danger'>{error}</MessageBox>
                     ) : (
-                        // <h2>{console.log(plots)}</h2>
 
                         plots.length > 0 ? (plots.map((plot) => {
                                 let data = [0, 0, 100];
@@ -107,10 +106,9 @@ const Analytics = () => {
                                 const pieChartColor = `rgb(${plot.id * 50}, ${plot.id * 50}, ${plot.id * 50})`
 
                                 return (
-                                    plot.movie || plot.location ? (
-                                        <Col key={1} sm={6} md={4} lg={3} style={{ backgroundColor: pieChartColor }}>
-                                            <h2>{category === 'locations' ? plot.location.city : plot.movie.title}</h2>
-                                            {/*<h2>{plot.location.city}</h2>*/}
+                                    plot.movie != null|| plot.location != null ? (
+                                        <Col key={plot.location != null ? plot.location.city : plot.movie.id} sm={6} md={4} lg={3} style={{ backgroundColor: pieChartColor }}>
+                                            <h2>{plot.location != null ? plot.location.city : plot.movie.title}</h2>
                                             <Pie data={chartData} />
                                         </Col>) : null
 
