@@ -1,6 +1,6 @@
 import React, {useEffect, useReducer, useContext} from 'react';
 import { Pie } from 'react-chartjs-2';
-import { Chart as ChartJS} from "chart.js/auto";
+import { Chart as ChartJS, ArcElement, Tooltip, Legend} from "chart.js";
 import {Col, Form, Row} from 'react-bootstrap';
 import axios from "axios";
 import { URL } from "../Constants";
@@ -8,7 +8,7 @@ import {Store} from "../Stores";
 import LoadingBox from "../components/LoadingBox";
 import MessageBox from "../components/MessageBox";
 
-
+ChartJS.register(ArcElement, Tooltip, Legend);
 const reducer = (state, action) => {
     switch (action.type) {
         case 'FETCH_REQUEST':
@@ -103,7 +103,9 @@ const AnalyticsScreen = () => {
                                     datasets: [
                                         {
                                             data: data,
-                                            backgroundColor: ['#4CAF50', 'grey', 'blue'],
+                                            backgroundColor: ['rgba(75, 192, 192, 0.2)', 'rgba(255, 99, 132, 0.1)', 'rgba(255, 206, 86, 0.2)'],
+                                            borderColor: ['rgba(75, 192, 192, 1)', 'rgba(255, 99, 132, 1)', 'rgba(255, 206, 86, 1)'],
+                                            borderWidth: 1,
                                         }
                                     ]
                                 };
