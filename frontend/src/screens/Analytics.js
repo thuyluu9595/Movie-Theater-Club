@@ -69,18 +69,22 @@ const Analytics = () => {
     };
 
     return (
-        <div>
+        <div className="analytics-container">
             <h1>Analytics </h1>
-            <Form.Control as="select" value={days} onChange={handleDaysChange}>
+            <label htmlFor="category-select" style={{color: "black", marginRight: "0.7rem"}}>Category: </label>
+            <Form.Control as="select" className="category-select" value={category} onChange={handleCategoryChange}>
+                <option value="locations">Location</option>
+                <option value="movies">Movies</option>
+            </Form.Control>
+
+            <label htmlFor="days-select" style={{color: "black", marginRight: "0.7rem"}}>Days: </label>
+            <Form.Control as="select" className="days-select" value={days} onChange={handleDaysChange}>
                 <option value={30}>30 Days</option>
                 <option value={60}>60 Days</option>
                 <option value={90}>90 Days</option>
             </Form.Control>
-            <Form.Control as="select" value={category} onChange={handleCategoryChange}>
-                <option value="locations">Location</option>
-                <option value="movies">Movies</option>
-            </Form.Control>
-            <Row>
+
+            <Row className="row">
                 {
                     loading ? (
                         <LoadingBox />
@@ -99,7 +103,7 @@ const Analytics = () => {
                                     datasets: [
                                         {
                                             data: data,
-                                            backgroundColor: ['green', 'red', 'grey']
+                                            backgroundColor: ['#4CAF50', '#F44336', '#9E9E9E']
                                         }
                                     ]
                                 };
@@ -107,7 +111,7 @@ const Analytics = () => {
 
                                 return (
                                     plot.movie != null|| plot.location != null ? (
-                                        <Col key={plot.location != null ? plot.location.city : plot.movie.id} sm={6} md={4} lg={3} style={{ backgroundColor: pieChartColor }}>
+                                        <Col key={plot.location != null ? plot.location.city : plot.movie.id} className="col" sm={6} md={4} lg={3} style={{ backgroundColor: pieChartColor }}>
                                             <h2>{plot.location != null ? plot.location.city : plot.movie.title}</h2>
                                             <Pie data={chartData} />
                                         </Col>) : null
