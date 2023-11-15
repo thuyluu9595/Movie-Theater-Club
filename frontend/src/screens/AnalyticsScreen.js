@@ -31,7 +31,7 @@ const reducer = (state, action) => {
             return state;
     }
 }
-const Analytics = () => {
+const AnalyticsScreen = () => {
     const {state} = useContext(Store);
     const {userInfo} = state;
     const [{plots, days, category, loading, error}, dispatch] = useReducer(reducer, {
@@ -103,7 +103,7 @@ const Analytics = () => {
                                     datasets: [
                                         {
                                             data: data,
-                                            backgroundColor: ['#4CAF50', '#F44336', '#9E9E9E']
+                                            backgroundColor: ['#4CAF50', 'grey', 'blue'],
                                         }
                                     ]
                                 };
@@ -130,4 +130,4 @@ const Analytics = () => {
 };
 
 
-export default Analytics;
+export default AnalyticsScreen;
