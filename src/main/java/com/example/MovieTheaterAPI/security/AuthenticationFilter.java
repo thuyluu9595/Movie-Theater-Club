@@ -45,9 +45,13 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
         if (authResult instanceof CustomAuthentication) {
+            CustomAuthentication auth = (CustomAuthentication) authResult;
             String token = JWT.create()
-                    .withSubject(authResult.getName())
-                    .withClaim("roles", authResult
+                    .withClaim("id", auth.getId())
+                    .withClaim("firstname", auth.getFirstname())
+                    .withClaim("lastname", auth.getLastname())
+                    .withClaim("username", auth.getName())
+                    .withClaim("roles", auth
                             .getAuthorities()
                             .stream()
                             .map(GrantedAuthority::getAuthority)
@@ -56,10 +60,10 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
                     .sign(Algorithm.HMAC512(SecurityConstants.SECRET_KEY));
 
             String JSONString = String.format("{\"id\":%d,\"role\":\"%s\",\"firstname\":\"%s\",\"lastname\":\"%s\",\"token\":\"%s\"}",
-                    ((CustomAuthentication) authResult).getId(),
-                    ((CustomAuthentication) authResult).getRole(),
-                    ((CustomAuthentication) authResult).getFirstname(),
-                    ((CustomAuthentication) authResult).getLastname(),
+                    auth.getId(),
+                    auth.getRole(),
+                    auth.getFirstname(),
+                    auth.getLastname(),
                     token);
 
             response.setContentType("application/json");

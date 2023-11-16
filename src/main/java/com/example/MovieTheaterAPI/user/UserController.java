@@ -1,5 +1,6 @@
 package com.example.MovieTheaterAPI.user;
 
+import com.example.MovieTheaterAPI.security.CustomAuthentication;
 import com.example.MovieTheaterAPI.user.dto.ChangePasswordDTO;
 import com.example.MovieTheaterAPI.user.dto.UpgradeAccountDTO;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -7,6 +8,8 @@ import lombok.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,6 +24,18 @@ public class UserController {
     @GetMapping("")
     public ResponseEntity<List<User>> getAllUser() {
         return new ResponseEntity<>(userService.getAllUser(), HttpStatus.OK);
+    }
+
+    @GetMapping("/info")
+    public ResponseEntity<?> getUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        CustomAuthentication auth = (CustomAuthentication) authentication;
+        try {
+            User user = userService.getUser(auth.getId());
+            return ResponseEntity.ok(user);
+        } catch (UserNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @PostMapping("/")
