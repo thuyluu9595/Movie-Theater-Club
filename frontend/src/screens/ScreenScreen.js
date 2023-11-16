@@ -167,7 +167,7 @@ export default function ScreenScreen() {
                     type="number"
                     value={capacity}
                     min={0}
-                    onChange={(e) => setCapacity(e.target.value)}
+                    onChange={(e) => setCapacity( e.target.value)}
                   />
                 </Form.Group>
                 <Button
