@@ -54,6 +54,16 @@ main {
   max-width: 100;
 }
 
+.container {
+  color: #ffffff;
+}
+
+.container table {
+  --bs-table-striped-color: #ffffff;
+  color: #ffffff;
+  --bs-table-hover-color: #b7b8b9;
+  --bs-table-hover-bg: rgba(114, 112, 112, 0.075);
+}
 /*======== Style for AnalyticsScreen ========*/
 
 .analytics-container {
