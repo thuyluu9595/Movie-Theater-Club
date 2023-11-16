@@ -6,6 +6,7 @@ import LoadingBox from '../components/LoadingBox';
 import MessageBox from '../components/MessageBox';
 import { URL } from '../Constants';
 import { Store } from '../Stores';
+import { useNavigate } from 'react-router-dom';
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -44,6 +45,7 @@ const initialState = {
 };
 
 export function LocationScreen() {
+  const navigate = useNavigate();
   const { state: webState } = useContext(Store);
   const { userInfo } = webState;
 
@@ -65,17 +67,6 @@ export function LocationScreen() {
     }
   };
 
-  const fetchLocationById = async (id) => {
-    dispatch({ type: 'FETCH_BY_ID_REQUEST' });
-    try {
-      const response = await axios.get(
-        `http://localhost:8080/api/locations/${id}`
-      );
-      dispatch({ type: 'FETCH_BY_ID_SUCCESS', payload: response.data });
-    } catch (error) {
-      dispatch({ type: 'FETCH_FAIL', payload: error.message });
-    }
-  };
 
   const createLocation = async () => {
     dispatch({ type: 'CREATE_REQUEST' });
@@ -140,7 +131,7 @@ export function LocationScreen() {
                   <td>
                     <Button
                       variant="info"
-                      onClick={() => fetchLocationById(loc._id)}
+                      onClick={() => {navigate(`/locations/${loc.id}`)}}
                     >
                       Add Screen
                     </Button>

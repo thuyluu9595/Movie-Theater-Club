@@ -1,7 +1,7 @@
 import React, {useEffect, useReducer, useContext} from 'react';
 import { Pie } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend} from "chart.js";
-import {Col, Form, Row} from 'react-bootstrap';
+import {Col, Container, Form, Row} from 'react-bootstrap';
 import axios from "axios";
 import { URL } from "../Constants";
 import {Store} from "../Stores";
@@ -69,7 +69,8 @@ const AnalyticsScreen = () => {
     };
 
     return (
-        <div className="analytics-container">
+        // <div className="analytics-container">
+        <Container>
             <h1>Analytics </h1>
             <label htmlFor="category-select" style={{color: "black", marginRight: "0.7rem"}}>Category: </label>
             <Form.Control as="select" className="category-select" value={category} onChange={handleCategoryChange}>
@@ -126,8 +127,10 @@ const AnalyticsScreen = () => {
 
                     )}
             </Row>
+        </Container>
+            
 
-        </div>
+        // </div>
     );
 };
 
