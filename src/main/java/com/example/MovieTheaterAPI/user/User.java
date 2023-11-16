@@ -47,7 +47,7 @@ public class User {
     @Column(name = "role", nullable = false)
     private Role role;
 
-    @JsonIgnore
+
     @OneToOne(mappedBy = "user", optional = true)
     private Member member;
 

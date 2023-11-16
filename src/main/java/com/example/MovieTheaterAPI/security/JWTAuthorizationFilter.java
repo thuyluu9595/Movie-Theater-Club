@@ -2,6 +2,7 @@ package com.example.MovieTheaterAPI.security;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.interfaces.DecodedJWT;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -46,8 +47,18 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
 
+        DecodedJWT jwt = JWT.require(Algorithm.HMAC512(SecurityConstants.SECRET_KEY)).build().verify(token);
 
-        Authentication authentication = new UsernamePasswordAuthenticationToken(user, null, roles);
+        Authentication authentication = new CustomAuthentication(
+                jwt.getClaim("id").asLong(),
+                null,
+                jwt.getClaim("firstname").asString(),
+                jwt.getClaim("lastname").asString(),
+                jwt.getClaim("username").asString(),
+                null,
+                null);
+
+//        Authentication authentication = new UsernamePasswordAuthenticationToken(user, null, roles);
         SecurityContextHolder.getContext().setAuthentication(authentication);
         filterChain.doFilter(request, response);
     }

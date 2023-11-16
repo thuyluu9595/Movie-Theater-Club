@@ -51,7 +51,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User changePassword(User user, ChangePasswordDTO dto) {
-        // Todo: generate hashed password
         if (!bCryptPasswordEncoder.matches(dto.getPassword(), user.getPassword())) {
             throw new RuntimeException("Unable to change password");
         }
