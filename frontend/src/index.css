@@ -53,3 +53,82 @@ main {
 .img-large {
   max-width: 100;
 }
+
+/*======== Style for AnalyticsScreen ========*/
+
+.analytics-container {
+
+  padding: 50px;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+}
+
+.analytics-container h1 {
+  font-family: Helvetica, sans-serif;
+  color: deepskyblue;
+  text-align: center;
+  font-size: 36px;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+.days-select, .category-select {
+  display: inline-flex;
+  width: 30rem;
+  margin-bottom: 20px;
+  margin-right: 20px;
+}
+
+.row {
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+
+}
+
+.col {
+  padding: 20px;
+  background-color: #f2f2f2;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+}
+
+.col h2 {
+  color: black;
+    text-align: center;
+  font-family: "Arial Hebrew", sans-serif;
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+/* Adjustments for medium screens (768px - 991px) */
+@media (max-width: 991px) {
+  .days-select, .category-select {
+    width: 100%;
+  }
+}
+
+/* Adjustments for small screens (576px - 767px) */
+@media (max-width: 767px) {
+  .analytics-container h1 {
+    font-size: 24px;
+  }
+
+  .col h2 {
+    font-size: 16px;
+  }
+}
+
+/* Adjustments for extra small screens (less than 576px) */
+@media (max-width: 576px) {
+  .analytics-container {
+    padding: 20px;
+  }
+
+  .col {
+    padding: 10px;
+  }
+}
+/*======== End Style for AnalyticsScreen ========*/
