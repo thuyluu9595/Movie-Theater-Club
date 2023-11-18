@@ -135,9 +135,9 @@ export default function ScreenScreen() {
               </tr>
             </thead>
             <tbody>
-              {screens.map((scr) => (
+              {screens.map((scr, idx) => (
                 <tr key={scr.id}>
-                  <td>{scr.id}</td>
+                  <td>{idx + 1}</td>
                   <td>{scr.name}</td>
                   <td>{scr.capacity}</td>
                   <td>{scr.location.city}</td>
@@ -153,7 +153,7 @@ export default function ScreenScreen() {
             <Col md={6}>
               <Form>
                 <Form.Group controlId="screenName">
-                  <Form.Label>Name</Form.Label>
+                  <Form.Label>Screen Name</Form.Label>
                   <Form.Control
                     type="text"
                     placeholder="Enter screen name"
@@ -162,7 +162,7 @@ export default function ScreenScreen() {
                   />
                 </Form.Group>
                 <Form.Group controlId="screenName">
-                  <Form.Label>Name</Form.Label>
+                  <Form.Label>Capacity</Form.Label>
                   <Form.Control
                     type="number"
                     value={capacity}
