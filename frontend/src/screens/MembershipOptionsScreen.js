@@ -48,7 +48,7 @@ const MembershipOptionsScreen = () => {
 
     const handleRegularClick = () => {
         if (!userInfo) {
-            navigate('/signin');
+            navigate('/signin?redirect=/membership-options');
         }
         else if (info.member.membershipTier === 'Premium') {
             navigate('/profile');
@@ -57,7 +57,7 @@ const MembershipOptionsScreen = () => {
 
     const handlePremiumClick = () => {
         if (!userInfo) {
-            navigate('/signin');
+            navigate('/signin?redirect=/membership-options');
         }
         else if (info.member.membershipTier === 'Regular') {
             navigate('/premium');
@@ -67,14 +67,14 @@ const MembershipOptionsScreen = () => {
     const {info} = state;
 
     return (
-        <Container className="mt-3">
-            <h1>Membership Options</h1>
-            <Row style={{color:"red"}}>
+        <Container className="membership-options">
+            <h1 className="membership-options-title">Membership Options</h1>
+            <Row style={{color:"black"}}>
                 <Col md={6} className="mb-4">
-                    <Card>
+                    <Card className="membership-plan-card">
                         <Card.Body>
-                            <Card.Title>Regular Membership</Card.Title>
-                            <Card.Text>
+                            <Card.Title className="membership-plan-title">Regular Membership</Card.Title>
+                            <Card.Text className="membership-plan-benefits">
                                 <p>Regular membership is free and provides the following benefits:</p>
                                 <ul>
                                     <li>Free access to view information about upcoming movies and current schedules.</li>
@@ -82,29 +82,35 @@ const MembershipOptionsScreen = () => {
                                     <li>Newsletter subscription for regular updates on movie releases and exclusive offers.</li>
                                 </ul>
                             </Card.Text>
-                                <Button variant="info" className="mt-3" onClick={handleRegularClick}>
+                                <Button variant="info"
+                                        className="mx-auto d-block membership-card-button"
+                                        onClick={handleRegularClick}
+                                        disabled={info && info.member.membershipTier === 'Regular'}
+                                >
                                     {!info ? 'Choose plan': info.member.membershipTier !== 'Premium' ? 'Current plan': 'Choose plan' }
                                 </Button>
                         </Card.Body>
                     </Card>
                 </Col>
                 <Col md={6} className="mb-4">
-                    <Card>
+                    <Card className="membership-plan-card">
                         <Card.Body >
-                            <Card.Title>Premium Membership</Card.Title>
-                            <Card.Text>
+                            <Card.Title className="membership-plan-title">Premium Membership</Card.Title>
+                            <Card.Text className="membership-plan-benefits">
                                 <p>Premium membership comes with additional benefits for an annual fee of $15:</p>
                                 <ul>
                                     <li>Online service fee waived for any booking.</li>
-                                    <li>Priority seating options for a better selection of seats.</li>
                                     <li>Book multiple seats (up to 8) for a movie show.</li>
                                     <li>Accumulate rewards points at an accelerated rate - 2 points per dollar spent.</li>
                                     <li>Cancel previous tickets before showtime and request a refund.</li>
-                                    <li>Access a curated list of movies watched in the past 30 days.</li>
                                     <li>Receive invitations to special events, premieres, or exclusive screenings.</li>
                                 </ul>
                             </Card.Text>
-                                <Button variant="info" className="mt-3" onClick={handlePremiumClick}>
+                                <Button variant="info"
+                                        className="mt-3 mx-auto d-block"
+                                        onClick={handlePremiumClick}
+                                        disabled={info && info.member.membershipTier === 'Premium'}
+                                >
                                     {!info ? 'Choose plan': info.member.membershipTier !== 'Premium' ? 'Upgrade': 'Current plan'}
                                 </Button>
                         </Card.Body>
