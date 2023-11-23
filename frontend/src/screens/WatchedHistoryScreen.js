@@ -1,4 +1,4 @@
-import React, {useContext, useReducer} from 'react';
+import React, {useContext, useEffect, useReducer} from 'react';
 import {Store} from "../Stores";
 import axios from "axios";
 import {URL} from "../Constants";
@@ -13,7 +13,7 @@ const reducer = (state, action) => {
         case "FETCH_REQUEST":
             return { ...state, loading: true };
         case "FETCH_SUCCESS":
-            return { ...state, info: action.payload, loading: false };
+            return { ...state, movies: [...action.payload], loading: false };
         case "FETCH_FAIL":
             return { ...state, loading: false, error: action.payload };
         default:
@@ -35,13 +35,17 @@ const WatchedHistoryScreen = () => {
         dispatch({ type: "FETCH_REQUEST" });
         try {
             const response = await axios.get(`${URL}/bookings/watched-movie-30/${userInfo.id}`, {
-                headers: { Authorization: `Bearer ${userInfo.token}` },
+                headers: { 'Authorization': `Bearer ${userInfo.token}` },
             });
             dispatch({ type: "FETCH_SUCCESS", payload: response.data });
         } catch (error) {
             dispatch({ type: "FETCH_FAIL", payload: error.message });
         }
     };
+
+    useEffect(() => {
+        if (userInfo) getMovies();
+    }, [userInfo]);
 
     return (
         <Container>
