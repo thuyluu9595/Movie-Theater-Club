@@ -46,7 +46,7 @@ const AnalyticsScreen = () => {
             dispatch({type: 'FETCH_REQUEST'});
             try {
                 const response = await axios.get(`${URL}/analytic/${category}?days=${days}`, {
-                    headers: { 'Authorization': `Bearer ${userInfo.access_token}` }
+                    headers: { 'Authorization': `Bearer ${userInfo.token}` }
                 });
                 dispatch({type: 'FETCH_SUCCESS', payload: response.data});
 
@@ -70,7 +70,7 @@ const AnalyticsScreen = () => {
 
     return (
         // <div className="analytics-container">
-        <Container>
+        <Container className="analytics-container">
             <h1>Analytics </h1>
             <label htmlFor="category-select" style={{color: "black", marginRight: "0.7rem"}}>Category: </label>
             <Form.Control as="select" className="category-select" value={category} onChange={handleCategoryChange}>
@@ -100,11 +100,11 @@ const AnalyticsScreen = () => {
                                 }
 
                                 const chartData = {
-                                    labels: ['Occupied', 'Unoccupied', 'No Data'],
+                                    labels: ['Occupied (%)', 'Unoccupied (%)', 'No Data'],
                                     datasets: [
                                         {
                                             data: data,
-                                            backgroundColor: ['rgba(75, 192, 192, 0.2)', 'rgba(255, 99, 132, 0.1)', 'rgba(255, 206, 86, 0.2)'],
+                                            backgroundColor: ['rgba(75, 255, 192, 0.2)', 'rgba(255, 99, 132, 0.1)', 'rgba(255, 206, 86, 0.2)'],
                                             borderColor: ['rgba(75, 192, 192, 1)', 'rgba(255, 99, 132, 1)', 'rgba(255, 206, 86, 1)'],
                                             borderWidth: 1,
                                         }
@@ -115,7 +115,7 @@ const AnalyticsScreen = () => {
                                 return (
                                     plot.movie != null|| plot.location != null ? (
                                         <Col key={plot.location != null ? plot.location.city : plot.movie.id} className="col" sm={6} md={4} lg={3} style={{ backgroundColor: pieChartColor }}>
-                                            <h2>{plot.location != null ? plot.location.city : plot.movie.title}</h2>
+                                            <h2>{plot.location != null ? plot.location.city + ", " + plot.location.state : plot.movie.title}</h2>
                                             <Pie data={chartData} />
                                         </Col>) : null
 
