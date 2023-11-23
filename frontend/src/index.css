@@ -183,4 +183,9 @@ main {
 .membership-card-button {
 
 }
+
+.membership-price {
+  text-align: center;
+  font-size: 24px;
+}
 /*========Style for MembershipOptionScreen=======*/
