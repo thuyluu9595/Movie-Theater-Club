@@ -1,6 +1,6 @@
 import { BrowserRouter, Link, Route, Routes, useLocation } from "react-router-dom";
 import React, { useContext, useEffect, useReducer } from "react";
-import { Navbar, Nav, Container, NavDropdown } from "react-bootstrap";
+import {Navbar, Nav, Container, NavDropdown, NavItem} from "react-bootstrap";
 import LinkContainer from "react-router-bootstrap/LinkContainer";
 import HomeScreen from "./screens/HomeScreen";
 import MovieScreen from "./screens/MovieScreen";
@@ -21,6 +21,7 @@ import axios from 'axios';
 import { URL } from "./Constants";
 import CancelPremiumScreen from "./screens/CancelPremiumScreen";
 import MembershipOptionsScreen from "./screens/MembershipOptionsScreen";
+import WatchedHistoryScreen from "./screens/WatchedHistoryScreen";
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -138,6 +139,9 @@ export default function App() {
                         <LinkContainer to="/history">
                           <NavDropdown.Item>History</NavDropdown.Item>
                         </LinkContainer>
+                        <LinkContainer to="/watched30">
+                            <NavDropdown.Item>Watched History</NavDropdown.Item>
+                        </LinkContainer>
                         {userInfo && generateButton()}
                       </div>
                     )}
@@ -153,7 +157,7 @@ export default function App() {
                 ) : (
                     <>
                       <Link className="member-options" to="/membership-options">
-                        Membership Options
+                        Membership
                       </Link>
                       <Link className="nav-Link" to="/signin">
                         Sign In
@@ -178,6 +182,7 @@ export default function App() {
               <Route path="/analytics" element={<AnalyticsScreen />} />
               <Route path="/cancel" element={<CancelPremiumScreen />} />
               <Route path="/membership-options" element={<MembershipOptionsScreen />} />
+              <Route path="/watched30" element={<WatchedHistoryScreen />} />
 
               <Route path="/profile" element={<ProfileScreen />} />
               <Route path="/premium" element={<PremiumScreen />} />
