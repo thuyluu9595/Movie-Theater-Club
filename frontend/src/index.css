@@ -142,3 +142,45 @@ main {
   }
 }
 /*======== End Style for AnalyticsScreen ========*/
+/*========Style for MembershipOptionScreen=======*/
+/* Overall styling */
+.membership-options {
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+}
+
+.membership-options-title {
+  color: deepskyblue;
+  text-align: center;
+  font-size: 36px;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+.membership-plan-card {
+  padding: 20px;
+  background-color: #f2f2f2;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  margin-bottom: 20px;
+  height: 100%;
+}
+
+.membership-plan-title {
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 15px;
+}
+
+.membership-plan-benefits {
+  font-family: "Times New Roman", sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.membership-card-button {
+
+}
+/*========Style for MembershipOptionScreen=======*/
