@@ -4,7 +4,7 @@ import {Container, Form, Button, Col, Row} from "react-bootstrap";
 import axios from "axios";
 import LoadingBox from "../components/LoadingBox";
 import MessageBox from "../components/MessageBox";
-import {Link, useParams} from "react-router-dom";
+import {Link, redirect, useNavigate, useParams} from "react-router-dom";
 import {URL} from "../Constants";
 import SeatItem from "../components/SeatItem";
 import SeatBox from "../components/SeatBox";
@@ -24,6 +24,24 @@ const reducer = (state, action) => {
             return {...state, info: action.payload, loadingInfo: false};
         case "FETCH_INFO_FAIL":
             return {...state, loading: false, errorInfo: action.payload};
+        case "CREATE_BOOKING_REQUEST":
+            return {...state, loadingPayment: true};
+        case "CREATE_BOOKING_SUCCESS":
+            return {...state, booking: action.payload};
+        case "CREATE_BOOKING_FAIL":
+            return {...state, loadingPayment: false, errorPayment: action.payload};
+        case "PAYMENT_REQUEST":
+            return {...state, loadingPayment: true};
+        case "PAYMENT_SUCCESS":
+            return {...state, payment: action.payload};
+        case "PAYMENT_FAIL":
+            return {...state, loadingPayment: false, errorPayment: action.payload};
+        case "PAID_BOOKING_REQUEST":
+            return {...state, loadingPayment: true}
+        case "PAID_BOOKING_SUCCESS":
+            return {...state, loadingPayment: false};
+        case "PAID_BOOKING_FAIL":
+            return {...state, loadingPayment: false, errorPayment: action.payload};
         default:
             return state;
     }
@@ -33,6 +51,10 @@ const initialState = {
     info: {},
     loadingInfo: true,
     errorInfo: null,
+    booking: {},
+    payment: {},
+    loadingPayment: false,
+    errorPayment: null,
     show: {},
     loading: true,
     error: null,
@@ -44,8 +66,19 @@ export default function BookingScreen() {
 
     const params = useParams();
     const {id} = params;
+    const navigate = useNavigate();
 
-    const [{show, loading, error, info}, dispatch] = useReducer(reducer, initialState);
+
+    const [{
+        show,
+        loading,
+        error,
+        info,
+        booking,
+        payment,
+        loadingPayment,
+        errorPayment
+    }, dispatch] = useReducer(reducer, initialState);
     const {state: ctxState, dispatch: ctxDispatch} = useContext(Store);
     const {userInfo} = ctxState;
 
@@ -67,7 +100,6 @@ export default function BookingScreen() {
         dispatch({type: 'FETCH_REQUEST'});
         try {
             const response = await axios.get(`${URL}/showtime/${id}`);
-            console.log(response.data)
             dispatch({type: 'FETCH_SUCCESS', payload: response.data});
         } catch (error) {
             dispatch({type: 'FETCH_FAIL', payload: error.message || 'Error fetching show'});
@@ -130,6 +162,7 @@ export default function BookingScreen() {
 
     let finalPrice;
     let total;
+    let tax;
     const renderPrice = () => {
         const price = selectedSeats.length * show.price;
         if (show.discount) {
@@ -144,74 +177,94 @@ export default function BookingScreen() {
 
     const renderTotal = () => {
         if (info !== null && info.member !== null) {
+            tax = finalPrice * 0.1;
             if (info.member.membershipTier === "Regular") {
-                total = finalPrice + 1.50;
+                total = finalPrice + 1.50 * selectedSeats.length;
                 return <div>
-                    <h4>Online Service Fee: $1.50</h4>
-                    <h4>Total: ${total.toFixed(2)}</h4>
+                    <h4>Online Service Fee: $1.50 x {selectedSeats.length}</h4>
+                    <h4>Tax: ${tax.toFixed(2)}</h4>
+                    <h4>Total: ${(total + tax).toFixed(2)}</h4>
                 </div>
             } else {
                 total = finalPrice;
                 return <div>
-                    <h4>Total: ${total.toFixed(2)}</h4>
+                    <h4>Tax: ${tax.toFixed(2)}</h4>
+                    <h4>Total: ${(total + tax).toFixed(2)}</h4>
                 </div>
             }
         }
     }
 
 
-    function submitHandler(e) {
+    async function submitHandler(e) {
+        e.preventDefault();
+        try {
+            const bookingId = await createBooking();
+            navigate(`/payment/${bookingId}`);
+        } catch (error) {
+
+        }
 
     }
 
-    const renderPayment = () => {
-        return disable ? (
-            <Form onSubmit={e => submitHandler(e)}>
-                <Form.Group className="mb-3" controlId="cardNumber">
-                    <Form.Label>Card Number</Form.Label>
-                    <Form.Control
-                        value={cardNumber}
-                        onChange={(e) => setCradNumber(e.target.value)}
-                        required
-                    />
-                </Form.Group>
-                <Form.Group className="mb-3" controlId="expMonth">
-                    <Form.Label>Expire Month</Form.Label>
-                    <Form.Control
-                        type="expMonth"
-                        value={expMonth}
-                        onChange={(e) => setExpMonth(e.target.value)}
-                        required
-                    />
-                </Form.Group>
-                <Form.Group className="mb-3" controlId="expYear">
-                    <Form.Label>Expire Year</Form.Label>
-                    <Form.Control
-                        value={expYear}
-                        onChange={(e) => setEpxYear(e.target.value)}
-                        required
-                    />
-                </Form.Group>
-                <Form.Group className="mb-3" controlId="cvc">
-                    <Form.Label>Security</Form.Label>
-                    <Form.Control
-                        value={cvc}
-                        onChange={(e) => setCvc(e.target.value)}
-                        required
-                    />
-                </Form.Group>
-                <div className="mb-3">
-                    <Button type="submit" disabled={selectedSeats.length === 0}>Purchase</Button>
-                </div>
-            </Form>
-        ) : (
-            <button type="button" className="pay-button"
-                    disabled={selectedSeats.length === 0}
-                    onClick={e => setDisable(!disable)}>
-                {"Purchase"}
-            </button>
-        )
+    async function createBooking() {
+        dispatch({type: "CREATE_BOOKING_REQUEST"});
+        try {
+            const {data} = await axios.post(`${URL}/bookings`,
+                {
+                    "userId": userInfo.id,
+                    "showTimeId": id,
+                    "seats": selectedSeats
+                },
+                {
+                    headers: {Authorization: `Bearer ${userInfo.token}`},
+                });
+            dispatch({type: "CREATE_BOOKING_SUCCESS", payload: data});
+            return data.id
+        } catch (error) {
+            dispatch({type: "CREATE_BOOKING_FAIL", payload: error.message});
+            throw error;
+        }
     }
+
+    async function paidBooking(id) {
+        dispatch({type: "PAID_BOOKING_REQUEST"});
+        try {
+            await axios.put(`${URL}/bookings/paid/${id}`, {},
+                {
+                    headers: {Authorization: `Bearer ${userInfo.token}`},
+                });
+            dispatch({type: "PAID_BOOKING_SUCCESS"});
+        } catch (error) {
+            dispatch({type: "PAID_BOOKING_FAIL", payload: error.message});
+            throw error
+        }
+    }
+
+    async function makePayment() {
+        dispatch({type: "PAYMENT_REQUEST"});
+        try {
+
+            const {data} = await axios.post(
+                `${URL}/payment/charge`,
+                {
+                    cardNumber,
+                    expMonth,
+                    expYear,
+                    cvc,
+                    "amount": total
+                },
+                {
+                    headers: {Authorization: `Bearer ${userInfo.token}`},
+                }
+            );
+            dispatch({type: "PAYMENT_SUCCESS", payload: data});
+            return data.success
+        } catch (error) {
+            dispatch({type: "PAYMENT_FAIL", payload: error.message});
+        }
+    }
+
 
     return (
         <Container fluid>
@@ -255,7 +308,11 @@ export default function BookingScreen() {
                                 </Row>
                                 {renderPrice()}
                                 {renderTotal()}
-                                {renderPayment()}
+                                <button type="button" className="pay-button"
+                                        disabled={selectedSeats.length === 0}
+                                        onClick={e => submitHandler(e)}>
+                                    {"Purchase"}
+                                </button>
                             </Col>
                         </Row>
 
