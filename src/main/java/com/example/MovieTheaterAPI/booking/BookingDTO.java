@@ -2,15 +2,16 @@ package com.example.MovieTheaterAPI.booking;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
+import lombok.NonNull;
 
 @Data
 public class BookingDTO {
-    @JsonProperty("user_id")
+    @NonNull
     private Long userId;
 
-    @JsonProperty("show_time_id")
+    @NonNull
     private Long showTimeId;
 
-    @JsonProperty("seats")
+    @NonNull
     private int[] seats;
 }

@@ -43,12 +43,6 @@ public class BookingServiceImpl implements BookingService{
         double totalPrice = 0;
         int numberOfSeats = bookingDTO.getSeats().length;
 
-        // Add online service fee
-        if (user.getMember().getMembershipTier() != Tier.Premium) {
-            // Need to clarify
-            totalPrice += ONLINE_SERVICE_FEE * numberOfSeats;
-        }
-
         float discount = 0;
         if (showTime.getDiscount() != null) {
             discount = showTime.getDiscount().getPercentDiscount() / 100;
@@ -61,6 +55,12 @@ public class BookingServiceImpl implements BookingService{
 
         // Add taxes
         totalPrice = totalPrice + totalPrice * TAXES;
+
+        // Add online service fee
+        if (user.getMember().getMembershipTier() != Tier.Premium) {
+            // Need to clarify
+            totalPrice += ONLINE_SERVICE_FEE * numberOfSeats;
+        }
         return totalPrice;
     }
 
