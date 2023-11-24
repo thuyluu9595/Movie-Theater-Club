@@ -7,8 +7,12 @@ import lombok.Data;
 
 @Data
 public class StripeChargeDTO {
+    private String cardNumber;
+    private String expMonth;
+    private String expYear;
+    private String cvc;
     private String stripeToken;
-    private String username;
+    private String customerId;
     private Double amount;
     private Boolean success;
     private String message;
