@@ -7,6 +7,7 @@ import { URL } from "../Constants";
 import {Store} from "../Stores";
 import LoadingBox from "../components/LoadingBox";
 import MessageBox from "../components/MessageBox";
+import Helmet from "react-helmet";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 const reducer = (state, action) => {
@@ -71,7 +72,10 @@ const AnalyticsScreen = () => {
     return (
         // <div className="analytics-container">
         <Container className="analytics-container">
-            <h1>Analytics </h1>
+            <Helmet>
+                <title>Analytic Dashboard</title>
+            </Helmet>
+            <h1>Analytics</h1>
             <label htmlFor="category-select" style={{color: "black", marginRight: "0.7rem"}}>Category: </label>
             <Form.Control as="select" className="category-select" value={category} onChange={handleCategoryChange}>
                 <option value="locations">Location</option>

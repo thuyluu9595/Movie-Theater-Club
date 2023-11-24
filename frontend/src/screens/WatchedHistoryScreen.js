@@ -53,23 +53,26 @@ const WatchedHistoryScreen = () => {
                 <title>Watched History</title>
             </Helmet>
             <h1>Watched Movies Last 30 Days</h1>
-            <Row>
-                {state.loading ? (
-                    <LoadingBox />
-                ) : state.error ? (
-                    <MessageBox variant="danger">{state.error}</MessageBox>
-                ) : (
-                    state.movies.length > 0 ? (
-                        state.movies.map((movie) => (
-                            <Col key={movie._id} sm={6} md={4} lg={3} className='mb-3'>
-                                <Movie movie={movie}></Movie>
-                            </Col>
-                        ))
+            <div className='movies'>
+                <Row>
+                    {state.loading ? (
+                        <LoadingBox />
+                    ) : state.error ? (
+                        <MessageBox variant="danger">{state.error}</MessageBox>
                     ) : (
-                        <MessageBox variant="info">No movies watched in the last 30 days.</MessageBox>
-                    )
-                )}
-            </Row>
+                        state.movies.length > 0 ? (
+                            state.movies.map((movie) => (
+                                <Col key={movie._id} sm={6} md={4} lg={3} className='mb-3'>
+                                    <Movie movie={movie}></Movie>
+                                </Col>
+                            ))
+                        ) : (
+                            <MessageBox variant="info">No movies watched in the last 30 days.</MessageBox>
+                        )
+                    )}
+                </Row>
+            </div>
+
         </Container>
     );
 };
