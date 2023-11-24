@@ -21,6 +21,7 @@ import axios from 'axios';
 import {URL} from "./Constants";
 import CancelPremiumScreen from "./screens/CancelPremiumScreen";
 import StripeScreen from "./screens/StripeScreen";
+import MembershipOptionsScreen from "./screens/MembershipOptionsScreen";
 
 const reducer = (state, action) => {
     switch (action.type) {
@@ -151,9 +152,14 @@ export default function App() {
                                         </Link>
                                     </NavDropdown>
                                 ) : (
-                                    <Link className="nav-Link" to="/signin">
+                                    <>
+                                      <Link className="member-options" to="/membership-options">
+                                        Membership Options
+                                      </Link>
+                                      <Link className="nav-Link" to="/signin">
                                         Sign In
-                                    </Link>
+                                      </Link>
+                                    </>
                                 )}
                             </Nav>
                         </Container>
@@ -173,6 +179,7 @@ export default function App() {
                             <Route path="/analytics" element={<AnalyticsScreen/>}/>
                             <Route path="/cancel" element={<CancelPremiumScreen/>}/>
                             <Route path="/payment/stripe/:id" element={<StripeScreen/>}/>
+              <Route path="/membership-options" element={<MembershipOptionsScreen />} />
 
                             <Route path="/profile" element={<ProfileScreen/>}/>
                             <Route path="/premium" element={<PremiumScreen/>}/>
