@@ -54,7 +54,7 @@ public class StripeService {
         Stripe.apiKey = stripeConfig.getPublishableKey();
     }
 
-    public StripeTokenDTO createCardToken(StripeTokenDTO dto) {
+    public StripeChargeDTO createCardToken(StripeChargeDTO dto) {
         switchToStripePublishableKey();
         try {
             Map<String, Object> card = new HashMap<>();
@@ -67,8 +67,7 @@ public class StripeService {
             params.put("card", card);
             Token token = Token.create(params);
             if (token != null && token.getId() != null) {
-                dto.setSuccess(true);
-                dto.setToken(token.getId());
+                dto.setStripeToken(token.getId());
             }
             return dto;
         } catch (StripeException e) {
@@ -77,6 +76,7 @@ public class StripeService {
     }
 
     public StripeChargeDTO charge(StripeChargeDTO dto) {
+        createCardToken(dto);
         switchToStripeSecretKey();
         try {
             dto.setSuccess(false);
