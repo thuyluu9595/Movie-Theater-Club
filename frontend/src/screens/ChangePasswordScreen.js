@@ -10,17 +10,11 @@ import MessageBox from "../components/MessageBox";
 
 const reducer = (state, action) => {
     switch (action.type) {
-        case "FETCH_REQUEST":
-            return {...state, loading: true};
-        case "FETCH_SUCCESS":
-            return {...state, info: action.payload, loading: false};
-        case "FETCH_FAIL":
-            return {...state, loading: false, error: action.payload};
-        case "UPDATE_INFO_REQUEST":
+        case "UPDATE_PASSWORD_REQUEST":
             return {...state, loading: true, success: false};
-        case "UPDATE_INFO_SUCCESS":
+        case "UPDATE_PASSWORD_SUCCESS":
             return {...state, loading: false, success: true};
-        case "UPDATE_INFO_FAIL":
+        case "UPDATE_PASSWORD_FAIL":
             return {...state, loading: false, error: action.payload};
         default:
             return state;
@@ -33,63 +27,46 @@ const initialState = {
     loading: false
 };
 
-export default function ProfileScreen() {
+export default function ChangePasswordScreen() {
     const {state, dispatch: ctxDispatch} = useContext(Store);
     const {userInfo} = state;
 
 
-    const [firstname, setFirstname] = useState();
-    const [lastname, setLastname] = useState();
-    const [email, setEmail] = useState();
+    const [password, setPassword] = useState("");
+    const [newPassword, setNewPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
 
     const navigate = useNavigate();
 
-    const [{loading, success, error, info}, dispatch] = useReducer(reducer, initialState);
+    const [{loading, success, error}, dispatch] = useReducer(reducer, initialState);
     const submitHandler = async (e) => {
         e.preventDefault();
-        dispatch({type: "UPDATE_INFO_REQUEST"});
-        try {
-            await axios.put(`${URL}/user/${userInfo.id}/update-info`, {
-                    firstname,
-                    lastname,
-                    email
-                },
-                {
-                    headers: {Authorization: `Bearer ${userInfo.token}`},
-                });
-            dispatch({type: "UPDATE_INFO_SUCCESS"});
-        } catch (error) {
-            dispatch({type: "UPDATE_INFO_FAIL", payload: error.message});
-            throw error
+        if (newPassword === confirmPassword) {
+            dispatch({type: "UPDATE_PASSWORD_REQUEST"});
+            try {
+                await axios.put(`${URL}/user/changepw`, {
+                        password,
+                        newPassword
+                    },
+                    {
+                        headers: {Authorization: `Bearer ${userInfo.token}`},
+                    });
+                dispatch({type: "UPDATE_PASSWORD_SUCCESS"});
+            } catch (error) {
+                dispatch({type: "UPDATE_PASSWORD_FAIL", payload: error.message});
+            }
+        } else {
+            alert("Password not match.");
         }
     };
 
-    const getInfo = async () => {
-        dispatch({type: "FETCH_REQUEST"});
-        try {
-            const {data} = await axios.get(`${URL}/user/info`, {
-                headers: {Authorization: `Bearer ${userInfo.token}`},
-            });
-            dispatch({type: "FETCH_SUCCESS", payload: data});
-            setFirstname(data.firstname);
-            setLastname(data.lastname);
-            setEmail(data.email);
-        } catch (error) {
-            dispatch({type: "FETCH_FAIL", payload: error.message});
-        }
-    };
 
     useEffect(() => {
-        getInfo();
         if (success) {
-            alert("Successfully update your profile");
-            userInfo.firstname = firstname;
-            userInfo.lastname = lastname;
-            localStorage.setItem('userInfo', JSON.stringify(userInfo));
+            alert("Successfully update your password");
             navigate("/");
-            window.location.reload();
         }
-    }, [success, dispatch]);
+    }, [success]);
 
     return (
         <div className='container small-container'>
@@ -101,37 +78,32 @@ export default function ProfileScreen() {
             {error && <MessageBox variant={"danger"}>{error}</MessageBox>}
             <form onSubmit={e => submitHandler(e)}>
                 <Form.Group className='mb-3' controlId='name'>
-                    <Form.Label>First Name</Form.Label>
+                    <Form.Label>Current Password</Form.Label>
                     <Form.Control
-                        value={firstname}
-                        onChange={(e) => setFirstname(e.target.value)}
+                        value={password}
+                        type={"password"}
+                        onChange={(e) => setPassword(e.target.value)}
                         required
                     />
                 </Form.Group>
                 <Form.Group className='mb-3' controlId='email'>
-                    <Form.Label>Last Name</Form.Label>
+                    <Form.Label>New Password</Form.Label>
                     <Form.Control
-                        value={lastname}
-                        onChange={(e) => setLastname(e.target.value)}
+                        type={"password"}
+                        value={newPassword}
+                        onChange={(e) => setNewPassword(e.target.value)}
                         required
                     />
                 </Form.Group>
                 <Form.Group className='mb-3' controlId='password'>
-                    <Form.Label>Email</Form.Label>
+                    <Form.Label>Confirm Password</Form.Label>
                     <Form.Control
-                        type='email'
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
+                        type={"password"}
+                        value={confirmPassword}
+                        onChange={(e) => setConfirmPassword(e.target.value)}
                         required
                     />
                 </Form.Group>
-                {/*<Form.Group className='mb-3' controlId='confirmPassword'>*/}
-                {/*    <Form.Label>Confirm Password</Form.Label>*/}
-                {/*    <Form.Control*/}
-                {/*        value={confirmPassword}*/}
-                {/*        onChange={(e) => setConfirmPassword(e.target.value)}*/}
-                {/*        required />*/}
-                {/*</Form.Group>*/}
                 <div className='mb-3'>
                     <Button type='submit'>Update</Button>
                 </div>
