@@ -22,6 +22,7 @@ import {URL} from "./Constants";
 import CancelPremiumScreen from "./screens/CancelPremiumScreen";
 import StripeScreen from "./screens/StripeScreen";
 import MembershipOptionsScreen from "./screens/MembershipOptionsScreen";
+import ChangePasswordScreen from "./screens/ChangePasswordScreen";
 
 const reducer = (state, action) => {
     switch (action.type) {
@@ -139,6 +140,9 @@ export default function App() {
                                                 <LinkContainer to="/history">
                                                     <NavDropdown.Item>History</NavDropdown.Item>
                                                 </LinkContainer>
+                                                <LinkContainer to="/changepw">
+                                                    <NavDropdown.Item>Change Password</NavDropdown.Item>
+                                                </LinkContainer>
                                                 {userInfo && generateButton()}
                                             </div>
                                         )}
@@ -184,6 +188,7 @@ export default function App() {
                             <Route path="/premium" element={<PremiumScreen/>}/>
                             <Route path="/history" element={<HistoryScreen/>}/>
                             <Route path="/locations/:id" element={<ScreenScreen/>}/>
+                            <Route path="/changepw" element={<ChangePasswordScreen/>}/>
                         </Routes>
                     </Container>
                 </main>
