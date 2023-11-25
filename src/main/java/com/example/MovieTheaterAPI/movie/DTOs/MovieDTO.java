@@ -1,4 +1,4 @@
-package com.example.MovieTheaterAPI.movie;
+package com.example.MovieTheaterAPI.movie.DTOs;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;

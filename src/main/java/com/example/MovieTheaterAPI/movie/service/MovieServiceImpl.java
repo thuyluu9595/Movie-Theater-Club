@@ -1,6 +1,7 @@
 package com.example.MovieTheaterAPI.movie.service;
 
-import com.example.MovieTheaterAPI.movie.MovieDTO;
+import com.example.MovieTheaterAPI.movie.DTOs.MovieDTO;
+import com.example.MovieTheaterAPI.movie.DTOs.MovieResponseDTO;
 import com.example.MovieTheaterAPI.movie.model.Movie;
 import com.example.MovieTheaterAPI.movie.repository.MovieRepository;
 import com.example.MovieTheaterAPI.movie.s3.S3Service;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.net.URL;
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -23,20 +25,36 @@ public class MovieServiceImpl implements MovieService{
         this.s3Service = s3Service;
     }
 
+    private MovieResponseDTO movieToMovieResponseDTO(Movie movie){
+        if (movie == null) return null;
 
+        MovieResponseDTO movieResponseDTO = new MovieResponseDTO();
+        movieResponseDTO.setId(movie.getId());
+        movieResponseDTO.setTitle(movie.getTitle());
+        movieResponseDTO.setDescription(movie.getDescription());
+        movieResponseDTO.setReleaseDate(movie.getReleaseDate());
+        movieResponseDTO.setPosterUrl(movie.getPosterUrl());
+        movieResponseDTO.setDurationInMinutes(movie.getDuration().toMinutes());
+        return movieResponseDTO;
+    }
     @Override
-    public List<Movie> getAllMovies() {
-        return movieRepository.findAll();
+    public List<MovieResponseDTO> getAllMovies() {
+         List<Movie> movies = movieRepository.findAll();
+         List<MovieResponseDTO> movieResponseDTOs = new ArrayList<>();
+         for (Movie movie : movies){
+             movieResponseDTOs.add(movieToMovieResponseDTO(movie));
+         }
+         return movieResponseDTOs;
     }
 
     @Override
-    public Movie getMovieById(Long id) {
+    public MovieResponseDTO getMovieById(Long id) {
         Movie existingMovie = movieRepository.findById(id).orElseThrow(MovieNotFoundException::new);
-        return existingMovie;
+        return movieToMovieResponseDTO(existingMovie);
     }
 
     @Override
-    public Movie createMovie(MovieDTO movie) {
+    public MovieResponseDTO createMovie(MovieDTO movie) {
         if (movieRepository.findByTitle(movie.getTitle()).isEmpty()) {
             Movie createdMovie = new Movie();
             createdMovie.setTitle(movie.getTitle());
@@ -44,13 +62,13 @@ public class MovieServiceImpl implements MovieService{
             createdMovie.setDescription(movie.getDescription());
             createdMovie.setPosterUrl(movie.getPosterUrl());
             createdMovie.setReleaseDate(movie.getReleaseDate());
-            return movieRepository.save(createdMovie);
+            return movieToMovieResponseDTO(movieRepository.save(createdMovie));
         }else
             throw new MovieExistedException();
     }
 
     @Override
-    public Movie updateMovie(Long id, MovieDTO movie) {
+    public MovieResponseDTO updateMovie(Long id, MovieDTO movie) {
         Movie existingMovie = movieRepository.findById(id).orElseThrow(MovieNotFoundException::new);
 
         if (movie.getTitle() != null && !movie.getTitle().equals("")) {
@@ -65,7 +83,7 @@ public class MovieServiceImpl implements MovieService{
         if (movie.getPosterUrl() != null && !movie.getPosterUrl().isBlank()) {
             existingMovie.setPosterUrl(movie.getPosterUrl());
         }
-        return movieRepository.save(existingMovie);
+        return movieToMovieResponseDTO(movieRepository.save(existingMovie));
     }
 
     @Override
@@ -74,14 +92,19 @@ public class MovieServiceImpl implements MovieService{
     }
 
     @Override
-    public List<Movie> getMoviesByReleaseDate() {
+    public List<MovieResponseDTO> getMoviesByReleaseDate() {
         // Find all movies that have a release date after the current date
-        return movieRepository.findAllByReleaseDateAfter(java.time.LocalDate.now());
+        List<Movie> movies = movieRepository.findAllByReleaseDateAfter(java.time.LocalDate.now());
+        List<MovieResponseDTO> movieResponseDTOS = new ArrayList<>();
+        for (Movie movie : movies) {
+            movieResponseDTOS.add(movieToMovieResponseDTO(movie));
+        }
+        return movieResponseDTOS;
     }
 
     @Override
-    public Movie getMovieByTitle(String title) {
-        return movieRepository.findByTitle(title).orElse(null);
+    public MovieResponseDTO getMovieByTitle(String title) {
+        return movieToMovieResponseDTO(movieRepository.findByTitle(title).orElse(null));
     }
 
     @Override
