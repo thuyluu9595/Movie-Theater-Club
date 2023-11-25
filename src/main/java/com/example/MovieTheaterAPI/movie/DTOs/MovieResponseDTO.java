@@ -8,6 +8,7 @@ import java.time.LocalDate;
 
 @Data
 public class MovieResponseDTO {
+    private long id;
     private String title;
 
     @JsonProperty("duration")

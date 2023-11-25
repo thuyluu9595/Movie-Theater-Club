@@ -27,7 +27,9 @@ public class MovieServiceImpl implements MovieService{
 
     private MovieResponseDTO movieToMovieResponseDTO(Movie movie){
         if (movie == null) return null;
+
         MovieResponseDTO movieResponseDTO = new MovieResponseDTO();
+        movieResponseDTO.setId(movie.getId());
         movieResponseDTO.setTitle(movie.getTitle());
         movieResponseDTO.setDescription(movie.getDescription());
         movieResponseDTO.setReleaseDate(movie.getReleaseDate());
