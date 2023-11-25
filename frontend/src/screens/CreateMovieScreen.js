@@ -4,15 +4,11 @@ import {Form, Button, Container} from 'react-bootstrap'
 import {useNavigate} from "react-router-dom";
 import axios from "axios";
 import { URL } from "../Constants"
-import MessageBox from "../components/MessageBox";
-import LoadingBox from "../components/LoadingBox";
 import {Store} from "../Stores";
 import moment from "moment";
 
 const reducer = (state, action) => {
     switch (action.type) {
-        // case 'FETCH_REQUEST':
-        //     return {...state, loading: true};
         case 'FETCH_SUCCESS':
             return {...state, movie: action.payload, loading: false};
         case 'FETCH_TITLE':
