@@ -59,17 +59,23 @@ export default function EditMovieScreen() {
         fetchData();
     }, [movie.posterUrl,dispatch]);
     const {title, description, duration, releaseDate, posterUrl} = movie;
-    const submitEditHandler = (e) => {
+    const submitEditHandler = async (e) => {
         e.preventDefault();
-        console.log(movie);
-        // try {
-        //     await axios.put(`${URL}/movies/${id}`, movie, {
-        //         headers: { 'Authorization': `Bearer ${userInfo.token}` }
-        //     });
-        //     alert('Movie updated successfully');
-        // } catch (err) {
-        //     alert(err.message);
-        // }
+        try {
+            const data = {
+                "title": title,
+                "description": description,
+                "duration_in_minutes": duration,
+                "release_date":  moment(releaseDate).format("MM/DD/YYYY")
+            }
+            console.log(data);
+            await axios.put(`${URL}/movies/${id}`,data , {
+                headers: { 'Authorization': `Bearer ${userInfo.token}` }
+            });
+            alert('Movie updated successfully');
+        } catch (err) {
+            alert(err.message);
+        }
     };
 
     const handleImageChange = (newImageUrl) => {
@@ -109,7 +115,8 @@ export default function EditMovieScreen() {
                     <Form.Group className='mb-3' controlId='description'>
                         <Form.Label>Description</Form.Label>
                         <Form.Control
-                            type="text"
+                            as="textarea"
+                            rows={3}
                             value={description}
                             placeholder={description}
                             onChange={(e) => dispatch({type: 'FETCH_DESCRIPTION', payload: e.target.value})}
@@ -130,8 +137,8 @@ export default function EditMovieScreen() {
                         <Form.Label>Release Date</Form.Label>
                         <Form.Control
                             type="date"
-                            value={releaseDate}
-                            onChange={(e) => dispatch({type: 'FETCH_RELEASE_DATE', payload: e.target.value})}
+                            value={moment(releaseDate, "MM/DD/YYYY").format("YYYY-MM-DD")}
+                            onChange={(e) => dispatch({type: 'FETCH_RELEASE_DATE', payload: moment(e.target.value, "YYYY-MM-DD").format("MM/DD/YYYY")})}
                             required />
                     </Form.Group>
                         <Button type='submit'>Update</Button>
