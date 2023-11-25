@@ -153,12 +153,12 @@ export default function App() {
                                     </NavDropdown>
                                 ) : (
                                     <>
-                                      <Link className="member-options" to="/membership-options">
-                                        Membership Options
-                                      </Link>
-                                      <Link className="nav-Link" to="/signin">
-                                        Sign In
-                                      </Link>
+                                        <Link className="member-options" to="/membership-options">
+                                            Membership Options
+                                        </Link>
+                                        <Link className="nav-Link" to="/signin">
+                                            Sign In
+                                        </Link>
                                     </>
                                 )}
                             </Nav>
@@ -179,8 +179,7 @@ export default function App() {
                             <Route path="/analytics" element={<AnalyticsScreen/>}/>
                             <Route path="/cancel" element={<CancelPremiumScreen/>}/>
                             <Route path="/payment/stripe/:id" element={<StripeScreen/>}/>
-              <Route path="/membership-options" element={<MembershipOptionsScreen />} />
-
+                            <Route path="/membership-options" element={<MembershipOptionsScreen/>}/>
                             <Route path="/profile" element={<ProfileScreen/>}/>
                             <Route path="/premium" element={<PremiumScreen/>}/>
                             <Route path="/history" element={<HistoryScreen/>}/>
