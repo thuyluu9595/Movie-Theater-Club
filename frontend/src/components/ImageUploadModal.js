@@ -3,7 +3,7 @@ import {Button, Form, Modal} from "react-bootstrap";
 import axios from "axios";
 import {URL} from "../Constants";
 
-const ImageUploadModal = ({ show, onHide, id, userInfo}) => {
+const ImageUploadModal = ({ show, onHide, id, userInfo, onImageChange}) => {
     const [selectedFile, setSelectedFile] = useState(null);
     const [loading, setLoading] = useState(false);
 
@@ -24,7 +24,9 @@ const ImageUploadModal = ({ show, onHide, id, userInfo}) => {
                         'Authorization': `Bearer ${userInfo.token}`
                     }
                 });
+                const newUrl = response.data;
                 setLoading(false);
+                onImageChange(newUrl);
             } catch (err) {
                 alert(err.message);
             }
@@ -38,6 +40,7 @@ const ImageUploadModal = ({ show, onHide, id, userInfo}) => {
         handleImageChange(selectedFile);
         // Close the modal
         onHide();
+
     };
 
     return (

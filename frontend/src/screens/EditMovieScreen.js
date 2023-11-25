@@ -57,7 +57,7 @@ export default function EditMovieScreen() {
             }
         };
         fetchData();
-    }, [dispatch]);
+    }, [movie.posterUrl,dispatch]);
     const {title, description, duration, releaseDate, posterUrl} = movie;
     const submitEditHandler = (e) => {
         e.preventDefault();
@@ -70,6 +70,11 @@ export default function EditMovieScreen() {
         // } catch (err) {
         //     alert(err.message);
         // }
+    };
+
+    const handleImageChange = (newImageUrl) => {
+        // Update the movie state with the new image URL
+        dispatch({ type: 'FETCH_POSTER_URL', payload: newImageUrl });
     };
 
 
@@ -137,6 +142,8 @@ export default function EditMovieScreen() {
                                   loading={loading}
                                   id={id}
                                   userInfo={userInfo}
+                                  dispatch={dispatch}
+                                  onImageChange={handleImageChange}
                 />
             </div>
             )
