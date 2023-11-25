@@ -1,6 +1,7 @@
 package com.example.MovieTheaterAPI.movie.controller;
 
-import com.example.MovieTheaterAPI.movie.MovieDTO;
+import com.example.MovieTheaterAPI.movie.DTOs.MovieDTO;
+import com.example.MovieTheaterAPI.movie.DTOs.MovieResponseDTO;
 import com.example.MovieTheaterAPI.movie.model.Movie;
 import com.example.MovieTheaterAPI.movie.service.MovieServiceImpl;
 import com.example.MovieTheaterAPI.movie.utils.MovieExistedException;
@@ -21,11 +22,6 @@ public class MovieController {
         this.movieService = movieService;
     }
 
-    @GetMapping
-    public String getMovies() {
-        // Route for test purposes
-        return "Hello World";
-    }
 
     @GetMapping("/")
     public ResponseEntity<?> getAllMovies() {
@@ -33,9 +29,9 @@ public class MovieController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Movie> getMovieById(@PathVariable Long id) {
+    public ResponseEntity<?> getMovieById(@PathVariable Long id) {
         try {
-            Movie movie = movieService.getMovieById(id);
+            MovieResponseDTO movie = movieService.getMovieById(id);
             return ResponseEntity.ok(movie);
         } catch (MovieNotFoundException e) {
             return ResponseEntity.notFound().build();
@@ -49,7 +45,7 @@ public class MovieController {
         }
 
         try {
-            Movie createdMovie = movieService.createMovie(movie);
+            MovieResponseDTO createdMovie = movieService.createMovie(movie);
             return ResponseEntity.ok(createdMovie);
         }
         catch (MovieExistedException e) {
@@ -63,7 +59,7 @@ public class MovieController {
             return ResponseEntity.badRequest().build();
         }
         try {
-            Movie updatedMovie = movieService.updateMovie(id, movie);
+            MovieResponseDTO updatedMovie = movieService.updateMovie(id, movie);
             return ResponseEntity.ok(updatedMovie);
         }
         catch (MovieNotFoundException e) {
@@ -86,7 +82,7 @@ public class MovieController {
 
     @GetMapping("/title/{title}")
     public ResponseEntity<?> getMovieByTitle(@PathVariable String title) {
-        Movie movie = movieService.getMovieByTitle(title);
+        MovieResponseDTO movie = movieService.getMovieByTitle(title);
         if (movie != null)
             return ResponseEntity.ok(movie);
         else

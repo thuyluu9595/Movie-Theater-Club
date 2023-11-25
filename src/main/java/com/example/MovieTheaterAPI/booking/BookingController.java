@@ -90,8 +90,8 @@ public class BookingController {
 
     }
 
-    @GetMapping("/watched-movie-30")
-    public ResponseEntity<?> getBookingsByUserIn30Days(@RequestParam Long id) {
+    @GetMapping("/watched-movie-30/{id}")
+    public ResponseEntity<?> getBookingsByUserIn30Days(@PathVariable Long id) {
         List<Movie> movies = bookingService.getBookingsByUserAndMovieDate(id);
         return ResponseEntity.ok(movies);
     }
