@@ -22,6 +22,9 @@ import { URL } from "./Constants";
 import CancelPremiumScreen from "./screens/CancelPremiumScreen";
 import MembershipOptionsScreen from "./screens/MembershipOptionsScreen";
 import WatchedHistoryScreen from "./screens/WatchedHistoryScreen";
+import ManageMoviesScreen from "./screens/ManageMoviesScreen";
+import EditMovieScreen from "./screens/EditMovieScreen";
+import CreateMovieScreen from "./screens/CreateMovieScreen";
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -121,8 +124,8 @@ export default function App() {
                         <LinkContainer to="/locations">
                           <NavDropdown.Item>Location</NavDropdown.Item>
                         </LinkContainer>
-                        <LinkContainer to="/">
-                          <NavDropdown.Item>Movies</NavDropdown.Item>
+                        <LinkContainer to="/manage-movies">
+                          <NavDropdown.Item>Manage Movies</NavDropdown.Item>
                         </LinkContainer>
                         <LinkContainer to="/showtimes">
                           <NavDropdown.Item>Showtime</NavDropdown.Item>
@@ -183,6 +186,9 @@ export default function App() {
               <Route path="/cancel" element={<CancelPremiumScreen />} />
               <Route path="/membership-options" element={<MembershipOptionsScreen />} />
               <Route path="/watched30" element={<WatchedHistoryScreen />} />
+              <Route path="/manage-movies" element={<ManageMoviesScreen />} />
+              <Route path="/manage-movies/:id" element={<EditMovieScreen />} />
+              <Route path="/addmovie" element={<CreateMovieScreen />} />
 
               <Route path="/profile" element={<ProfileScreen />} />
               <Route path="/premium" element={<PremiumScreen />} />

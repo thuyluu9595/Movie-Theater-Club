@@ -60,7 +60,7 @@ export default function HomeScreen(props){
             ) : (
             movies.map((movie) => (
             <Col key={movie._id} sm={6} md={4} lg={3} className='mb-3'>
-              <Movie movie={movie}></Movie>
+              <Movie movie={movie} buttonName="Get Tickets"></Movie>
             </Col>
           )))}
         </Row>

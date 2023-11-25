@@ -6,7 +6,7 @@ import Button from 'react-bootstrap/Button';
 
 
 export default function Movie(props){
-  const {movie} = props;
+  const {movie, buttonName} = props;
   return (
     <Card>
       <Link to={`/movie/${movie.id}`}>
@@ -17,14 +17,27 @@ export default function Movie(props){
           width="500" height="500"
           />
       </Link>
-      <Card.Body>
-        <Link to={`/movie/${movie.id}`}>
-          <Card.Title>{movie.title}</Card.Title>
-        </Link>
-        <Link to={`/showtimes/${movie.id}`}>
-          <Button>Get Tickets</Button>
-        </Link>
-      </Card.Body>
+        {buttonName === "Edit" ? (
+                <Card.Body>
+                    <Link to={`/manage-movies/${movie.id}`}>
+                        <Card.Title>{movie.title}</Card.Title>
+                    </Link>
+                    <Link to={`/manage-movies/${movie.id}`}>
+                        <Button>{buttonName}</Button>
+                    </Link>
+                </Card.Body>
+
+        ) : (
+            <Card.Body>
+                    <Link to={`/movie/${movie.id}`}>
+                <Card.Title>{movie.title}</Card.Title>
+            </Link>
+            <Link to={`/showtimes/${movie.id}`}>
+                <Button>{buttonName}</Button>
+            </Link>
+            </Card.Body>
+        )}
+
     </Card>
   )
 } 
