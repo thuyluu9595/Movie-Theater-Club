@@ -48,20 +48,15 @@ public class UserController {
         return new ResponseEntity<>(userService.createEmployee(user), HttpStatus.CREATED);
     }
 
-    @PutMapping("/{id}/changepw")
-    public ResponseEntity<?> changePassword(
-            @PathVariable long id,
-            @RequestBody ChangePasswordDTO req) {
-        //Todo: verify old password
-        User user;
+    @PutMapping("/changepw")
+    public ResponseEntity<?> changePassword(@RequestBody ChangePasswordDTO req) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        CustomAuthentication auth = (CustomAuthentication) authentication;
         try {
-            user = userService.getUser(id);
+            User user = userService.getUser(auth.getId());
+            userService.changePassword(user, req);
         } catch (UserNotFoundException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-
-        try {
-            userService.changePassword(user, req);
         } catch (RuntimeException e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
