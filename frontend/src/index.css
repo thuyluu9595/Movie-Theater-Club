@@ -143,7 +143,10 @@ main {
 }
 /*======== End Style for AnalyticsScreen ========*/
 /*========Style for MembershipOptionScreen=======*/
-/* Overall styling */
+.member-options{
+    margin-right: 0.5rem;
+
+}
 .membership-options {
   padding: 20px;
   background-color: #fff;
@@ -182,5 +185,10 @@ main {
 
 .membership-card-button {
 
+}
+
+.membership-price {
+  text-align: center;
+  font-size: 24px;
 }
 /*========Style for MembershipOptionScreen=======*/

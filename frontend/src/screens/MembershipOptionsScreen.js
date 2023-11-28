@@ -82,6 +82,7 @@ const MembershipOptionsScreen = () => {
                                     <li>Newsletter subscription for regular updates on movie releases and exclusive offers.</li>
                                 </ul>
                             </Card.Text>
+                            <Card.Text className="membership-price">Free</Card.Text>
                                 <Button variant="info"
                                         className="mx-auto d-block membership-card-button"
                                         onClick={handleRegularClick}
@@ -97,7 +98,7 @@ const MembershipOptionsScreen = () => {
                         <Card.Body >
                             <Card.Title className="membership-plan-title">Premium Membership</Card.Title>
                             <Card.Text className="membership-plan-benefits">
-                                <p>Premium membership comes with additional benefits for an annual fee of $15:</p>
+                                <p>Premium membership comes with additional benefits for an annual fee of <b>$15</b>:</p>
                                 <ul>
                                     <li>Online service fee waived for any booking.</li>
                                     <li>Book multiple seats (up to 8) for a movie show.</li>
@@ -106,6 +107,7 @@ const MembershipOptionsScreen = () => {
                                     <li>Receive invitations to special events, premieres, or exclusive screenings.</li>
                                 </ul>
                             </Card.Text>
+                            <Card.Text className="membership-price">$15/year</Card.Text>
                                 <Button variant="info"
                                         className="mt-3 mx-auto d-block"
                                         onClick={handlePremiumClick}

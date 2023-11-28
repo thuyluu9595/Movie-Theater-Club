@@ -1,6 +1,6 @@
 import {BrowserRouter, Link, Route, Routes, useLocation, useNavigate} from "react-router-dom";
 import React, {useContext, useEffect, useReducer} from "react";
-import {Navbar, Nav, Container, NavDropdown} from "react-bootstrap";
+import {Navbar, Nav, Container, NavDropdown, NavItem} from "react-bootstrap";
 import LinkContainer from "react-router-bootstrap/LinkContainer";
 import HomeScreen from "./screens/HomeScreen";
 import MovieScreen from "./screens/MovieScreen";
@@ -22,7 +22,12 @@ import {URL} from "./Constants";
 import CancelPremiumScreen from "./screens/CancelPremiumScreen";
 import StripeScreen from "./screens/StripeScreen";
 import MembershipOptionsScreen from "./screens/MembershipOptionsScreen";
+import WatchedHistoryScreen from "./screens/WatchedHistoryScreen";
+import ManageMoviesScreen from "./screens/ManageMoviesScreen";
+import EditMovieScreen from "./screens/EditMovieScreen";
+import CreateMovieScreen from "./screens/CreateMovieScreen";
 import ChangePasswordScreen from "./screens/ChangePasswordScreen";
+
 
 const reducer = (state, action) => {
     switch (action.type) {
@@ -90,7 +95,6 @@ export default function App() {
         }
     }
 
-
     return (
         <BrowserRouter>
             <div className="d-flex flex-column site-container">
@@ -122,8 +126,8 @@ export default function App() {
                                                 <LinkContainer to="/locations">
                                                     <NavDropdown.Item>Location</NavDropdown.Item>
                                                 </LinkContainer>
-                                                <LinkContainer to="/">
-                                                    <NavDropdown.Item>Movies</NavDropdown.Item>
+                                                <LinkContainer to="/manage-movies">
+                                                    <NavDropdown.Item>Manage Movies</NavDropdown.Item>
                                                 </LinkContainer>
                                                 <LinkContainer to="/showtimes">
                                                     <NavDropdown.Item>Showtime</NavDropdown.Item>
@@ -139,6 +143,9 @@ export default function App() {
                                                 </LinkContainer>
                                                 <LinkContainer to="/history">
                                                     <NavDropdown.Item>History</NavDropdown.Item>
+                                                </LinkContainer>
+                                                <LinkContainer to="/watched30">
+                                                    <NavDropdown.Item>Watched History</NavDropdown.Item>
                                                 </LinkContainer>
                                                 <LinkContainer to="/changepw">
                                                     <NavDropdown.Item>Change Password</NavDropdown.Item>
@@ -189,6 +196,10 @@ export default function App() {
                             <Route path="/history" element={<HistoryScreen/>}/>
                             <Route path="/locations/:id" element={<ScreenScreen/>}/>
                             <Route path="/changepw" element={<ChangePasswordScreen/>}/>
+                            <Route path="/watched30" element={<WatchedHistoryScreen />} />
+                            <Route path="/manage-movies" element={<ManageMoviesScreen />} />
+                            <Route path="/manage-movies/:id" element={<EditMovieScreen />} />
+                            <Route path="/addmovie" element={<CreateMovieScreen />} />
                         </Routes>
                     </Container>
                 </main>
