@@ -93,7 +93,7 @@ main {
 .row {
   margin-bottom: 20px;
   display: flex;
-  justify-content: space-between;
+  /*justify-content: space-between;*/
 
 }
 
@@ -192,3 +192,6 @@ main {
   font-size: 24px;
 }
 /*========Style for MembershipOptionScreen=======*/
+.mb-3 {
+  min-width: 20rem;
+}
