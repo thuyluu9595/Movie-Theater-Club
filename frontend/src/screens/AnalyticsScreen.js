@@ -1,9 +1,9 @@
 import React, {useEffect, useReducer, useContext} from 'react';
-import { Pie } from 'react-chartjs-2';
-import { Chart as ChartJS, ArcElement, Tooltip, Legend} from "chart.js";
+import {Pie} from 'react-chartjs-2';
+import {Chart as ChartJS, ArcElement, Tooltip, Legend} from "chart.js";
 import {Col, Container, Form, Row} from 'react-bootstrap';
 import axios from "axios";
-import { URL } from "../Constants";
+import {URL} from "../Constants";
 import {Store} from "../Stores";
 import LoadingBox from "../components/LoadingBox";
 import MessageBox from "../components/MessageBox";
@@ -27,7 +27,7 @@ const reducer = (state, action) => {
         case 'FETCH_SUCCESS':
             return {...state, plots: action.payload, loading: false};
         case 'FETCH_FAIL':
-            return {...state,loading:false, error: action.payload};
+            return {...state, loading: false, error: action.payload};
         default:
             return state;
     }
@@ -39,7 +39,7 @@ const AnalyticsScreen = () => {
         plots: [],
         days: 30,
         category: 'locations',
-        loading : true,
+        loading: true,
         error: '',
     });
     useEffect(() => {
@@ -47,7 +47,7 @@ const AnalyticsScreen = () => {
             dispatch({type: 'FETCH_REQUEST'});
             try {
                 const response = await axios.get(`${URL}/analytic/${category}?days=${days}`, {
-                    headers: { 'Authorization': `Bearer ${userInfo.token}` }
+                    headers: {'Authorization': `Bearer ${userInfo.token}`}
                 });
                 dispatch({type: 'FETCH_SUCCESS', payload: response.data});
 
@@ -92,14 +92,14 @@ const AnalyticsScreen = () => {
             <Row className="row">
                 {
                     loading ? (
-                        <LoadingBox />
+                        <LoadingBox/>
                     ) : error ? (
                         <MessageBox variant='danger'>{error}</MessageBox>
                     ) : (
 
                         plots.length > 0 ? (plots.map((plot) => {
                                 let data = [0, 0, 100];
-                                if (plot.occupiedPercent !=='NaN') {
+                                if (plot.occupiedPercent !== 'NaN') {
                                     data = [parseFloat(plot.occupiedPercent), 100 - parseFloat(plot.occupiedPercent), 0];
                                 }
 
@@ -117,10 +117,12 @@ const AnalyticsScreen = () => {
                                 const pieChartColor = `rgb(${plot.id * 50}, ${plot.id * 50}, ${plot.id * 50})`
 
                                 return (
-                                    plot.movie != null|| plot.location != null ? (
-                                        <Col key={plot.location != null ? plot.location.city : plot.movie.id} className="col" sm={6} md={4} lg={3} style={{ backgroundColor: pieChartColor }}>
+                                    plot.movie != null || plot.location != null ? (
+                                        <Col key={plot.location != null ? plot.location.city : plot.movie.id}
+                                             className="col" sm={6} md={4} lg={3}
+                                             style={{backgroundColor: pieChartColor}}>
                                             <h2>{plot.location != null ? plot.location.city + ", " + plot.location.state : plot.movie.title}</h2>
-                                            <Pie data={chartData} />
+                                            <Pie data={chartData}/>
                                         </Col>) : null
 
                                 );
@@ -132,7 +134,7 @@ const AnalyticsScreen = () => {
                     )}
             </Row>
         </Container>
-            
+
 
         // </div>
     );
