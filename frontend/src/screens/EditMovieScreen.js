@@ -1,7 +1,7 @@
 import React, {useContext, useEffect, useReducer, useState} from 'react'
 import { Helmet } from 'react-helmet';
 import {Form, Button, Container} from 'react-bootstrap'
-import {useParams} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import axios from "axios";
 import { URL } from "../Constants"
 import MessageBox from "../components/MessageBox";
@@ -35,6 +35,7 @@ const reducer = (state, action) => {
 export default function EditMovieScreen() {
 
     const id = useParams().id;
+    const navigate = useNavigate();
     const {state} = useContext(Store);
     const {userInfo} = state;
 
@@ -84,6 +85,19 @@ export default function EditMovieScreen() {
     };
 
 
+    function deleteHandler() {
+        try{
+            axios.delete(`${URL}/movies/${id}`,
+                {
+                    headers: { 'Authorization': `Bearer ${userInfo.token}` }
+                });
+            alert('Movie deleted');
+        } catch (err) {
+            alert(err.message);
+        }
+        navigate('/manage-movies');
+    }
+
     return (
         <Container className='edit-movie'>
             <Helmet>
@@ -103,7 +117,7 @@ export default function EditMovieScreen() {
                         <button onClick={() => setShowModal(true)}>Change Image</button>
                     </div>
                 </div>
-                <Form onSubmit={submitEditHandler}>
+                <Form onSubmit={submitEditHandler} style={{marginBottom:"1rem"}}>
                     <Form.Group className='mb-3' controlId='title'>
                         <Form.Label>Movie Title</Form.Label>
                         <Form.Control
@@ -142,8 +156,9 @@ export default function EditMovieScreen() {
                             required />
                     </Form.Group>
                         <Button type='submit'>Update</Button>
-
+                        <Button onClick={deleteHandler} style={{display: "inline-flex", backgroundColor:"red", marginLeft:"5px"}}>Delete</Button>
                 </Form>
+
                 <ImageUploadModal show={showModal}
                                   onHide={() => setShowModal(false)}
                                   loading={loading}
