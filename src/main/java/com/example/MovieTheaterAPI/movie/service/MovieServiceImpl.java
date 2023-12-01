@@ -74,6 +74,8 @@ public class MovieServiceImpl implements MovieService{
         if (movie.getTitle() != null && !movie.getTitle().equals("")) {
             existingMovie.setTitle(movie.getTitle());
         }
+        existingMovie.setDescription(movie.getDescription());
+        
         if (movie.getDurationInMinutes() != 0) {
             existingMovie.setDuration(Duration.ofMinutes(movie.getDurationInMinutes()));
         }
