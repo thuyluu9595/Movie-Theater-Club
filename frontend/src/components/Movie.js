@@ -6,7 +6,7 @@ import Button from 'react-bootstrap/Button';
 
 
 export default function Movie(props){
-  const {movie, buttonName} = props;
+  const {movie, buttonName, disable} = props;
   return (
     <Card>
       <Link to={`/movie/${movie.id}`}>
@@ -32,9 +32,14 @@ export default function Movie(props){
                     <Link to={`/movie/${movie.id}`}>
                 <Card.Title>{movie.title}</Card.Title>
             </Link>
-            <Link to={`/showtimes/${movie.id}`}>
-                <Button>{buttonName}</Button>
-            </Link>
+                {
+                    disable ? null : (
+                        <Link to={`/showtimes/${movie.id}`}>
+                            <Button>{buttonName}</Button>
+                        </Link>
+
+                    )
+                }
             </Card.Body>
         )}
 

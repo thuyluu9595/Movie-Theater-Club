@@ -63,7 +63,7 @@ const WatchedHistoryScreen = () => {
                         state.movies.length > 0 ? (
                             state.movies.map((movie) => (
                                 <Col key={movie._id} sm={6} md={4} lg={3} className='mb-3'>
-                                    <Movie movie={movie}></Movie>
+                                    <Movie movie={movie} buttonName="Get Tickets"></Movie>
                                 </Col>
                             ))
                         ) : (
