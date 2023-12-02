@@ -1,10 +1,15 @@
 package com.example.MovieTheaterAPI.showtime;
 
+import com.example.MovieTheaterAPI.booking.Booking;
 import com.example.MovieTheaterAPI.discount.Discount;
 import com.example.MovieTheaterAPI.movie.model.Movie;
 import com.example.MovieTheaterAPI.screen.Screen;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
+import com.example.MovieTheaterAPI.booking.Booking;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
