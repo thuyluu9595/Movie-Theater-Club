@@ -27,6 +27,7 @@ import ManageMoviesScreen from "./screens/ManageMoviesScreen";
 import EditMovieScreen from "./screens/EditMovieScreen";
 import CreateMovieScreen from "./screens/CreateMovieScreen";
 import ChangePasswordScreen from "./screens/ChangePasswordScreen";
+import Discount from "./screens/Discount";
 
 
 const reducer = (state, action) => {
@@ -126,6 +127,9 @@ export default function App() {
                                                 <LinkContainer to="/locations">
                                                     <NavDropdown.Item>Location</NavDropdown.Item>
                                                 </LinkContainer>
+                                                <LinkContainer to="/discount">
+                                                    <NavDropdown.Item>Discount</NavDropdown.Item>
+                                                </LinkContainer>
                                                 <LinkContainer to="/manage-movies">
                                                     <NavDropdown.Item>Manage Movies</NavDropdown.Item>
                                                 </LinkContainer>
@@ -197,6 +201,7 @@ export default function App() {
                             <Route path="/manage-movies" element={<ManageMoviesScreen/>}/>
                             <Route path="/manage-movies/:id" element={<EditMovieScreen/>}/>
                             <Route path="/addmovie" element={<CreateMovieScreen/>}/>
+                            <Route path="/discount" element={<Discount/>}/>
                         </Routes>
                     </Container>
                 </main>
