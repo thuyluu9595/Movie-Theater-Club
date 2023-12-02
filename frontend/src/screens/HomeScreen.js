@@ -102,7 +102,7 @@ export default function HomeScreen(props){
       </div>
         <div>
             <h2>Upcoming Movies</h2>
-            <Slider slidesToShow={3} slidesToScroll={1} infinite={true}>
+            <Slider slidesToShow={4} slidesToScroll={1} infinite={true}>
                 {upcomingMovies.map((movie) => (
                     <div key={movie.id}>
                         <Movie movie={movie} buttonName={"Get Ticket"} disable={true}></Movie>
