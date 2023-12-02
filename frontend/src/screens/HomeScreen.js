@@ -100,7 +100,7 @@ export default function HomeScreen(props) {
                             movies.map((movie) => (
                                 <Col key={movie._id} sm={6} md={4} lg={3} className='mb-3'>
                                     <Movie movie={movie}
-                                           buttonName={userInfo.role === "Employee" ? "Edit" : "Get Ticket"}></Movie>
+                                           buttonName={userInfo && userInfo.role === "Employee" ? "Edit" : "Get Ticket"}></Movie>
                                 </Col>
                             )))}
                 </Row>
@@ -110,7 +110,8 @@ export default function HomeScreen(props) {
                 <Slider slidesToShow={3} slidesToScroll={1} infinite={true}>
                     {upcomingMovies.map((movie) => (
                         <div key={movie.id}>
-                            <Movie movie={movie} buttonName={userInfo.role === "Employee" ? "Edit" : "Get Ticket"}
+                            <Movie movie={movie}
+                                   buttonName={userInfo && userInfo.role === "Employee" ? "Edit" : "Get Ticket"}
                                    disable={true}></Movie>
                         </div>
                     ))}
