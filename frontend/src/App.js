@@ -129,9 +129,6 @@ export default function App() {
                                                 <LinkContainer to="/manage-movies">
                                                     <NavDropdown.Item>Manage Movies</NavDropdown.Item>
                                                 </LinkContainer>
-                                                <LinkContainer to="/showtimes">
-                                                    <NavDropdown.Item>Showtime</NavDropdown.Item>
-                                                </LinkContainer>
                                                 <LinkContainer to="/analytics">
                                                     <NavDropdown.Item>Analytics</NavDropdown.Item>
                                                 </LinkContainer>
@@ -196,10 +193,10 @@ export default function App() {
                             <Route path="/history" element={<HistoryScreen/>}/>
                             <Route path="/locations/:id" element={<ScreenScreen/>}/>
                             <Route path="/changepw" element={<ChangePasswordScreen/>}/>
-                            <Route path="/watched30" element={<WatchedHistoryScreen />} />
-                            <Route path="/manage-movies" element={<ManageMoviesScreen />} />
-                            <Route path="/manage-movies/:id" element={<EditMovieScreen />} />
-                            <Route path="/addmovie" element={<CreateMovieScreen />} />
+                            <Route path="/watched30" element={<WatchedHistoryScreen/>}/>
+                            <Route path="/manage-movies" element={<ManageMoviesScreen/>}/>
+                            <Route path="/manage-movies/:id" element={<EditMovieScreen/>}/>
+                            <Route path="/addmovie" element={<CreateMovieScreen/>}/>
                         </Routes>
                     </Container>
                 </main>
