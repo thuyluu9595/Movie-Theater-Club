@@ -27,6 +27,7 @@ import ManageMoviesScreen from "./screens/ManageMoviesScreen";
 import EditMovieScreen from "./screens/EditMovieScreen";
 import CreateMovieScreen from "./screens/CreateMovieScreen";
 import ChangePasswordScreen from "./screens/ChangePasswordScreen";
+import ShowtimeByLocationScreen from "./screens/ShowtimeByLocationScreen";
 
 
 const reducer = (state, action) => {
@@ -164,6 +165,9 @@ export default function App() {
                                     </NavDropdown>
                                 ) : (
                                     <>
+                                        <Link className="member-options" to="/showtime">
+                                            Showtime
+                                        </Link>
                                         <Link className="member-options" to="/membership-options">
                                             Membership Options
                                         </Link>
@@ -200,6 +204,7 @@ export default function App() {
                             <Route path="/manage-movies" element={<ManageMoviesScreen />} />
                             <Route path="/manage-movies/:id" element={<EditMovieScreen />} />
                             <Route path="/addmovie" element={<CreateMovieScreen />} />
+                            <Route path="/showtime" element={<ShowtimeByLocationScreen />} />
                         </Routes>
                     </Container>
                 </main>
