@@ -1,10 +1,12 @@
 import React, { useEffect, useReducer, useState } from 'react';
-import { Col, Container, Form, Row } from 'react-bootstrap';
+import {Button, Col, Container, Form, ListGroup, ListGroupItem, Row} from 'react-bootstrap';
 import Helmet from 'react-helmet';
 import axios from 'axios';
 import LoadingBox from '../components/LoadingBox';
 import MessageBox from '../components/MessageBox';
-import { URL } from '../Constants'; // Import your URL constant
+import { URL } from '../Constants';
+import Card from "react-bootstrap/Card";
+import {useNavigate} from "react-router-dom"; // Import your URL constant
 
 const reducer = (state, action) => {
     switch (action.type) {
@@ -29,6 +31,7 @@ const ShowtimeByLocationScreen = () => {
         error: '',
     });
 
+    const navigate = useNavigate();
     useEffect(() => {
         const fetchLocations = async () => {
             try {
@@ -71,24 +74,32 @@ const ShowtimeByLocationScreen = () => {
                 <MessageBox variant="danger">{error}</MessageBox>
             ) : (
                 <>
-                    <label htmlFor="location-select" style={{ color: 'black', marginRight: '0.7rem' }}>
+                    <label htmlFor="location-select" style={{ color: 'white', marginRight: '0.7rem' }}>
                         Location:{' '}
                     </label>
-                    <Form.Control as="select" className="location-select" value={locationId} onChange={handleLocationChange}>
+                    <Form.Control as="select" style={{maxWidth:'30%',marginBottom:'8px'}} className="location-select" value={locationId} onChange={handleLocationChange}>
                         {locations.map((lo) => (
                             <option key={lo.id} value={lo.id}>
                                 {lo.city + ', ' + lo.state}
                             </option>
                         ))}
                     </Form.Control>
-                    <Row className="row">
+                    <Row xs={1} md={2} className="g-4">
                         {showtime.map((show) => (
                             <Col key={show.id} className="col" sm={6} md={4} lg={3}>
-                                <ul>
-                                    <li>{show.id}</li>
-                                    <li>{show.movie.title}</li>
-                                    <li>{show.screen.name}</li>
-                                </ul>
+                                <Card>
+                                    <Card.Body>
+                                        <Card.Title style={{color:'black'}}>{show.movie.title}</Card.Title>
+                                        <ListGroup style={{marginBottom:'2px'}}>
+                                            <ListGroup.Item>Room: {show.screen.name}</ListGroup.Item>
+                                            <ListGroup.Item>Show date: {show.date}</ListGroup.Item>
+                                            <ListGroup.Item>Start time: {show.startTime}</ListGroup.Item>
+                                            <ListGroup.Item>Price: ${show.price}</ListGroup.Item>
+                                        </ListGroup>
+
+                                        <Button variant="primary" onClick={() => navigate(`/bookings/${show.id}`)}>Book</Button>
+                                    </Card.Body>
+                                </Card>
                             </Col>
                         ))}
                     </Row>

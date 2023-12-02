@@ -169,7 +169,7 @@ export default function App() {
                                             Showtime
                                         </Link>
                                         <Link className="member-options" to="/membership-options">
-                                            Membership Options
+                                            Membership
                                         </Link>
                                         <Link className="nav-Link" to="/signin">
                                             Sign In
