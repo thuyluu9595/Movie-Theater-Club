@@ -24,4 +24,6 @@ public interface BookingService {
 //    List<Booking> getBookingsByStatus(BookingStatus status);
 //    List<Booking> getBookingsByShowTimeIdAndBookingDate(Long showTimeId, String bookingDate);
     List<Movie> getBookingsByUserAndMovieDate(Long id);
+
+    Boolean cancelShow(Long id);
 }

@@ -11,4 +11,6 @@ public interface ShowTimeService {
     List<ShowTime> getShowTimeByLocation(long locationId);
     ShowTime getShowTimeById(long showtimeId);
     List<ShowTime> getShowTimeByDate(LocalDate date);
+
+    Boolean deleteShowTime(long showtimeId);
 }
