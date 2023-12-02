@@ -66,4 +66,14 @@ public class ShowTimeController {
         LocalDate date = LocalDate.parse(dateString, formatter);
         return ResponseEntity.ok(showTimeService.getShowTimeByDate(date));
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteShowTimeByID(@PathVariable long id) {
+        try {
+            if (showTimeService.deleteShowTime(id)) return ResponseEntity.noContent().build();
+            else return ResponseEntity.notFound().build();
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
 }

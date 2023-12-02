@@ -1,5 +1,6 @@
 package com.example.MovieTheaterAPI.showtime;
 
+import com.example.MovieTheaterAPI.booking.BookingService;
 import com.example.MovieTheaterAPI.discount.Discount;
 import com.example.MovieTheaterAPI.discount.DiscountRepository;
 import com.example.MovieTheaterAPI.discount.DiscountService;
@@ -30,6 +31,7 @@ public class ShowTimeServiceImpl implements ShowTimeService {
     private final ScreenRepository screenRepository;
     private final LocationRepository locationRepository;
     private final DiscountRepository discountRepository;
+    private final BookingService bookingService;
 
     @Override
     public ShowTime createShowTime(ShowTimeDTO showTimeDTO) {
@@ -75,6 +77,16 @@ public class ShowTimeServiceImpl implements ShowTimeService {
     @Override
     public List<ShowTime> getShowTimeByDate(LocalDate date) {
         return showTimeRepository.findShowTimeByDate(date);
+    }
+
+    @Override
+    public Boolean deleteShowTime(long showtimeId) {
+        ShowTime showTime = getEntityOrThrow(showTimeRepository.findById(showtimeId));
+        if (bookingService.cancelShow(showtimeId)) {
+            showTimeRepository.deleteById(showTime.getId());
+            return true;
+        }
+        return false;
     }
 
     private <T> T getEntityOrThrow(Optional<T> optional) {
