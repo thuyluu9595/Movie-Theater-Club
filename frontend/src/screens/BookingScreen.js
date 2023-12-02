@@ -101,12 +101,13 @@ export default function BookingScreen() {
   const renderCinemaHall = () => {
     let cinemaHall = [];
     let isSelect;
-    for (let i = 0; i < show.availableSeat.length; i++) {
+    for (let i = 1; i <= show.availableSeat.length; i++) {
       if (selectedSeats.includes(i)) {
         isSelect = true;
       } else {
         isSelect = false;
       }
+      console.log(i, show.availableSeat[i - 1], show.availableSeat);
       cinemaHall = [
         ...cinemaHall,
         <Col md={3}>
@@ -124,6 +125,7 @@ export default function BookingScreen() {
   };
 
   const handleSelectSeat = async (seatNumber) => {
+    console.log(seatNumber, selectedSeats);
     if (selectedSeats.includes(seatNumber)) {
       const allSelected = selectedSeats.filter((seat) => seat !== seatNumber);
       changeSelectedSeats(allSelected);
@@ -131,7 +133,7 @@ export default function BookingScreen() {
       setLimit(false);
     } else if (selectedSeats.length === 8) {
       setLimit(true);
-    } else if (show.availableSeat[seatNumber] == null) {
+    } else if (show.availableSeat[seatNumber - 1] == null) {
       return;
     } else {
       const allSelected = [...selectedSeats, seatNumber];
