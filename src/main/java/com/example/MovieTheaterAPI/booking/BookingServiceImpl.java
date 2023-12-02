@@ -173,4 +173,18 @@ public class BookingServiceImpl implements BookingService{
         }
         return movies;
     }
+
+    @Override
+    public Boolean cancelShow(Long id) {
+        try {
+        List<Booking> bookingList = bookingRepository.findByShowTimeId(id);
+        for (Booking b : bookingList) {
+            this.cancelBooking(b.getId());
+            b.setShowTime(null);
+            bookingRepository.save(b);
+        }} catch (Exception e) {
+            return false;
+        }
+        return true;
+    }
 }
