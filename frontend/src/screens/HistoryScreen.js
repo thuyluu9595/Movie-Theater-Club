@@ -17,6 +17,14 @@ const reducer = (state, action) => {
             return {...state, histories: action.payload, loading: false};
         case "FETCH_FAIL":
             return {...state, loading: false, error: action.payload};
+        case "CANCEL_REQUEST":
+            return {...state, loadingCancel: true};
+        case "CANCEL_SUCCESS":
+            return {...state, loadingCancel: false, success: true};
+        case "CANCEL_FAIL":
+            return {...state, loadingCancel: false, errorCancel: action.payload};
+        case "CANCEL_RESET":
+            return {...state, loadingCancel: false, success: false};
         default:
             return state;
     }
@@ -25,7 +33,10 @@ const reducer = (state, action) => {
 const initialState = {
     histories: [],
     loading: true,
-    error: null
+    error: null,
+    loadingCancel: false,
+    errorCancel: null,
+    success: false,
 };
 
 export default function HistoryScreen() {
@@ -36,11 +47,19 @@ export default function HistoryScreen() {
     const navigate = useNavigate();
 
 
-    const [{loading, error, histories}, dispatch] = useReducer(reducer, initialState);
+    const [{
+        loading,
+        error,
+        histories,
+        loadingCancel,
+        errorCancel,
+        success
+    }, dispatch] = useReducer(reducer, initialState);
 
     useEffect(() => {
         fetchShow()
-    }, []);
+        if (success) dispatch("CANCEL_RESET");
+    }, [success]);
 
     const fetchShow = async () => {
         dispatch({type: 'FETCH_REQUEST'});
@@ -53,6 +72,24 @@ export default function HistoryScreen() {
             dispatch({type: 'FETCH_FAIL', payload: error.message || 'Error fetching show'});
         }
     };
+
+    const cancelHandler = async (id) => {
+        if (window.confirm("Do you want to cancel this?")) {
+            dispatch({type: 'CANCEL_REQUEST'});
+            try {
+                const response = await axios.put(`${URL}/bookings/cancel/${id}`,
+                    {},
+                    {headers: {Authorization: `Bearer ${userInfo.token}`}}
+                )
+                dispatch({type: 'CANCEL_SUCCESS'});
+                alert("Ticket canceled, refund will be issue in the next 2 or 3 business day.")
+            } catch (error) {
+                dispatch({type: 'CANCEL_FAIL', payload: error.message || 'Cannot cancel'});
+            }
+        }
+    }
+
+
     return (
         <div>
             <Helmet>
@@ -62,39 +99,44 @@ export default function HistoryScreen() {
             {loading ? (
                 <LoadingBox></LoadingBox>
             ) : error ? (
-                <MessageBox varian="fanger">{error}</MessageBox>
+                <MessageBox varian="danger">{error}</MessageBox>
             ) : (
-                <Table className="table">
-                    <thead>
-                    <tr>
-                        <th>MOVIE</th>
-                        <th>SCREEN</th>
-                        <th>LOCATION</th>
-                        <th>SEATS</th>
-                        <th>STATUS</th>
-                        <th>TOTAL</th>
-                        <th>ACTION</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {histories.map((history) => (
-                        <tr key={history.id}>
-                            <td>{history.showTime.movie.title}</td>
-                            <td>{history.showTime.screen.name}</td>
-                            <td>{history.showTime.screen.location.city}, {history.showTime.screen.location.state}</td>
-                            <td>{history.seats.toString()}</td>
-                            <td>{history.status}</td>
-                            <td>{history.totalPrice.toFixed(2)}</td>
-                            <td>{history.status === "PENDING" ?
-                                <Link to={`/payment/${history.id}`}>
-                                    <Button variant="primary">Pay</Button>
-                                </Link> :
-                                new Date(history.showTime.date) > new Date() &&
-                                <Button variant="danger">Cancel</Button>}</td>
+                <>
+                {loadingCancel && (<LoadingBox/>)}
+                {errorCancel && <MessageBox varian="danger"></MessageBox>}
+                    <Table className="table">
+                        <thead>
+                        <tr>
+                            <th>MOVIE</th>
+                            <th>SCREEN</th>
+                            <th>LOCATION</th>
+                            <th>SEATS</th>
+                            <th>STATUS</th>
+                            <th>TOTAL</th>
+                            <th>ACTION</th>
                         </tr>
-                    ))}
-                    </tbody>
-                </Table>
+                        </thead>
+                        <tbody>
+                        {histories.map((history) => (
+                            <tr key={history.id}>
+                                <td>{history.showTime.movie.title}</td>
+                                <td>{history.showTime.screen.name}</td>
+                                <td>{history.showTime.screen.location.city}, {history.showTime.screen.location.state}</td>
+                                <td>{history.seats.toString()}</td>
+                                <td>{history.status}</td>
+                                <td>{history.totalPrice.toFixed(2)}</td>
+                                <td>{history.status === "PENDING" ?
+                                    <Link to={`/payment/${history.id}`}>
+                                        <Button variant="primary">Pay</Button>
+                                    </Link> : history.status === "PAID" &&
+                                    new Date(history.showTime.date) > new Date() &&
+                                    <Button variant="danger"
+                                            onClick={() => cancelHandler(history.id)}>Cancel</Button>}</td>
+                            </tr>
+                        ))}
+                        </tbody>
+                    </Table>
+                </>
             )}
         </div>
     );
