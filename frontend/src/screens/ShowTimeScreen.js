@@ -6,6 +6,8 @@ import axios from 'axios';
 import {Store} from "../Stores";
 import {URL} from "../Constants";
 import moment from "moment";
+import LoadingBox from "../components/LoadingBox";
+import MessageBox from "../components/MessageBox";
 
 const reducer = (state, action) => {
     switch (action.type) {
@@ -35,11 +37,23 @@ const reducer = (state, action) => {
 
         // Create Showtime
         case 'ADD_SHOWTIME_REQUEST':
-            return {...state, adding: true};
+            return {...state, adding: true, addError: null};
         case 'ADD_SHOWTIME_SUCCESS':
-            return {...state, adding: false};
+            return {...state, adding: false, successAdding: true};
         case 'ADD_SHOWTIME_FAIL':
             return {...state, adding: false, addError: action.payload};
+        case 'ADD_SHOWTIME_RESET':
+            return {...state, successAdding: false};
+
+        // Cancel Showtim
+        case 'CANCEL_REQUEST':
+            return {...state, loadingCancel: true, errorCancel: null};
+        case 'CANCEL_SUCCESS':
+            return {...state, loadingCancel: false, successCancel: true};
+        case 'CANCEL_FAIL':
+            return {...state, loadingCancel: false, errorCancel: action.payload};
+        case 'CANCEL_RESET':
+            return {...state, successCancel: false, errorCancel: null}
         default:
             return state;
     }
@@ -59,7 +73,12 @@ const initialState = {
     errorScreen: null,
 
     adding: false,
+    successAdding: false,
     addError: '',
+
+    loadingCancel: false,
+    successCancel: false,
+    errorCancel: null
 };
 
 export default function ShowTimeScreen() {
@@ -90,7 +109,12 @@ export default function ShowTimeScreen() {
         errorScreen,
 
         adding,
-        addError
+        successAdding,
+        addError,
+
+        loadingCancel,
+        successCancel,
+        errorCancel
     }, dispatch] = useReducer(reducer, initialState);
 
     const isAdmin = userInfo && userInfo.role === "Employee";
@@ -141,7 +165,7 @@ export default function ShowTimeScreen() {
 
             dispatch({type: 'ADD_SHOWTIME_SUCCESS'});
             fetchShowtimes(); // Refresh showtimes after adding a new one
-            
+
             setScreenId(null);
             setPrice(0.00);
             setStartTime();
@@ -164,8 +188,28 @@ export default function ShowTimeScreen() {
     useEffect(() => {
         fetchShowtimes();
         if (isAdmin) fetchLocations();
+        if (successCancel) {
+            alert("Successfully cancel show.")
+            dispatch({type: 'CANCEL_RESET'})
+        }
+        if (successAdding) {
+            alert("Successfully add show.")
+            dispatch({type: 'ADD_SHOWTIME_RESET'})
+        }
 
-    }, []);
+    }, [successCancel, successAdding]);
+
+    async function cancelShowHandler(id) {
+        dispatch({type: 'CANCEL_REQUEST'});
+        try {
+            const response = axios.delete(`${URL}/showtime/${id}`, {
+                headers: {Authorization: `Bearer ${userInfo.token}`},
+            });
+            dispatch({type: 'CANCEL_SUCCESS'});
+        } catch (error) {
+            dispatch({type: 'CANCEL_FAIL', payload: error.message});
+        }
+    }
 
     return (
         <Container className='mt-3'>
@@ -174,11 +218,14 @@ export default function ShowTimeScreen() {
             </Helmet>
             <h1>Showtimes</h1>
 
+            {(loadingCancel || adding) && <LoadingBox/>}
+            {errorCancel && <MessageBox variant={"danger"}>{errorCancel}</MessageBox>}
+            {addError && <MessageBox variant={"danger"}>{addError}</MessageBox>}
 
             {loading ? (
-                <div>Loading...</div>
+                <LoadingBox/>
             ) : error ? (
-                <div className="text-danger">{error}</div>
+                <MessageBox variant={"danger"}>{error}</MessageBox>
             ) : (
                 <Table striped bordered hover>
                     <thead>
@@ -200,9 +247,16 @@ export default function ShowTimeScreen() {
                             <td>{showtime.date}</td>
                             <td>{showtime.startTime}</td>
                             <td>
-                                <Button>
-                                    <Link to={`/bookings/${showtime.id}`}>Book</Link>
-                                </Button>
+                                {userInfo.role === "Employee" ?
+                                    <Button onClick={() => cancelShowHandler(showtime.id)}>
+                                        Cancel Show
+                                    </Button>
+                                    :
+                                    <Button>
+                                        <Link to={`/bookings/${showtime.id}`}>Book</Link>
+                                    </Button>
+                                }
+
                             </td>
                         </tr>
                     ))}
@@ -219,6 +273,8 @@ export default function ShowTimeScreen() {
 
                     <Form.Group controlId="locationId">
                         <Form.Label>Location</Form.Label>
+                        {loadingLocation && <LoadingBox/>}
+                        {errorLocation && <MessageBox variant={"danger"}>{errorLocation}</MessageBox>}
                         <Form.Select
                             onChange={e => locationHandler(e)}
                             required={true}
@@ -231,6 +287,8 @@ export default function ShowTimeScreen() {
                     </Form.Group>
                     <Form.Group controlId="screenId">
                         <Form.Label>Screen</Form.Label>
+                        {loadingScreen && <LoadingBox/>}
+                        {errorScreen && <MessageBox variant={"danger"}>{errorScreen}</MessageBox>}
                         <Form.Select
                             onChange={e => setScreenId(e.target.value)}
                             required={true}
