@@ -15,17 +15,17 @@ public class S3Config {
     @Value("${aws.s3.bucket.region}")
     private String awsRegion;
 
-    @Value("${aws.accessKeyId}")
-    private String accessKeyId;
-
-    @Value("${aws.secretKey}")
-    private String secretKey;
+//    @Value("${aws.accessKeyId}")
+//    private String accessKeyId;
+//
+//    @Value("${aws.secretKey}")
+//    private String secretKey;
 
     @Bean
     public S3Client s3Client() {
         S3Client client = S3Client.builder()
                 .region(Region.of(awsRegion))
-                .credentialsProvider(() -> AwsBasicCredentials.create(accessKeyId, secretKey))
+//                .credentialsProvider(() -> AwsBasicCredentials.create(accessKeyId, secretKey))
                 .build();
 
         return client;
