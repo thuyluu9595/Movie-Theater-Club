@@ -85,7 +85,7 @@ export default function MovieScreen() {
                         </ListGroup.Item>
                         <ListGroup.Item>
                             <Link to={`/showtimes/${movie.id}`}>
-                                <Button>{userInfo.role === "Employee" ? "Add Showtime" : "Get Tickets"}</Button>
+                                <Button>{userInfo && userInfo.role === "Employee" ? "Add Showtime" : "Get Tickets"}</Button>
                             </Link>
                         </ListGroup.Item>
                     </ListGroup>

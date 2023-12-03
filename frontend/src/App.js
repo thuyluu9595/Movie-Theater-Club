@@ -28,6 +28,9 @@ import EditMovieScreen from "./screens/EditMovieScreen";
 import CreateMovieScreen from "./screens/CreateMovieScreen";
 import ChangePasswordScreen from "./screens/ChangePasswordScreen";
 import ShowtimeByLocationScreen from "./screens/ShowtimeByLocationScreen";
+import Discount from "./screens/Discount";
+import Admin from "./components/Admin";
+import Private from "./components/Private";
 
 
 const reducer = (state, action) => {
@@ -127,11 +130,11 @@ export default function App() {
                                                 <LinkContainer to="/locations">
                                                     <NavDropdown.Item>Location</NavDropdown.Item>
                                                 </LinkContainer>
+                                                <LinkContainer to="/discount">
+                                                    <NavDropdown.Item>Discount</NavDropdown.Item>
+                                                </LinkContainer>
                                                 <LinkContainer to="/manage-movies">
                                                     <NavDropdown.Item>Manage Movies</NavDropdown.Item>
-                                                </LinkContainer>
-                                                <LinkContainer to="/showtimes">
-                                                    <NavDropdown.Item>Showtime</NavDropdown.Item>
                                                 </LinkContainer>
                                                 <LinkContainer to="/analytics">
                                                     <NavDropdown.Item>Analytics</NavDropdown.Item>
@@ -188,23 +191,24 @@ export default function App() {
                             <Route path="/signin" element={<SigninScreen/>}/>
                             <Route path="/showtimes/:id" element={<ShowTimeScreen/>}/>
                             <Route path="/register" element={<RegisterScreen/>}/>
-                            <Route path="/bookings/:id" element={<BookingScreen/>}/>
-                            <Route path="/locations" element={<LocationScreen/>}/>
-                            <Route path="/payment/:id" element={<PaymentScreen/>}/>
-                            <Route path="/analytics" element={<AnalyticsScreen/>}/>
-                            <Route path="/cancel" element={<CancelPremiumScreen/>}/>
-                            <Route path="/payment/stripe/:id" element={<StripeScreen/>}/>
-                            <Route path="/membership-options" element={<MembershipOptionsScreen/>}/>
-                            <Route path="/profile" element={<ProfileScreen/>}/>
-                            <Route path="/premium" element={<PremiumScreen/>}/>
-                            <Route path="/history" element={<HistoryScreen/>}/>
-                            <Route path="/locations/:id" element={<ScreenScreen/>}/>
-                            <Route path="/changepw" element={<ChangePasswordScreen/>}/>
-                            <Route path="/watched30" element={<WatchedHistoryScreen />} />
-                            <Route path="/manage-movies" element={<ManageMoviesScreen />} />
-                            <Route path="/manage-movies/:id" element={<EditMovieScreen />} />
-                            <Route path="/addmovie" element={<CreateMovieScreen />} />
                             <Route path="/showtime" element={<ShowtimeByLocationScreen />} />
+                            <Route path="/bookings/:id" element={<Private><BookingScreen/></Private>}/>
+                            <Route path="/locations" element={<Admin><LocationScreen/></Admin>}/>
+                            <Route path="/payment/:id" element={<Private><PaymentScreen/></Private>}/>
+                            <Route path="/analytics" element={<Admin><AnalyticsScreen/></Admin>}/>
+                            <Route path="/cancel" element={<Private><CancelPremiumScreen/></Private>}/>
+                            <Route path="/payment/stripe/:id" element={<Private><StripeScreen/></Private>}/>
+                            <Route path="/membership-options" element={<MembershipOptionsScreen/>}/>
+                            <Route path="/profile" element={<Private><ProfileScreen/></Private>}/>
+                            <Route path="/premium" element={<Private><PremiumScreen/></Private>}/>
+                            <Route path="/history" element={<Private><HistoryScreen/></Private>}/>
+                            <Route path="/locations/:id" element={<Admin><ScreenScreen/></Admin>}/>
+                            <Route path="/changepw" element={<Private><ChangePasswordScreen/></Private>}/>
+                            <Route path="/watched30" element={<Private><WatchedHistoryScreen/></Private>}/>
+                            <Route path="/manage-movies" element={<Admin><ManageMoviesScreen/></Admin>}/>
+                            <Route path="/manage-movies/:id" element={<Admin><EditMovieScreen/></Admin>}/>
+                            <Route path="/addmovie" element={<Admin><CreateMovieScreen/></Admin>}/>
+                            <Route path="/discount" element={<Admin><Discount/></Admin>}/>
                         </Routes>
                     </Container>
                 </main>
