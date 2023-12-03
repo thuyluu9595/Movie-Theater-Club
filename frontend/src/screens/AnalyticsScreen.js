@@ -8,6 +8,7 @@ import {Store} from "../Stores";
 import LoadingBox from "../components/LoadingBox";
 import MessageBox from "../components/MessageBox";
 import Helmet from "react-helmet";
+import Card from "react-bootstrap/Card";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 const reducer = (state, action) => {
@@ -75,7 +76,7 @@ const AnalyticsScreen = () => {
             <Helmet>
                 <title>Analytic Dashboard</title>
             </Helmet>
-            <h1>Analytics</h1>
+            <h1>Analytic Dashboard</h1>
             <label htmlFor="category-select" style={{color: "black", marginRight: "0.7rem"}}>Category: </label>
             <Form.Control as="select" className="category-select" value={category} onChange={handleCategoryChange}>
                 <option value="locations">Location</option>
@@ -121,8 +122,14 @@ const AnalyticsScreen = () => {
                                         <Col key={plot.location != null ? plot.location.city : plot.movie.id}
                                              className="col" sm={6} md={4} lg={3}
                                              style={{backgroundColor: pieChartColor}}>
-                                            <h2>{plot.location != null ? plot.location.city + ", " + plot.location.state : plot.movie.title}</h2>
-                                            <Pie data={chartData}/>
+                                            <Card>
+                                                <Card.Body>
+                                                    <Card.Title style={{color:'black'}}>{plot.location != null ? plot.location.city + ", " + plot.location.state : plot.movie.title}</Card.Title>
+                                                    <Pie data={chartData}/>
+                                                </Card.Body>
+
+                                            </Card>
+
                                         </Col>) : null
 
                                 );

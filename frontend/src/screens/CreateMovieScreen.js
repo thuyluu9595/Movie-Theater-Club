@@ -66,7 +66,7 @@ export default function CreateMovieScreen() {
             <Helmet>
                 <title>Create Movie</title>
             </Helmet>
-            <h1 className='my-3'>Edit Movie</h1>
+            <h1 className='my-3'>Create Movie</h1>
             {(
                     <div>
                         <Form onSubmit={submitCreateHandler}>

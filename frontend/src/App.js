@@ -27,6 +27,7 @@ import ManageMoviesScreen from "./screens/ManageMoviesScreen";
 import EditMovieScreen from "./screens/EditMovieScreen";
 import CreateMovieScreen from "./screens/CreateMovieScreen";
 import ChangePasswordScreen from "./screens/ChangePasswordScreen";
+import ShowtimeByLocationScreen from "./screens/ShowtimeByLocationScreen";
 import Discount from "./screens/Discount";
 import Admin from "./components/Admin";
 import Private from "./components/Private";
@@ -167,8 +168,11 @@ export default function App() {
                                     </NavDropdown>
                                 ) : (
                                     <>
+                                        <Link className="member-options" to="/showtime">
+                                            Showtime
+                                        </Link>
                                         <Link className="member-options" to="/membership-options">
-                                            Membership Options
+                                            Membership
                                         </Link>
                                         <Link className="nav-Link" to="/signin">
                                             Sign In
@@ -187,13 +191,14 @@ export default function App() {
                             <Route path="/signin" element={<SigninScreen/>}/>
                             <Route path="/showtimes/:id" element={<ShowTimeScreen/>}/>
                             <Route path="/register" element={<RegisterScreen/>}/>
+                            <Route path="/showtime" element={<ShowtimeByLocationScreen />} />
                             <Route path="/bookings/:id" element={<Private><BookingScreen/></Private>}/>
                             <Route path="/locations" element={<Admin><LocationScreen/></Admin>}/>
                             <Route path="/payment/:id" element={<Private><PaymentScreen/></Private>}/>
                             <Route path="/analytics" element={<Admin><AnalyticsScreen/></Admin>}/>
                             <Route path="/cancel" element={<Private><CancelPremiumScreen/></Private>}/>
                             <Route path="/payment/stripe/:id" element={<Private><StripeScreen/></Private>}/>
-                            <Route path="/membership-options" element={<Private><MembershipOptionsScreen/></Private>}/>
+                            <Route path="/membership-options" element={<MembershipOptionsScreen/>}/>
                             <Route path="/profile" element={<Private><ProfileScreen/></Private>}/>
                             <Route path="/premium" element={<Private><PremiumScreen/></Private>}/>
                             <Route path="/history" element={<Private><HistoryScreen/></Private>}/>
