@@ -7,21 +7,24 @@ import com.example.MovieTheaterAPI.movie.repository.MovieRepository;
 import com.example.MovieTheaterAPI.screen.dto.ScreenDTO;
 import com.example.MovieTheaterAPI.screen.utils.ResourceNotFoundException;
 import com.example.MovieTheaterAPI.screen.utils.ScreenAlreadyExistsException;
+import com.example.MovieTheaterAPI.showtime.ShowTime;
+import com.example.MovieTheaterAPI.showtime.ShowTimeRepository;
+import com.example.MovieTheaterAPI.showtime.ShowTimeService;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
 
 @Service
+@AllArgsConstructor
 public class ScreenServiceImpl implements ScreenService{
     private final ScreenRepository screenRepository;
     private final MovieRepository movieRepository;
     private final LocationRepository locationRepository;
+    private final ShowTimeRepository showTimeRepository;
+    private final ShowTimeService showTimeService;
 
-    public ScreenServiceImpl(ScreenRepository screenRepository, MovieRepository movieRepository, LocationRepository locationRepository) {
-        this.screenRepository = screenRepository;
-        this.movieRepository = movieRepository;
-        this.locationRepository = locationRepository;
-    }
+
 
     @Override
     public List<Screen> getScreens() {
@@ -78,6 +81,10 @@ public class ScreenServiceImpl implements ScreenService{
     public void deleteScreen(Long id) {
         Optional<Screen> screenOptional = screenRepository.findById(id);
         if (screenOptional.isPresent()) {
+            List<ShowTime> showTimes = showTimeRepository.findShowTimeByScreen(screenOptional.get());
+            for (ShowTime show: showTimes) {
+                showTimeService.deleteShowTime(show.getId());
+            }
             screenRepository.deleteById(id);
         } else {
             throw new ResourceNotFoundException();
