@@ -2,7 +2,7 @@ import React, {useReducer, useEffect, useState, useContext} from "react";
 import {Row, Col, Carousel} from 'react-bootstrap';
 import Movie from "../components/Movie";
 import axios from "axios";
-import logger from "use-reducer-logger";
+// import logger from "use-reducer-logger";
 import {Helmet} from "react-helmet";
 import LoadingBox from "../components/LoadingBox";
 import MessageBox from "../components/MessageBox";
@@ -27,15 +27,16 @@ const reducer = (state, action) => {
     }
 }
 
+const initialState = {
+    movies: [],
+    loading: true,
+    error: null,
+}
 export default function HomeScreen(props) {
     const {state: ctxState, dispatch: ctxDispatch} = useContext(Store);
     const {userInfo} = ctxState;
 
-    const [{loading, error, movies}, dispatch] = useReducer(logger(reducer), {
-        movies: [],
-        loading: true,
-        error: '',
-    });
+    const [{loading, error, movies}, dispatch] = useReducer(reducer, initialState);
 
     const [upcomingMovies, setUpcomingMovies] = useState([]);
 
