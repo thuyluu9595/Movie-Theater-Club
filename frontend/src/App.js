@@ -191,7 +191,7 @@ export default function App() {
                             <Route path="/signin" element={<SigninScreen/>}/>
                             <Route path="/showtimes/:id" element={<ShowTimeScreen/>}/>
                             <Route path="/register" element={<RegisterScreen/>}/>
-                            <Route path="/showtime" element={<ShowtimeByLocationScreen />} />
+                            <Route path="/showtime" element={<ShowtimeByLocationScreen/>}/>
                             <Route path="/bookings/:id" element={<Private><BookingScreen/></Private>}/>
                             <Route path="/locations" element={<Admin><LocationScreen/></Admin>}/>
                             <Route path="/payment/:id" element={<Private><PaymentScreen/></Private>}/>
@@ -222,7 +222,7 @@ export default function App() {
                     >
                         <Container className="d-flex justify-content-center align-items-center flex-grow-1">
                             <div className="text-center">
-                                2003-2004 TCH Theater , Inc - All Right Reserver
+                                2023-2024 TCH Theater , Inc - All Right Reserver
                             </div>
                         </Container>
                     </Navbar>
