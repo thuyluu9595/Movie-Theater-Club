@@ -86,8 +86,8 @@ export default function App() {
     const generateButton = () => {
         if (info && info.member.membershipTier == "Regular") {
             return (
-                <LinkContainer to="/premium">
-                    <NavDropdown.Item>Upgrade Premium</NavDropdown.Item>
+                <LinkContainer to="/membership-options">
+                    <NavDropdown.Item>Upgrade Account</NavDropdown.Item>
                 </LinkContainer>
             );
         } else {
