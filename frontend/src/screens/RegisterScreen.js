@@ -32,8 +32,9 @@ export default function RegisterScreen() {
                 password,
             });
             ctxDispatch({type: 'USER_SINGIN', payload: data});
-            localStorage.setItem('userInfo', JSON.stringify(data));
-            navigate(redirect || '/');
+            // localStorage.setItem('userInfo', JSON.stringify(data));
+            alert('Account create successful');
+            navigate('/signin');
         } catch (err) {
             alert('Invalid username or password');
         }
