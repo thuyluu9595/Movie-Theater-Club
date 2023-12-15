@@ -1,0 +1,233 @@
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+.site-container {
+  min-height: 100vh;
+}
+main {
+  background-color: #181616;
+  flex: 1;
+  color : white;
+  font-family: Luminari, fantasy;
+}
+.thead {
+ background-color: white;
+}
+.tbody tr{
+  background-color: white;
+}
+.movies {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.movie {
+  border: 1px #0c0c0c solid;
+  margin: 1rem;
+}
+.movie img {
+  width: 100%;
+}
+.movie-info{
+  padding: 1rem;
+}
+
+.btn-primary {
+  background-color: rgb(236, 181, 30);
+  color: black;
+}
+.small-container {
+  max-width: 600px;
+}
+.img-large {
+  max-width: 100;
+}
+
+.container {
+  color: #ffffff;
+}
+
+.container table {
+  --bs-table-striped-color: #ffffff;
+  color: #ffffff;
+  --bs-table-hover-color: #b7b8b9;
+  --bs-table-hover-bg: rgba(114, 112, 112, 0.075);
+}
+/*======== Style for AnalyticsScreen ========*/
+
+.analytics-container {
+
+  padding: 50px;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+}
+
+.analytics-container h1 {
+  font-family: Helvetica, sans-serif;
+  color: deepskyblue;
+  text-align: center;
+  font-size: 36px;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+.days-select, .category-select {
+  display: inline-flex;
+  width: 30rem;
+  margin-bottom: 20px;
+  margin-right: 20px;
+}
+
+/*.row {*/
+/*  margin-bottom: 20px;*/
+/*  display: flex;*/
+/*  !*justify-content: space-between;*!*/
+
+/*}*/
+
+/*.col {*/
+/*  padding: 20px;*/
+/*  background-color: #f2f2f2;*/
+/*  border-radius: 10px;*/
+/*  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);*/
+/*}*/
+
+/*.col h2 {*/
+/*  color: black;*/
+/*    text-align: center;*/
+/*  font-family: "Arial Hebrew", sans-serif;*/
+/*  font-size: 18px;*/
+/*  font-weight: 600;*/
+/*  margin-bottom: 20px;*/
+/*}*/
+
+/* Adjustments for medium screens (768px - 991px) */
+@media (max-width: 991px) {
+  .days-select, .category-select {
+    width: 100%;
+  }
+}
+
+/* Adjustments for small screens (576px - 767px) */
+@media (max-width: 767px) {
+  .analytics-container h1 {
+    font-size: 24px;
+  }
+
+  .col h2 {
+    font-size: 16px;
+  }
+}
+
+/* Adjustments for extra small screens (less than 576px) */
+@media (max-width: 576px) {
+  .analytics-container {
+    padding: 20px;
+  }
+
+  .col {
+    padding: 10px;
+  }
+}
+/*======== End Style for AnalyticsScreen ========*/
+/*========Style for MembershipOptionScreen=======*/
+.member-options{
+    margin-right: 0.5rem;
+
+}
+.membership-options {
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+}
+
+.membership-options-title {
+  color: deepskyblue;
+  text-align: center;
+  font-size: 36px;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+.membership-plan-card {
+  padding: 20px;
+  background-color: #f2f2f2;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  margin-bottom: 20px;
+  height: 100%;
+}
+
+.membership-plan-title {
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 15px;
+}
+
+.membership-plan-benefits {
+  font-family: "Times New Roman", sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.membership-card-button {
+
+}
+
+.membership-price {
+  text-align: center;
+  font-size: 24px;
+}
+/*========Style for MembershipOptionScreen=======*/
+.mb-3 {
+  min-width: 20rem;
+}
+
+.poster-image {
+  width: 100%;
+  position: relative;
+}
+.poster-image img {
+  object-fit: cover;
+  object-position: 50% 0;
+  height: 100%;
+  width: 100%;
+  display: block;
+  margin: 0 auto;
+
+}
+.cover-image-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: bisque;
+  text-shadow: 4px 4px 4px rgba(0,0,0,0.5);
+  font-size: 300%;
+  font-weight: bold;
+  text-align: center;
+
+}
+
+.edit-movie-img-container {
+  max-width: 30%;
+}
+
+
+/*.container {*/
+/*  max-width: 92%;*/
+/*  margin: auto;*/
+/*}*/
