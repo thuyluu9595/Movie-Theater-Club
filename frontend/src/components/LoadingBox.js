@@ -1,10 +1,9 @@
-import React from "react";
-import { Spinner } from "react-bootstrap";
+import React from 'react';
 
 export default function LoadingBox() {
   return (
-    <Spinner amination='border' role='status'>
-      <span className="'visually-hidden">Loading...</span>
-    </Spinner>
-  )
+    <div className="flex justify-center items-center p-4">
+      <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-gray-900" />
+    </div>
+  );
 }

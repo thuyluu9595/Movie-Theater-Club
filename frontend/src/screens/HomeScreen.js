@@ -1,5 +1,5 @@
 import React, {useReducer, useEffect, useState, useContext} from "react";
-import {Row, Col, Carousel} from 'react-bootstrap';
+
 import Movie from "../components/Movie";
 import axios from "axios";
 // import logger from "use-reducer-logger";
@@ -89,25 +89,22 @@ export default function HomeScreen(props) {
                     TCH Movie Theater
                 </div>
             </div>
-            <h1>List Of Movies</h1>
-            <div className='movies'>
-                <Row>
-                    {
-                        loading ? (
-                            <LoadingBox/>
-                        ) : error ? (
-                            <MessageBox variant='danger'>{error}</MessageBox>
-                        ) : (
-                            movies.map((movie) => (
-                                <Col key={movie._id} sm={6} md={4} lg={3} className='mb-3'>
-                                    <Movie movie={movie}
-                                           buttonName={userInfo && userInfo.role === "Employee" ? "Edit" : "Get Ticket"}></Movie>
-                                </Col>
-                            )))}
-                </Row>
+            <h1 className="text-2xl font-semibold mb-4">List Of Movies</h1>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                {
+                    loading ? (
+                        <LoadingBox/>
+                    ) : error ? (
+                        <MessageBox variant='danger'>{error}</MessageBox>
+                    ) : (
+                        movies.map((movie) => (
+                            <Movie key={movie._id} movie={movie}
+                                   buttonName={userInfo && userInfo.role === "Employee" ? "Edit" : "Get Ticket"}></Movie>
+                        )))
+                }
             </div>
-            <div>
-                <h2>Upcoming Movies</h2>
+            <div className="mt-8">
+                <h2 className="text-xl font-semibold mb-4">Upcoming Movies</h2>
                 <Slider slidesToShow={4} slidesToScroll={1} infinite={true}>
                     {upcomingMovies.map((movie) => (
                         <div key={movie.id}>

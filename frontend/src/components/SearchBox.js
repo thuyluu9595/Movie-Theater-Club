@@ -1,5 +1,4 @@
-import React, { useState } from 'react'
-import { Button, Form, FormControl, InputGroup, Nav } from 'react-bootstrap'
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 export default function SearchBox() {
@@ -11,23 +10,25 @@ export default function SearchBox() {
   };
 
   return (
-    <Nav className='d-flex justify-content-center align-items-center flex-grow-1'>
-      <Form className='d-flex justify-content-center' onSubmit={submitHandler}>
-        <InputGroup>
-          <FormControl
-            type='text'
-            name='q'
-            id='q'
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder='search...'
-            aria-label='Search Movies'
-            aria-describedby='button-search'
-          ></FormControl>
-          <Button variant='outline-primary' type='submit' id='button-search'>
-            <i className='fas fa-search'></i>
-          </Button>
-        </InputGroup>
-      </Form>
-    </Nav>
-  )
+    <form onSubmit={submitHandler} className="flex flex-grow justify-center">
+      <div className="flex">
+        <input
+          type="text"
+          name="q"
+          id="q"
+          onChange={(e) => setQuery(e.target.value)}
+          placeholder="search..."
+          aria-label="Search Movies"
+          className="border border-gray-300 rounded-l px-3 py-1 focus:outline-none"
+        />
+        <button
+          type="submit"
+          id="button-search"
+          className="bg-blue-600 text-white px-3 py-1 rounded-r"
+        >
+          <i className="fas fa-search" />
+        </button>
+      </div>
+    </form>
+  );
 }

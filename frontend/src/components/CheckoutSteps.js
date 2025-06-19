@@ -1,14 +1,23 @@
-import React from 'react'
-import { Col, Row } from 'react-bootstrap'
-import {Link} from 'react-router-dom'
+import React from 'react';
 
 export default function CheckoutSteps(props) {
+  const steps = [
+    { key: 'step1', label: 'Sign-In' },
+    { key: 'step2', label: 'Booked' },
+    { key: 'step3', label: 'Payment' },
+    { key: 'step4', label: 'Place Order' },
+  ];
+
   return (
-    <Row className='checkout-steps'>
-      <Col className={props.step1 ? 'active' : ''}>Sign-In</Col>
-      <Col className={props.step2 ? 'active' : ''}>Booked</Col>
-      <Col className={props.step3 ? 'active' : ''}>Payment</Col>
-      <Col className={props.step4 ? 'active' : ''}>Place Order</Col>
-    </Row>
+    <div className="flex justify-center space-x-4 mb-4">
+      {steps.map((s) => (
+        <div
+          key={s.key}
+          className={props[s.key] ? 'font-semibold text-blue-600' : 'text-gray-400'}
+        >
+          {s.label}
+        </div>
+      ))}
+    </div>
   );
 }

@@ -11,7 +11,8 @@ The Movie Theater project is a web application that allows users to explore and 
 * PostgreSQL as database
 
 ### Frontend (JavaScript):
-* React, a JavaScipt library for building user interface
+* React for building the user interface
+* Tailwind CSS for modern responsive styling
 
 __The entire application is containerized using Docker for easy development and management__
 

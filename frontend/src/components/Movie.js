@@ -1,48 +1,35 @@
 import React from 'react';
-import { Link } from 'react-router-dom'; 
-import Card from 'react-bootstrap/Card';
-import Button from 'react-bootstrap/Button';
+import { Link } from 'react-router-dom';
 
-
-
-export default function Movie(props){
-  const {movie, buttonName, disable} = props;
+export default function Movie(props) {
+  const { movie, buttonName, disable } = props;
   return (
-    <Card>
+    <div className="bg-white rounded-lg shadow-md overflow-hidden">
       <Link to={`/movie/${movie.id}`}>
-        <img 
-          src={movie.posterUrl} 
-          className='card-img-top' 
-          alt={movie.title} 
-          width="500" height="500"
-          />
+        <img
+          src={movie.posterUrl}
+          className="w-full object-cover"
+          alt={movie.title}
+          width="500"
+          height="500"
+        />
       </Link>
-        {buttonName === "Edit" ? (
-                <Card.Body>
-                    <Link to={`/manage-movies/${movie.id}`}>
-                        <Card.Title>{movie.title}</Card.Title>
-                    </Link>
-                    <Link to={`/manage-movies/${movie.id}`}>
-                        <Button>{buttonName}</Button>
-                    </Link>
-                </Card.Body>
-
-        ) : (
-            <Card.Body>
-                    <Link to={`/movie/${movie.id}`}>
-                <Card.Title>{movie.title}</Card.Title>
-            </Link>
-                {
-                    disable ? null : (
-                        <Link to={`/showtimes/${movie.id}`}>
-                            <Button>{buttonName}</Button>
-                        </Link>
-
-                    )
-                }
-            </Card.Body>
+      <div className="p-4">
+        <Link
+          to={buttonName === 'Edit' ? `/manage-movies/${movie.id}` : `/movie/${movie.id}`}
+          className="block mb-2 text-lg font-semibold"
+        >
+          {movie.title}
+        </Link>
+        {disable ? null : (
+          <Link
+            to={buttonName === 'Edit' ? `/manage-movies/${movie.id}` : `/showtimes/${movie.id}`}
+            className="inline-block mt-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+          >
+            {buttonName}
+          </Link>
         )}
-
-    </Card>
-  )
-} 
+      </div>
+    </div>
+  );
+}
