@@ -4,6 +4,7 @@ import lombok.Data;
 
 @Data
 public class ReviewDTO {
+    private Long userId;
     private Long movieId;
     private String title;
     private Float rating;

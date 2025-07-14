@@ -68,7 +68,7 @@ public class ReviewService {
 
 
     @Transactional(propagation = Propagation.REQUIRED)
-    public UserMovieReview createReview(Long userId, ReviewDTO reviewDTO) {
+    public Review createReview(Long userId, ReviewDTO reviewDTO) {
         User user = userRepository.findById(userId)
                 .orElseThrow(ResourceNotFoundException::new);
         Movie movie = movieRepository.findById(reviewDTO.getMovieId())
@@ -90,7 +90,8 @@ public class ReviewService {
         userMovieReview.setMovie(movie);
         userMovieReview.setReview(savedReview);
 
-        return userMovieReviewRepository.save(userMovieReview);
+        userMovieReviewRepository.save(userMovieReview);
+        return savedReview;
     }
 
     @Transactional(propagation = Propagation.REQUIRED)
