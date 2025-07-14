@@ -34,3 +34,8 @@ Make sure you have the following installed:
 4. Start the containers.
 > `docker-conpose up`
 5. Access the frontend at `http://localhost:3000`.
+
+### Check processes using port 5432
+`sudo lsof -i :5432`
+### Kill processes using this port
+`sudo kill -9 PID`

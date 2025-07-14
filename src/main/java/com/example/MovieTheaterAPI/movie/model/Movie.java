@@ -1,11 +1,13 @@
 package com.example.MovieTheaterAPI.movie.model;
 
+import com.example.MovieTheaterAPI.review.entities.UserMovieReview;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.Duration;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -33,6 +35,8 @@ public class Movie {
     @Column(name = "poster_url")
     private String posterUrl;
 
+    @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<UserMovieReview> userMovieReviews;
     @Override
     public String toString() {
         return "Movie{" +
