@@ -35,6 +35,9 @@ public class Movie {
     @Column(name = "poster_url")
     private String posterUrl;
 
+    @Column(name = "review_summary")
+    private String reviewSummary;
+
     @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<UserMovieReview> userMovieReviews;
     @Override

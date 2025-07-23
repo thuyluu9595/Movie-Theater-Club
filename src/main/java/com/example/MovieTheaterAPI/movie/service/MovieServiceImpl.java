@@ -35,6 +35,7 @@ public class MovieServiceImpl implements MovieService{
         movieResponseDTO.setReleaseDate(movie.getReleaseDate());
         movieResponseDTO.setPosterUrl(movie.getPosterUrl());
         movieResponseDTO.setDurationInMinutes(movie.getDuration().toMinutes());
+        movieResponseDTO.setReviewSummary(movie.getReviewSummary());
         return movieResponseDTO;
     }
     @Override

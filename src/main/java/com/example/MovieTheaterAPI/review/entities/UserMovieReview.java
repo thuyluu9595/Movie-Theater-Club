@@ -14,7 +14,7 @@ public class UserMovieReview {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String id;
+    private Long id;
 
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "review_id", referencedColumnName = "id")

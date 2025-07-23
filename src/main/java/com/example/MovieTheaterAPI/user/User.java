@@ -54,6 +54,7 @@ public class User {
     private Member member;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private List<UserMovieReview> userMovieReviews;
 
 //    @JsonIgnore

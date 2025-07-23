@@ -19,7 +19,7 @@ main {
   background-color: #181616;
   flex: 1;
   color : white;
-  font-family: Luminari, fantasy;
+  font-family: "Gill Sans", Luminari, fantasy;
 }
 .thead {
  background-color: white;
@@ -51,7 +51,7 @@ main {
   max-width: 600px;
 }
 .img-large {
-  max-width: 100;
+  max-width: 100vh;
 }
 
 .container {

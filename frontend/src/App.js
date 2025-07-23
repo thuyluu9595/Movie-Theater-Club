@@ -84,7 +84,7 @@ export default function App() {
 
     const {info} = state;
     const generateButton = () => {
-        if (info && info.member.membershipTier == "Regular") {
+        if (info && info.member.membershipTier === "Regular") {
             return (
                 <LinkContainer to="/membership-options">
                     <NavDropdown.Item>Upgrade Account</NavDropdown.Item>
@@ -106,7 +106,7 @@ export default function App() {
                     <Navbar
                         style={{
                             backgroundColor: "#9d1010",
-                            fontFamily: "Luminari, fantasy",
+                            fontFamily: "\"Gill Sans\", fantasy",
                             color: "white",
                         }}
                     >
@@ -216,7 +216,7 @@ export default function App() {
                     <Navbar
                         style={{
                             backgroundColor: "#9d1010",
-                            fontFamily: "Luminari, fantasy",
+                            fontFamily: "\"Gill Sans\", fantasy",
                             color: "white",
                         }}
                     >

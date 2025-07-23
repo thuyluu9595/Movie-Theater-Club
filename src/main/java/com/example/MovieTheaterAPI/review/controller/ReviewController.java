@@ -1,5 +1,6 @@
 package com.example.MovieTheaterAPI.review.controller;
 
+import com.example.MovieTheaterAPI.review.dto.GetReviewDTO;
 import com.example.MovieTheaterAPI.review.dto.ReviewDTO;
 import com.example.MovieTheaterAPI.review.entities.Review;
 import com.example.MovieTheaterAPI.review.service.ReviewService;
@@ -8,8 +9,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
-@RequestMapping("/api/review")
+@RequestMapping("/api/reviews")
 public class ReviewController {
     private final ReviewService reviewService;
 
@@ -22,7 +25,12 @@ public class ReviewController {
         return this.reviewService.ask(userInput);
     }
 
-    @PostMapping
+    @GetMapping("/movie/{movieId}")
+    public ResponseEntity<List<GetReviewDTO>> getReviewsByMovieId(@PathVariable Long movieId) {
+        return ResponseEntity.ok(reviewService.getReviewsByMovieId(movieId));
+    }
+
+    @PostMapping("/create")
     public ResponseEntity<Review> createReview(@RequestBody ReviewDTO reviewDTO) {
         Long userId = reviewDTO.getUserId();
         if (userId == null) {
@@ -38,13 +46,9 @@ public class ReviewController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteReview(@RequestBody ReviewDTO reviewDTO, @PathVariable Long id) {
+    public ResponseEntity<?> deleteReview(@PathVariable Long id) {
         try {
-            Long userId = reviewDTO.getUserId();
-            if (userId == null) {
-                throw new ResourceNotFoundException();
-            }
-            reviewService.deleteReview(id, userId);
+            reviewService.deleteReview(id);
             return ResponseEntity.ok("Review deleted");
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
