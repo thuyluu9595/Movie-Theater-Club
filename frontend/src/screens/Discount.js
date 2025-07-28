@@ -1,137 +1,173 @@
-import React, {useContext, useEffect, useReducer, useState} from 'react'
-import {Store} from '../Stores'
-import {Helmet} from 'react-helmet';
-import {Form, Button} from 'react-bootstrap'
+import React, { useContext, useEffect, useState } from 'react';
+import { Helmet } from 'react-helmet';
+import { Form, Button, Container, Row, Col } from 'react-bootstrap';
 import axios from "axios";
-import {URL} from "../Constants";
-import {useNavigate} from "react-router-dom";
+import { URL } from "../Constants";
+import { Store } from "../Stores";
 import LoadingBox from "../components/LoadingBox";
 import MessageBox from "../components/MessageBox";
-
-const reducer = (state, action) => {
-    switch (action.type) {
-        case "FETCH_REQUEST":
-            return {...state, loading: true};
-        case "FETCH_SUCCESS":
-            return {...state, loading: false};
-        case "FETCH_FAIL":
-            return {...state, loading: false, error: action.payload};
-
-        case "UPDATE_REQUEST":
-            return {...state, loadingUpdate: true, success: false}
-        case "UPDATE_SUCCESS":
-            return {...state, loadingUpdate: false, success: true}
-        case "UPDATE_FAIL":
-            return {...state, loadingUpdate: false, errorUpdate: action.payload}
-        case "UPDATE_RESET":
-            return {...state, loadingUpdate: false, success: false}
-        default:
-            return state;
-    }
-};
-
-const initialState = {
-    error: null,
-    loadingUpdate: false,
-    errorUpdate: null,
-    success: false,
-    loading: true
-};
+import { getError } from '../utils';
 
 export default function Discount() {
-    const {state, dispatch: ctxDispatch} = useContext(Store);
-    const {userInfo} = state;
-    const pm = "before-6pm"
-    const tu = "tueday-special"
+    const { state } = useContext(Store);
+    const { userInfo } = state;
 
-    const [tueday, setTueday] = useState();
-    const [sixPM, setSixPM] = useState();
+    // Constants for discount types
+    const TUESDAY_SPECIAL = "tueday-special";
+    const BEFORE_6PM = "before-6pm";
 
-    const navigate = useNavigate();
+    // State for each discount value
+    const [tuesdayDiscount, setTuesdayDiscount] = useState('');
+    const [sixPmDiscount, setSixPmDiscount] = useState('');
 
-    const [{loading, success, error, loadingUpdate, errorUpdate}, dispatch] = useReducer(reducer, initialState);
-    const submitHandler = async (e, type) => {
-        e.preventDefault();
-        dispatch({type: "UPDATE_REQUEST"});
-        try {
-            const {data} = axios.put(`${URL}/discount/${type}`, {
-                "percent": type === pm ? sixPM : tueday
-            }, {
-                headers: {Authorization: `Bearer ${userInfo.token}`}
-            })
-            dispatch({type: "UPDATE_SUCCESS"})
-        } catch (error) {
-            dispatch({type: "UPDATE_FAIL", payload: error.message})
-        }
+    // State for loading, error, and success feedback for each form
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState('');
 
-    };
+    const [loadingTuesday, setLoadingTuesday] = useState(false);
+    const [errorTuesday, setErrorTuesday] = useState('');
+    const [successTuesday, setSuccessTuesday] = useState('');
 
+    const [loadingSixPm, setLoadingSixPm] = useState(false);
+    const [errorSixPm, setErrorSixPm] = useState('');
+    const [successSixPm, setSuccessSixPm] = useState('');
 
     useEffect(() => {
-        if (success) {
-            alert("Successfully update discount");
-            dispatch({type: "UPDATE_RESET"})
-        }
-        fetchDiscount();
-    }, [success]);
+        const fetchDiscounts = async () => {
+            setLoading(true);
+            try {
+                const { data } = await axios.get(`${URL}/discount`, {
+                    headers: { Authorization: `Bearer ${userInfo.token}` }
+                });
+                // Find and set the value for each discount type
+                const tuesday = data.find(d => d.id === "TuedaySpecial");
+                const sixPm = data.find(d => d.id !== "TuedaySpecial"); // Assuming the other is always Before6PM
+                if (tuesday) setTuesdayDiscount(tuesday.percentDiscount);
+                if (sixPm) setSixPmDiscount(sixPm.percentDiscount);
+                setLoading(false);
+            } catch (err) {
+                setError(getError(err));
+                setLoading(false);
+            }
+        };
+        fetchDiscounts();
+    }, [userInfo.token]);
 
-    async function fetchDiscount() {
-        dispatch({type: "FETCH_REQUEST"});
-        try {
-            const {data} = await axios.get(`${URL}/discount`, {
-                headers: {Authorization: `Bearer ${userInfo.token}`}
-            })
-            dispatch({type: "FETCH_SUCCESS", payload: data})
-            data.map((d) => {
-                if (d.id === "TuedaySpecial") setTueday(d.percentDiscount);
-                else setSixPM(d.percentDiscount);
-            })
-        } catch (error) {
-            dispatch({type: "FETCH_FAIL", payload: error.message})
+    // Generic handler to clear success messages after a delay
+    const clearSuccessMessage = (setter) => {
+        setTimeout(() => {
+            setter('');
+        }, 3000);
+    };
+
+    const submitHandler = async (e, type) => {
+        e.preventDefault();
+        // Set loading and clear errors for the specific form
+        if (type === TUESDAY_SPECIAL) {
+            setLoadingTuesday(true);
+            setErrorTuesday('');
+            setSuccessTuesday('');
+        } else {
+            setLoadingSixPm(true);
+            setErrorSixPm('');
+            setSuccessSixPm('');
         }
-    }
+
+        try {
+            await axios.put(`${URL}/discount/${type}`, {
+                "percent": type === TUESDAY_SPECIAL ? tuesdayDiscount : sixPmDiscount
+            }, {
+                headers: { Authorization: `Bearer ${userInfo.token}` }
+            });
+
+            if (type === TUESDAY_SPECIAL) {
+                setLoadingTuesday(false);
+                setSuccessTuesday("Tuesday discount updated successfully!");
+                clearSuccessMessage(setSuccessTuesday);
+            } else {
+                setLoadingSixPm(false);
+                setSuccessSixPm("Before 6 PM discount updated successfully!");
+                clearSuccessMessage(setSuccessSixPm);
+            }
+        } catch (err) {
+            if (type === TUESDAY_SPECIAL) {
+                setLoadingTuesday(false);
+                setErrorTuesday(getError(err));
+            } else {
+                setLoadingSixPm(false);
+                setErrorSixPm(getError(err));
+            }
+        }
+    };
 
     return (
-        <div className='container small-container'>
+        <Container fluid className="discount-page">
             <Helmet>
-                <title>Profile Screen</title>
+                <title>Manage Discounts</title>
             </Helmet>
-            <h1 className='my-3'>User Profile</h1>
-            {loadingUpdate && <LoadingBox/>}
-            {errorUpdate && <MessageBox variant={"danger"}>{errorUpdate}</MessageBox>}
-            {loading ? <LoadingBox/> :
-                error ? <MessageBox variant={"danger"}>{error}</MessageBox> :
-                    <>
-                        <Form onSubmit={e => submitHandler(e, tu)}>
-                            <Form.Group controlId="price">
-                                <Form.Label>Tueday Special</Form.Label>
-                                <Form.Control
-                                    type="number"
-                                    step={0.01}
-                                    min={0}
-                                    onChange={(e) => setTueday(e.target.value)}
-                                    value={tueday}
-                                    required
-                                />
-                            </Form.Group>
-                            <Button type={"submit"}>Update</Button>
-                        </Form>
+            <div className="page-header">
+                <h1 className='page-title'>Manage Discounts</h1>
+            </div>
 
-                        <Form onSubmit={e => submitHandler(e, pm)}>
-                            <Form.Group controlId="price">
-                                <Form.Label>Before 6 PM</Form.Label>
-                                <Form.Control
-                                    type="number"
-                                    step={0.01}
-                                    min={0}
-                                    onChange={(e) => setSixPM(e.target.value)}
-                                    value={sixPM}
-                                    required
-                                />
-                            </Form.Group>
-                            <Button type={"submit"}>Update</Button>
-                        </Form>
-                    </>}
-        </div>
+            {loading ? <LoadingBox /> : error ? <MessageBox variant="danger">{error}</MessageBox> : (
+                <Row>
+                    {/* Tuesday Special Card */}
+                    <Col md={6} className="mb-4">
+                        <div className="form-card">
+                            <h3 className="form-card-title">Tuesday Special Discount</h3>
+                            <Form onSubmit={e => submitHandler(e, TUESDAY_SPECIAL)}>
+                                {errorTuesday && <MessageBox variant="danger">{errorTuesday}</MessageBox>}
+                                {successTuesday && <MessageBox variant="success">{successTuesday}</MessageBox>}
+                                <Form.Group className="mb-3" controlId="tuesdayDiscount">
+                                    <Form.Label>Discount Percentage (%)</Form.Label>
+                                    <Form.Control
+                                        type="number"
+                                        step={0.01}
+                                        min={0}
+                                        max={100}
+                                        value={tuesdayDiscount}
+                                        onChange={(e) => setTuesdayDiscount(e.target.value)}
+                                        required
+                                    />
+                                </Form.Group>
+                                <div className="d-grid">
+                                    <Button type="submit" className="auth-button" disabled={loadingTuesday}>
+                                        {loadingTuesday ? <LoadingBox isButton={true} /> : 'Update Discount'}
+                                    </Button>
+                                </div>
+                            </Form>
+                        </div>
+                    </Col>
+
+                    {/* Before 6 PM Card */}
+                    <Col md={6} className="mb-4">
+                        <div className="form-card">
+                            <h3 className="form-card-title">Before 6 PM Discount</h3>
+                            <Form onSubmit={e => submitHandler(e, BEFORE_6PM)}>
+                                {errorSixPm && <MessageBox variant="danger">{errorSixPm}</MessageBox>}
+                                {successSixPm && <MessageBox variant="success">{successSixPm}</MessageBox>}
+                                <Form.Group className="mb-3" controlId="sixPmDiscount">
+                                    <Form.Label>Discount Percentage (%)</Form.Label>
+                                    <Form.Control
+                                        type="number"
+                                        step={0.01}
+                                        min={0}
+                                        max={100}
+                                        value={sixPmDiscount}
+                                        onChange={(e) => setSixPmDiscount(e.target.value)}
+                                        required
+                                    />
+                                </Form.Group>
+                                <div className="d-grid">
+                                    <Button type="submit" className="auth-button" disabled={loadingSixPm}>
+                                        {loadingSixPm ? <LoadingBox isButton={true} /> : 'Update Discount'}
+                                    </Button>
+                                </div>
+                            </Form>
+                        </div>
+                    </Col>
+                </Row>
+            )}
+        </Container>
     );
 }

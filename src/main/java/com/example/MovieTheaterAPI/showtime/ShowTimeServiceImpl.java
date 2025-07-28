@@ -3,7 +3,6 @@ package com.example.MovieTheaterAPI.showtime;
 import com.example.MovieTheaterAPI.booking.BookingService;
 import com.example.MovieTheaterAPI.discount.Discount;
 import com.example.MovieTheaterAPI.discount.DiscountRepository;
-import com.example.MovieTheaterAPI.discount.DiscountService;
 import com.example.MovieTheaterAPI.discount.DiscountType;
 import com.example.MovieTheaterAPI.location.Location;
 import com.example.MovieTheaterAPI.location.LocationRepository;
@@ -11,10 +10,12 @@ import com.example.MovieTheaterAPI.movie.model.Movie;
 import com.example.MovieTheaterAPI.movie.repository.MovieRepository;
 import com.example.MovieTheaterAPI.screen.Screen;
 import com.example.MovieTheaterAPI.screen.ScreenRepository;
-import com.example.MovieTheaterAPI.screen.ScreenService;
 import com.example.MovieTheaterAPI.screen.utils.ResourceNotFoundException;
+import com.example.MovieTheaterAPI.showtime.dto.GetShowtimeDTO;
 import com.example.MovieTheaterAPI.showtime.dto.ShowTimeDTO;
+import com.example.MovieTheaterAPI.showtime.mapper.ShowtimeMapper;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.DayOfWeek;
@@ -23,6 +24,7 @@ import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @Service
 @AllArgsConstructor
 public class ShowTimeServiceImpl implements ShowTimeService {
@@ -32,9 +34,10 @@ public class ShowTimeServiceImpl implements ShowTimeService {
     private final LocationRepository locationRepository;
     private final DiscountRepository discountRepository;
     private final BookingService bookingService;
+    private final ShowtimeMapper showtimeMapper;
 
     @Override
-    public ShowTime createShowTime(ShowTimeDTO showTimeDTO) {
+    public GetShowtimeDTO createShowTime(ShowTimeDTO showTimeDTO) {
         Movie movie = getEntityOrThrow(movieRepository.findById(showTimeDTO.getMovieId()));
         Screen screen = getEntityOrThrow(screenRepository.findById(showTimeDTO.getScreenId()));
 
@@ -53,25 +56,37 @@ public class ShowTimeServiceImpl implements ShowTimeService {
             throw new RuntimeException();
         }
         applyDiscount(showTime);
-        return showTimeRepository.save(showTime);
+        return showtimeMapper.getShowtimeDTO(showTimeRepository.save(showTime));
     }
 
     @Override
-    public ShowTime getShowTimeById(long showtimeId) {
+    public GetShowtimeDTO getShowTimeById(long showtimeId) {
         ShowTime showTime = getEntityOrThrow(showTimeRepository.findById(showtimeId));
-        return showTime;
+        return showtimeMapper.getShowtimeDTO(showTime);
     }
 
     @Override
-    public List<ShowTime> getShowTimeByMovie(long movieId) {
+    public List<GetShowtimeDTO> getShowTimeByMovie(long movieId) {
         Movie movie = getEntityOrThrow(movieRepository.findById(movieId));
-        return showTimeRepository.findShowTimeByDateAfterAndMovie(LocalDate.now(), movie);
+        List<ShowTime> showTimes = showTimeRepository.findShowTimeByDateAfterAndMovie(LocalDate.now(), movie);
+
+        log.info(showTimes.toString());
+
+        return showTimes
+                .stream()
+                .map(showtimeMapper::getShowtimeDTO)
+                .toList();
     }
 
     @Override
-    public List<ShowTime> getShowTimeByLocation(long locationId) {
+    public List<GetShowtimeDTO> getShowTimeByLocation(long locationId) {
         Location location = getEntityOrThrow(locationRepository.findById(locationId));
-        return showTimeRepository.findShowTimeByLocation(location);
+        List<ShowTime> showTimes = showTimeRepository.findShowTimeByLocation(location);
+
+        return showTimes
+                .stream()
+                .map(showtimeMapper::getShowtimeDTO)
+                .toList();
     }
 
     @Override

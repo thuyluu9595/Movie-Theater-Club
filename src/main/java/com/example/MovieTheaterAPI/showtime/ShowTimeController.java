@@ -2,6 +2,8 @@ package com.example.MovieTheaterAPI.showtime;
 
 import com.example.MovieTheaterAPI.screen.ScreenService;
 import com.example.MovieTheaterAPI.screen.utils.ResourceNotFoundException;
+import com.example.MovieTheaterAPI.showtime.dto.GetScreenDTO;
+import com.example.MovieTheaterAPI.showtime.dto.GetShowtimeDTO;
 import com.example.MovieTheaterAPI.showtime.dto.ShowTimeDTO;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -22,7 +24,7 @@ public class ShowTimeController {
     @PostMapping("")
     public ResponseEntity<?> createShowTime(@RequestBody @Valid ShowTimeDTO showTimeDTO) {
         try {
-            ShowTime showTime = showTimeService.createShowTime(showTimeDTO);
+            GetShowtimeDTO showTime = showTimeService.createShowTime(showTimeDTO);
             screenService.addMovieToScreen(showTimeDTO.getScreenId(), showTimeDTO.getMovieId());
             return ResponseEntity.ok(showTime);
         } catch (ResourceNotFoundException e) {
@@ -33,7 +35,7 @@ public class ShowTimeController {
     @GetMapping("/{id}")
     public ResponseEntity<?> getShowTimeById(@PathVariable long id) {
         try {
-            ShowTime showTime = showTimeService.getShowTimeById(id);
+            GetShowtimeDTO showTime = showTimeService.getShowTimeById(id);
             return ResponseEntity.ok(showTime);
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.badRequest().build();
@@ -43,7 +45,7 @@ public class ShowTimeController {
     @GetMapping("/{id}/movie")
     public ResponseEntity<?> getShowTimeByMovie(@PathVariable long id) {
         try {
-            List<ShowTime> showTimes = showTimeService.getShowTimeByMovie(id);
+            List<GetShowtimeDTO> showTimes = showTimeService.getShowTimeByMovie(id);
             return ResponseEntity.ok(showTimes);
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.badRequest().build();
@@ -53,7 +55,7 @@ public class ShowTimeController {
     @GetMapping("/{id}/location")
     public ResponseEntity<?> getShowTimeByLocation(@PathVariable long id) {
         try {
-            List<ShowTime> showTimes = showTimeService.getShowTimeByLocation(id);
+            List<GetShowtimeDTO> showTimes = showTimeService.getShowTimeByLocation(id);
             return ResponseEntity.ok(showTimes);
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.badRequest().build();

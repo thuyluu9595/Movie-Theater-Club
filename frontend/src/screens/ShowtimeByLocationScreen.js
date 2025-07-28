@@ -1,108 +1,121 @@
 import React, { useEffect, useReducer, useState } from 'react';
-import {Button, Col, Container, Form, ListGroup, ListGroupItem, Row} from 'react-bootstrap';
-import Helmet from 'react-helmet';
+import { Col, Container, Form, Row, Button } from 'react-bootstrap';
+import { Helmet } from 'react-helmet';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+
 import LoadingBox from '../components/LoadingBox';
 import MessageBox from '../components/MessageBox';
 import { URL } from '../Constants';
-import Card from "react-bootstrap/Card";
-import {useNavigate} from "react-router-dom"; // Import your URL constant
+import { getError } from '../utils';
 
 const reducer = (state, action) => {
     switch (action.type) {
         case 'FETCH_REQUEST':
-            return { ...state, loading: true };
+            return { ...state, loading: true, error: '' };
         case 'FETCH_LOCATIONS_SUCCESS':
-            return { ...state, locations: action.payload, loading: false };
+            return { ...state, locations: action.payload };
+        case 'FETCH_SHOWTIME_REQUEST':
+            return { ...state, loadingShowtimes: true, error: '' };
         case 'FETCH_SHOWTIME_SUCCESS':
-            return { ...state, showtime: action.payload, loading: false };
+            return { ...state, showtimes: action.payload, loading: false, loadingShowtimes: false };
         case 'FETCH_FAIL':
-            return { ...state, loading: false, error: action.payload };
+            return { ...state, loading: false, loadingShowtimes: false, error: action.payload };
         default:
             return state;
     }
 };
 
 const ShowtimeByLocationScreen = () => {
-    const [{ locations, showtime, loading, error }, dispatch] = useReducer(reducer, {
+    const [{ locations, showtimes, loading, error, loadingShowtimes }, dispatch] = useReducer(reducer, {
         locations: [],
-        showtime: [],
+        showtimes: [],
         loading: true,
         error: '',
+        loadingShowtimes: true,
     });
 
     const navigate = useNavigate();
+    const [locationId, setLocationId] = useState('');
+
     useEffect(() => {
         const fetchLocations = async () => {
+            dispatch({ type: 'FETCH_REQUEST' });
             try {
-                const res = await axios.get(`${URL}/locations`);
-                dispatch({ type: 'FETCH_LOCATIONS_SUCCESS', payload: res.data });
+                const { data } = await axios.get(`${URL}/locations`);
+                dispatch({ type: 'FETCH_LOCATIONS_SUCCESS', payload: data });
+                if (data.length > 0) {
+                    setLocationId(data[0].id); // Set initial location
+                } else {
+                    // Handle case with no locations
+                    dispatch({ type: 'FETCH_SHOWTIME_SUCCESS', payload: [] });
+                }
             } catch (e) {
-                dispatch({ type: 'FETCH_FAIL', payload: e.message });
+                dispatch({ type: 'FETCH_FAIL', payload: getError(e) });
             }
         };
         fetchLocations();
     }, []);
 
-    const [locationId, setLocationId] = useState(1);
-
     useEffect(() => {
-        const fetchShowtime = async () => {
+        if (!locationId) return; // Don't fetch if no location is selected
+
+        const fetchShowtimes = async () => {
+            dispatch({ type: 'FETCH_SHOWTIME_REQUEST' });
             try {
-                const response = await axios.get(`${URL}/showtime/${locationId}/location`);
-                dispatch({ type: 'FETCH_SHOWTIME_SUCCESS', payload: response.data });
+                const { data } = await axios.get(`${URL}/showtime/${locationId}/location`);
+                dispatch({ type: 'FETCH_SHOWTIME_SUCCESS', payload: data });
             } catch (err) {
-                dispatch({ type: 'FETCH_FAIL', payload: err.message });
+                dispatch({ type: 'FETCH_FAIL', payload: getError(err) });
             }
         };
-        fetchShowtime();
+        fetchShowtimes();
     }, [locationId]);
 
-    const handleLocationChange = (e) => {
-        setLocationId(e.target.value);
-    };
-
     return (
-        <Container>
+        <Container fluid className="showtime-page">
             <Helmet>
-                <title>Showtime</title>
+                <title>Showtimes</title>
             </Helmet>
-            <h1>Showtime</h1>
-            {loading ? (
-                <LoadingBox />
-            ) : error ? (
-                <MessageBox variant="danger">{error}</MessageBox>
-            ) : (
-                <>
-                    <label htmlFor="location-select" style={{ color: 'white', marginRight: '0.7rem' }}>
-                        Location:{' '}
-                    </label>
-                    <Form.Control as="select" style={{maxWidth:'30%',marginBottom:'8px'}} className="location-select" value={locationId} onChange={handleLocationChange}>
-                        {locations.map((lo) => (
-                            <option key={lo.id} value={lo.id}>
-                                {lo.city + ', ' + lo.state}
-                            </option>
-                        ))}
-                    </Form.Control>
-                    <Row xs={1} md={2} className="g-4">
-                        {showtime.map((show) => (
-                            <Col key={show.id} className="col" sm={6} md={4} lg={3}>
-                                <Card>
-                                    <Card.Body>
-                                        <Card.Title style={{color:'black'}}>{show.movie.title}</Card.Title>
-                                        <ListGroup style={{marginBottom:'2px'}}>
-                                            <ListGroup.Item>Room: {show.screen.name}</ListGroup.Item>
-                                            <ListGroup.Item>Show date: {show.date}</ListGroup.Item>
-                                            <ListGroup.Item>Start time: {show.startTime}</ListGroup.Item>
-                                            <ListGroup.Item>Price: ${show.price}</ListGroup.Item>
-                                        </ListGroup>
+            <div className="page-header">
+                <h1 className="page-title">Showtimes by Location</h1>
+            </div>
 
-                                        <Button variant="primary" onClick={() => navigate(`/bookings/${show.id}`)}>Book</Button>
-                                    </Card.Body>
-                                </Card>
-                            </Col>
-                        ))}
-                    </Row>
+            {loading ? <LoadingBox /> : error ? <MessageBox variant="danger">{error}</MessageBox> : (
+                <>
+                    <Form.Group controlId="location-select" className="location-filter-group">
+                        <Form.Label>Select a Location</Form.Label>
+                        <Form.Control as="select" value={locationId} onChange={(e) => setLocationId(e.target.value)}>
+                            {locations.map((loc) => (
+                                <option key={loc.id} value={loc.id}>
+                                    {loc.city}, {loc.state}
+                                </option>
+                            ))}
+                        </Form.Control>
+                    </Form.Group>
+
+                    {loadingShowtimes ? <LoadingBox /> : showtimes.length === 0 ? (
+                        <MessageBox variant="info">No showtimes available for this location.</MessageBox>
+                    ) : (
+                        <Row xs={1} md={2} xl={3} className="g-4">
+                            {showtimes.map((show) => (
+                                <Col key={show.id}>
+                                    <div className="showtime-card">
+                                        <h4 className="showtime-movie-title">{show.movie.title}</h4>
+                                        <ul className="showtime-details-list">
+                                            <li><i className="fas fa-desktop"></i><span>Room: {show.screen.name}</span></li>
+                                            <li><i className="fas fa-calendar-alt"></i><span>Date: {show.date}</span></li>
+                                            <li><i className="fas fa-clock"></i><span>Time: {show.startTime}</span></li>
+                                            <li><i className="fas fa-dollar-sign"></i><span>Price: ${show.price.toFixed(2)}</span></li>
+                                        </ul>
+                                        <Button className="btn-book-now" onClick={() => navigate(`/bookings/${show.id}`)}>
+                                            Book Now
+                                        </Button>
+                                    </div>
+                                </Col>
+                            ))}
+                        </Row>
+                    )}
                 </>
             )}
         </Container>

@@ -1,233 +1,1579 @@
+/* --- Google Font Import --- */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap');
+
+/* --- Global Styles & Theme --- */
 body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  /* A simple, clean, and professional dark background */
+  background: linear-gradient(to bottom, #1E293B, #0F172A);
+  color: #FFFFFF;
+  font-family: 'Inter', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  margin: 0;
 }
 
-
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+main {
+  flex: 1;
+  /* Removed background color to let the body gradient show through */
 }
+
 .site-container {
   min-height: 100vh;
-}
-main {
-  background-color: #181616;
-  flex: 1;
-  color : white;
-  font-family: "Gill Sans", Luminari, fantasy;
-}
-.thead {
- background-color: white;
-}
-.tbody tr{
-  background-color: white;
-}
-.movies {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-.movie {
-  border: 1px #0c0c0c solid;
-  margin: 1rem;
-}
-.movie img {
-  width: 100%;
-}
-.movie-info{
-  padding: 1rem;
+  flex-direction: column;
 }
 
-.btn-primary {
-  background-color: rgb(236, 181, 30);
-  color: black;
-}
-.small-container {
-  max-width: 600px;
-}
-.img-large {
-  max-width: 100vh;
-}
-
+/* Override bootstrap container to use our text color */
 .container {
-  color: #ffffff;
+  color: #FFFFFF;
 }
 
-.container table {
-  --bs-table-striped-color: #ffffff;
-  color: #ffffff;
-  --bs-table-hover-color: #b7b8b9;
-  --bs-table-hover-bg: rgba(114, 112, 112, 0.075);
-}
-/*======== Style for AnalyticsScreen ========*/
-
-.analytics-container {
-
-  padding: 50px;
-  background-color: #fff;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-}
-
-.analytics-container h1 {
-  font-family: Helvetica, sans-serif;
-  color: deepskyblue;
-  text-align: center;
-  font-size: 36px;
-  font-weight: 600;
-  margin-bottom: 20px;
-}
-
-.days-select, .category-select {
-  display: inline-flex;
-  width: 30rem;
-  margin-bottom: 20px;
-  margin-right: 20px;
-}
-
-/*.row {*/
-/*  margin-bottom: 20px;*/
-/*  display: flex;*/
-/*  !*justify-content: space-between;*!*/
-
-/*}*/
-
-/*.col {*/
-/*  padding: 20px;*/
-/*  background-color: #f2f2f2;*/
-/*  border-radius: 10px;*/
-/*  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);*/
-/*}*/
-
-/*.col h2 {*/
-/*  color: black;*/
-/*    text-align: center;*/
-/*  font-family: "Arial Hebrew", sans-serif;*/
-/*  font-size: 18px;*/
-/*  font-weight: 600;*/
-/*  margin-bottom: 20px;*/
-/*}*/
-
-/* Adjustments for medium screens (768px - 991px) */
-@media (max-width: 991px) {
-  .days-select, .category-select {
-    width: 100%;
-  }
-}
-
-/* Adjustments for small screens (576px - 767px) */
-@media (max-width: 767px) {
-  .analytics-container h1 {
-    font-size: 24px;
-  }
-
-  .col h2 {
-    font-size: 16px;
-  }
-}
-
-/* Adjustments for extra small screens (less than 576px) */
-@media (max-width: 576px) {
-  .analytics-container {
-    padding: 20px;
-  }
-
-  .col {
-    padding: 10px;
-  }
-}
-/*======== End Style for AnalyticsScreen ========*/
-/*========Style for MembershipOptionScreen=======*/
-.member-options{
-    margin-right: 0.5rem;
-
-}
-.membership-options {
-  padding: 20px;
-  background-color: #fff;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-}
-
-.membership-options-title {
-  color: deepskyblue;
-  text-align: center;
-  font-size: 36px;
-  font-weight: 600;
-  margin-bottom: 20px;
-}
-
-.membership-plan-card {
-  padding: 20px;
-  background-color: #f2f2f2;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-  margin-bottom: 20px;
-  height: 100%;
-}
-
-.membership-plan-title {
-  font-size: 22px;
-  font-weight: 600;
-  margin-bottom: 15px;
-}
-
-.membership-plan-benefits {
-  font-family: "Times New Roman", sans-serif;
-  font-size: 16px;
-  line-height: 1.5;
-}
-
-.membership-card-button {
-
-}
-
-.membership-price {
-  text-align: center;
-  font-size: 24px;
-}
-/*========Style for MembershipOptionScreen=======*/
-.mb-3 {
-  min-width: 20rem;
-}
-
-.poster-image {
-  width: 100%;
+/* --- Header / Navbar Styling --- */
+.app-header {
+  /* Glassmorphism Effect */
+  background: rgba(35, 35, 45, 0.5); /* Semi-transparent background */
+  backdrop-filter: blur(10px); /* The blur effect */
+  -webkit-backdrop-filter: blur(10px); /* For Safari compatibility */
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2); /* Subtle border */
+  padding: 0.75rem 0;
   position: relative;
+  z-index: 10;
 }
-.poster-image img {
-  object-fit: cover;
-  object-position: 50% 0;
-  height: 100%;
-  width: 100%;
-  display: block;
-  margin: 0 auto;
 
+.app-header .navbar-brand {
+  color: #fd00ad !important;
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  font-size: 1.5rem;
 }
-.cover-image-text {
+
+/* --- Custom Navigation Links --- */
+.nav-link-custom {
+  color: #EAEAEA;
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+  margin: 0 0.5rem;
+  border-radius: 20px;
+  transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+}
+
+.nav-link-custom:hover {
+  color: #FFFFFF;
+  background-color: rgba(255, 255, 255, 0.15); /* Subtle hover effect */
+}
+
+.nav-link-signin {
+  /* New modern accent color */
+  background-color: #F92672;
+  color: #FFFFFF;
+  font-weight: 500;
+}
+
+.nav-link-signin:hover {
+  color: #FFFFFF;
+  background-color: #e02366; /* Slightly darker accent on hover */
+}
+
+
+/* --- User Dropdown Styling --- */
+.user-dropdown .dropdown-toggle {
+  color: #FFFFFF !important;
+}
+
+.user-dropdown .dropdown-toggle::after {
+  color: #FFFFFF;
+}
+
+/* Custom styles for the dropdown menu with Glassmorphism */
+.dropdown-menu {
+  background: rgba(30, 30, 40, 0.7); /* Darker glass for dropdown */
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  z-index: 10;
+}
+
+.dropdown-item {
+  color: #FFFFFF !important;
+}
+
+.dropdown-item:hover {
+  background-color: #F92672 !important; /* New accent color on hover */
+  color: #FFFFFF !important;
+}
+
+.dropdown-divider {
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+
+/* --- Footer Styling --- */
+.app-footer {
+  /* Glassmorphism Effect */
+  background: rgba(35, 35, 45, 0.5);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: #AAAAAA;
+  padding: 1.5rem 0;
+  text-align: center;
+  font-size: 0.9rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* --- HomeScreen Styles --- */
+
+/* Hero Section */
+.hero-section {
+  position: relative;
+  height: 60vh;
+  width: 100%;
+  margin-bottom: 3rem;
+  color: white;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.hero-slide {
+  position: relative;
+  height: 60vh;
+  background-size: cover;
+  background-position: center;
+}
+
+.hero-slide::after {
+  content: '';
   position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  color: bisque;
-  text-shadow: 4px 4px 4px rgba(0,0,0,0.5);
-  font-size: 300%;
-  font-weight: bold;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  /* Softer gradient to complement the new theme */
+  background: linear-gradient(to top, rgba(10, 5, 20, 0.9) 0%, rgba(10, 5, 20, 0) 100%);
+}
+
+.hero-content {
+  position: absolute;
+  bottom: 10%;
+  left: 5%;
+  z-index: 2;
+  max-width: 50%;
+}
+
+.hero-title {
+  font-size: 2.8rem;
+  font-weight: 700;
+  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
+  margin-bottom: 1rem;
+}
+
+.hero-description {
+  font-size: 1rem;
+  margin-bottom: 1.5rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Section Heading */
+.section-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #FFFFFF; /* Changed to white for better contrast on gradient */
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Movie Card Styling */
+.movie-card {
+  /* Glassmorphism Effect */
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+
+  border-radius: 8px;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.movie-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
+}
+
+.movie-poster-link {
+  display: block;
+  width: 100%;
+  aspect-ratio: 2 / 3; /* Enforces a cinematic poster aspect ratio */
+  background-color: #121212; /* Fallback color */
+}
+
+.movie-poster {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Ensures the image covers the area without distortion */
+}
+
+.movie-info {
+  padding: 1rem;
+  flex-grow: 1; /* Allows this section to fill available space */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* Pushes title up and button down */
+}
+
+.movie-title-container a {
+  text-decoration: none;
+}
+
+.movie-title {
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: #FFFFFF;
+  margin-bottom: 1rem;
+  /* Clamp title to 2 lines to prevent overflow */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.movie-title:hover {
+  color: #F92672; /* New accent color */
+}
+
+.movie-button-container .btn {
+  background-color: #F92672; /* New accent color */
+  border-color: #F92672;
+  color: #FFFFFF;
+  font-weight: 700;
+  width: 100%;
+}
+
+.movie-button-container .btn:hover {
+  background-color: #e02366;
+  border-color: #e02366;
+}
+
+.movie-button-container .btn:disabled {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+  color: #888;
+  cursor: not-allowed;
+}
+
+/* --- Movie Details Screen Styles --- */
+
+.movie-details-page {
+  padding-bottom: 3rem;
+}
+
+/* Hero Section with Backdrop */
+.movie-hero-section {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  padding: 2rem;
+  margin-bottom: 3rem;
+  background-size: cover;
+  background-position: center;
+}
+
+.movie-hero-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(25, 25, 30, 0.6); /* Adjusted overlay for better readability */
+  backdrop-filter: blur(10px); /* Frosted glass effect */
+  z-index: 1;
+}
+
+.movie-hero-section .row {
+  position: relative;
+  z-index: 1;
+}
+
+.details-poster-img {
+  width: 100%;
+  max-width: 350px;
+  height: auto;
+  border-radius: 8px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.details-content h1 {
+  font-size: 3rem;
+  font-weight: 700;
+  color: #FFFFFF; /* Title now white, stands out better */
+  margin-bottom: 1.5rem;
+}
+
+.details-meta-item {
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+  color: #DDDDDD;
+}
+
+.details-meta-item strong {
+  color: #FFFFFF;
+}
+
+.details-description {
+  font-size: 1rem;
+  line-height: 1.6;
+  margin-bottom: 2rem;
+}
+
+.btn-get-tickets {
+  background-color: #F92672; /* New accent color */
+  border-color: #F92672;
+  color: #FFFFFF;
+  font-weight: 700;
+  font-size: 1.2rem;
+  padding: 0.75rem 2rem;
+}
+.btn-get-tickets:hover {
+  background-color: #e02366;
+  border-color: #e02366;
+  color: #FFFFFF;
+}
+
+/* Section Divider & Title */
+.section-divider {
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  margin: 2.5rem 0;
+}
+
+.section-title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #FFFFFF;
+  margin-bottom: 1.5rem;
+}
+
+/* AI Summary Box */
+.ai-summary-box {
+  background: rgba(0, 0, 0, 0.2); /* Darker transparent box */
+  border-left: 4px solid #F92672; /* New accent color */
+  padding: 1.5rem;
+  border-radius: 8px;
+  color: #DDDDDD;
+  font-style: italic;
+}
+
+/* Reviews List */
+.review-card {
+  /* Glassmorphism Effect */
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.review-header {
+  display: flex;
+  justify-content: space-between; /* Pushes items to opposite ends */
+  align-items: flex-start; /* Aligns items to the top */
+  margin-bottom: 0.5rem;
+}
+
+.review-author-info {
+  /* This group contains the author and rating */
+  flex-grow: 1;
+}
+
+.review-actions {
+  /* This contains the delete button */
+  margin-left: 1rem; /* Adds some space between the content and the button */
+}
+.review-author {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #FFFFFF;
+}
+
+.review-title {
+  font-weight: 700;
+  margin-top: 0.5rem;
+}
+
+.review-rating {
+  color: #CCCCCC;
+}
+
+.review-rating .star {
+  color: #F92672; /* New accent color */
+}
+
+.review-comment {
+  color: #FFFFFF;
+  margin: 0.5rem 0;
+}
+
+.review-date {
+  font-size: 0.8rem;
+  color: #AAAAAA;
+}
+
+/* Review Form */
+.review-form-container .form-label {
+  color: #FFFFFF;
+  font-weight: 500;
+}
+
+.review-form-container .form-control,
+.review-form-container .form-select {
+  background-color: rgba(0, 0, 0, 0.3); /* Transparent dark input */
+  color: #FFFFFF;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.review-form-container .form-control:focus,
+.review-form-container .form-select:focus {
+  background-color: rgba(0, 0, 0, 0.3);
+  color: #FFFFFF;
+  border-color: #F92672; /* Focus uses accent color */
+  box-shadow: 0 0 0 0.25rem rgba(249, 38, 114, 0.25);
+}
+
+.review-form-container .form-control::placeholder {
+  color: #AAAAAA;
+}
+
+.review-form-container .btn-primary {
+  background-color: #F92672; /* New accent color */
+  border-color: #F92672;
+  color: #FFFFFF;
+  font-weight: 700;
+}
+.review-form-container .btn-primary:hover {
+  background-color: #e02366;
+  border-color: #e02366;
+  color: #FFFFFF;
+}
+
+/* --- SearchBox Styles --- */
+
+.search-box-container {
+  display: flex;
+  align-items: center;
+  /* Glassmorphism Effect */
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 50px; /* Pill shape */
+  padding: 0.25rem 0.25rem 0.25rem 1rem; /* Add padding inside */
+  transition: background-color 0.3s ease;
+  min-width: 300px;
+}
+
+.search-box-container:focus-within {
+  /* Enhance the glass effect on focus */
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(249, 38, 114, 0.5);
+}
+
+.search-input {
+  /* Reset default styles */
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  outline: none !important;
+
+  color: #FFFFFF !important;
+  flex-grow: 1; /* Allow input to take up available space */
+}
+
+.search-input::placeholder {
+  color: #AAAAAA;
+  opacity: 1; /* Override bootstrap's default */
+}
+
+.search-button {
+  /* Reset default styles */
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  outline: none !important;
+
+  color: #F92672; /* Use our accent color for the icon */
+  font-size: 1rem;
+  border-radius: 50%; /* Make it a circle */
+  width: 38px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s ease;
+}
+
+.search-button:hover {
+  background-color: rgba(249, 38, 114, 0.2) !important; /* Accent color glow on hover */
+  color: #F92672;
+}
+
+/* --- Authentication Form Styles (for Sign In & Register) --- */
+
+.auth-container {
+  max-width: 380px;
+  margin: 4rem auto; /* Center the container vertically and horizontally */
+  padding: 2.5rem;
+
+  /* Glassmorphism Effect */
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  border-radius: 12px;
+}
+
+.auth-title {
+  text-align: center;
+  margin-bottom: 2rem;
+  font-weight: 700;
+  color: #FFFFFF;
+}
+
+/* Style form elements within the auth container */
+.auth-container .form-label {
+  color: #FFFFFF;
+  font-weight: 500;
+}
+
+.auth-container .form-control {
+  background-color: rgba(0, 0, 0, 0.3) !important;
+  color: #FFFFFF !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  padding: 0.75rem 1rem;
+}
+
+.auth-container .form-control:focus {
+  background-color: rgba(0, 0, 0, 0.3) !important;
+  color: #FFFFFF !important;
+  border-color: #F92672 !important; /* Focus uses accent color */
+  box-shadow: 0 0 0 0.25rem rgba(249, 38, 114, 0.25) !important;
+}
+
+.auth-button {
+  background-color: #F92672 !important;
+  border-color: #F92672 !important;
+  color: #FFFFFF !important;
+  font-weight: 700 !important;
+  font-size: 1.1rem !important;
+  padding: 0.75rem !important;
+  transition: background-color 0.2s ease;
+}
+
+.auth-button:hover {
+  background-color: #e02366 !important;
+  border-color: #e02366 !important;
+}
+
+.auth-switch-link {
+  text-align: center;
+  color: #CCCCCC;
+}
+
+.auth-switch-link a {
+  color: #F92672; /* Use accent color for the link */
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.auth-switch-link a:hover {
+  text-decoration: underline;
+  color: #e02366;
+}
+
+
+/* --- Analytics Screen Styles --- */
+
+.analytics-page {
+  padding-top: 1rem;
+  padding-bottom: 3rem;
+}
+
+.page-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #FFFFFF;
+  margin-bottom: 2rem;
+}
+
+/* Filter Card Styling */
+.filter-card {
+  padding: 1.5rem 2rem;
+  margin-bottom: 2.5rem;
+
+  /* Glassmorphism Effect */
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  border-radius: 12px;
+}
+
+.filter-card .form-label {
+  color: #FFFFFF;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+}
+
+.filter-card .form-control {
+  background-color: rgba(0, 0, 0, 0.3) !important;
+  color: #FFFFFF !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+}
+
+.filter-card .form-control:focus {
+  border-color: #F92672 !important;
+  box-shadow: 0 0 0 0.25rem rgba(249, 38, 114, 0.25) !important;
+}
+
+/* Analytics Card for Charts */
+.analytics-card {
+  height: 100%;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+
+  /* Glassmorphism Effect */
+  background: rgba(255, 255, 255, 0.05); /* Slightly more subtle than filter card */
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  transition: background-color 0.3s ease;
+}
+
+.analytics-card:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.analytics-card-title {
+  text-align: center;
+  font-weight: 500;
+  color: #FFFFFF;
+  margin-bottom: 1.5rem;
+  min-height: 48px; /* Ensure consistent height for titles */
+}
+
+.chart-container {
+  flex-grow: 1;
+  position: relative;
+  width: 100%;
+}
+
+
+/* --- Manage Movies Screen Styles --- */
+
+.manage-movies-page {
+  padding: 1rem 0 3rem 0;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2.5rem;
+}
+
+/* Re-using the page-title style from Analytics */
+.page-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #FFFFFF;
+  margin: 0; /* Remove default margin */
+}
+
+.btn-add-movie {
+  background-color: #F92672 !important; /* Accent color */
+  border-color: #F92672 !important;
+  color: #FFFFFF !important;
+  font-weight: 500 !important;
+  font-size: 1rem !important;
+  padding: 0.6rem 1.2rem !important;
+  border-radius: 8px !important;
+  transition: background-color 0.2s ease;
+}
+
+.btn-add-movie:hover {
+  background-color: #e02366 !important;
+  border-color: #e02366 !important;
+}
+
+
+/* --- Create Movie Screen Styles --- */
+
+.create-movie-page {
+  padding: 1rem 0 3rem 0;
+}
+
+/* A small helper for the loading spinner inside a button */
+.btn .loading-spinner {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+
+/* --- Location Screen Styles --- */
+
+.location-page {
+  padding: 1rem 0 3rem 0;
+}
+
+/* Form Card Styling (for Create Location) */
+.form-card {
+  padding: 2rem;
+  height: 100%;
+  /* Glassmorphism Effect */
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  border-radius: 12px;
+}
+
+.form-card-title {
+  font-size: 1.5rem;
+  font-weight: 500;
+  color: #FFFFFF;
+  margin-bottom: 1.5rem;
+}
+
+/* Table Card Styling */
+.table-card {
+  padding: 2rem;
+  height: 100%;
+  /* Glassmorphism Effect */
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  border-radius: 12px;
+}
+
+.table-card-title {
+  font-size: 1.5rem;
+  font-weight: 500;
+  color: #FFFFFF;
+  margin-bottom: 1.5rem;
+}
+
+/* Custom Data Table Styling */
+.data-table {
+  color: #FFFFFF; /* Ensures text in table is white */
+}
+
+.data-table thead th {
+  color: #FFFFFF;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.3) !important;
+}
+
+.data-table tbody tr {
+  transition: background-color 0.2s ease;
+}
+
+.data-table tbody tr:hover {
+  background-color: rgba(249, 38, 114, 0.15); /* Hover with accent color */
+}
+
+.data-table td, .data-table th {
+  border-color: rgba(255, 255, 255, 0.2) !important;
+  vertical-align: middle;
+}
+
+.btn-table-action {
+  background-color: rgba(255, 255, 255, 0.15) !important;
+  border: 1px solid #F92672 !important;
+  color: #F92672 !important;
+  font-size: 0.9rem !important;
+  padding: 0.4rem 0.8rem !important;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.btn-table-action:hover {
+  background-color: #F92672 !important;
+  border-color: #F92672 !important;
+  color: #FFFFFF !important;
+}
+
+/* --- Discount Screen Styles --- */
+
+.discount-page {
+  padding: 1rem 0 3rem 0;
+}
+
+
+/* --- Edit Movie Screen Styles --- */
+
+.edit-movie-page {
+  padding: 1rem 0 3rem 0;
+}
+
+.edit-movie-card {
+  padding: 2rem;
+  /* Glassmorphism Effect */
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  border-radius: 12px;
+}
+
+.poster-column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.edit-poster-img {
+  width: 100%;
+  max-width: 300px;
+  height: auto;
+  aspect-ratio: 2 / 3;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+.btn-change-image {
+  width: 100%;
+  max-width: 300px;
+  background-color: rgba(255, 255, 255, 0.15) !important;
+  border: 1px solid rgba(255, 255, 255, 0.3) !important;
+  color: #FFFFFF !important;
+  transition: background-color 0.2s ease;
+}
+
+.btn-change-image:hover {
+  background-color: rgba(255, 255, 255, 0.25) !important;
+}
+
+.form-column {
+  border-left: 1px solid rgba(255, 255, 255, 0.2);
+  padding-left: 2rem;
+}
+
+/* Responsive: remove border and padding on small screens */
+@media (max-width: 767px) {
+  .form-column {
+    border-left: none;
+    padding-left: 0;
+    margin-top: 2rem;
+  }
+}
+
+.action-buttons {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.btn-delete {
+  background-color: #a4262c !important; /* A darker, more subtle red */
+  border-color: #a4262c !important;
+  color: #FFFFFF !important;
+  transition: background-color 0.2s ease;
+}
+
+.btn-delete:hover {
+  background-color: #c02d34 !important;
+  border-color: #c02d34 !important;
+}
+
+
+/* --- Image Upload Modal Styles --- */
+
+.image-upload-modal .modal-content {
+  /* Glassmorphism Effect */
+  background: rgba(30, 30, 40, 0.85);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  color: #FFFFFF;
+}
+
+.image-upload-modal .modal-header {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.image-upload-modal .modal-header .btn-close {
+  /* Style the close button to be white */
+  filter: brightness(0) invert(1);
+}
+
+.image-upload-modal .modal-footer {
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Custom styling for the file input */
+.image-upload-modal .form-control[type="file"] {
+  background-color: rgba(0, 0, 0, 0.3);
+  color: #FFFFFF;
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.image-upload-modal .form-control[type="file"]::file-selector-button {
+  background-color: rgba(255, 255, 255, 0.2);
+  color: #FFFFFF;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
+.image-upload-modal .form-control[type="file"]::file-selector-button:hover {
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+/* Image Preview Styling */
+.image-preview-container {
+  margin-top: 1rem;
+  text-align: center;
+}
+
+.image-preview-container p {
+  margin-bottom: 0.5rem;
+  color: #CCCCCC;
+}
+
+.image-preview {
+  max-width: 100%;
+  max-height: 250px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Modal Button Styling */
+.btn-modal-close {
+  background-color: rgba(255, 255, 255, 0.15) !important;
+  border: 1px solid rgba(255, 255, 255, 0.3) !important;
+  color: #FFFFFF !important;
+}
+
+.btn-modal-close:hover {
+  background-color: rgba(255, 255, 255, 0.25) !important;
+}
+
+.btn-modal-primary {
+  background-color: #F92672 !important;
+  border-color: #F92672 !important;
+  color: #FFFFFF !important;
+}
+
+.btn-modal-primary:hover {
+  background-color: #e02366 !important;
+  border-color: #e02366 !important;
+}
+
+
+/* --- Membership Options Screen Styles --- */
+
+.membership-page {
+  padding: 1rem 0 3rem 0;
+}
+
+.page-subtitle {
+  font-size: 1.2rem;
+  color: #AAAAAA;
+  margin-top: -0.5rem;
+}
+
+.membership-card {
+  position: relative;
+  padding: 2.5rem 2rem;
+  height: 100%;
   text-align: center;
 
+  /* Glassmorphism Effect */
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  border-radius: 16px;
+
+  transition: transform 0.3s ease, border-color 0.3s ease;
+
+  /* --- NEW: Make the card a flex container --- */
+  display: flex;
 }
 
-.edit-movie-img-container {
-  max-width: 30%;
+/* This is the new wrapper for the card content */
+.card-content {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
 }
 
 
-/*.container {*/
-/*  max-width: 92%;*/
-/*  margin: auto;*/
-/*}*/
+.membership-card:hover {
+  transform: translateY(-10px);
+}
+
+/* Premium Card Highlight */
+.membership-card.premium {
+  border-color: #F92672;
+}
+
+.recommended-badge {
+  position: absolute;
+  top: -15px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #F92672;
+  color: #FFFFFF;
+  padding: 0.4rem 1rem;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.plan-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #FFFFFF;
+  margin-bottom: 0.5rem;
+}
+
+.plan-price {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 2rem;
+  color: #FFFFFF;
+}
+
+.price-period {
+  font-size: 1rem;
+  font-weight: 400;
+  color: #AAAAAA;
+  margin-left: 0.5rem;
+}
+
+.plan-benefits {
+  list-style: none;
+  padding: 0;
+  margin-bottom: 2.5rem;
+  text-align: left;
+  color: #DDDDDD;
+
+  /* --- NEW: This makes the list grow to fill space --- */
+  flex-grow: 1;
+}
+
+.plan-benefits li {
+  margin-bottom: 0.75rem;
+  display: flex;
+  align-items: center;
+}
+
+.plan-benefits .fa-check-circle {
+  color: #F92672; /* Use accent color for checkmarks */
+  margin-right: 0.75rem;
+  font-size: 1.2rem;
+}
+
+.btn-choose-plan {
+  width: 100%;
+  padding: 0.8rem !important;
+  font-size: 1.1rem !important;
+  font-weight: 500 !important;
+  border-radius: 8px !important;
+
+  /* Default style for regular plan */
+  background-color: rgba(255, 255, 255, 0.15) !important;
+  border: 1px solid rgba(255, 255, 255, 0.3) !important;
+  color: #FFFFFF !important;
+  transition: background-color 0.2s ease;
+}
+
+.btn-choose-plan:hover:not(:disabled) {
+  background-color: rgba(255, 255, 255, 0.25) !important;
+}
+
+/* Premium button highlight */
+.membership-card.premium .btn-choose-plan {
+  background-color: #F92672 !important;
+  border-color: #F92672 !important;
+}
+
+.membership-card.premium .btn-choose-plan:hover:not(:disabled) {
+  background-color: #e02366 !important;
+  border-color: #e02366 !important;
+}
+
+.btn-choose-plan:disabled {
+  background-color: rgba(255, 255, 255, 0.1) !important;
+  border-color: rgba(255, 255, 255, 0.2) !important;
+  color: #888 !important;
+  cursor: not-allowed;
+}
+
+
+/* --- Profile Screen Styles --- */
+
+.profile-page {
+  padding: 1rem 0 3rem 0;
+}
+
+.profile-card {
+  padding: 2rem;
+  /* Glassmorphism Effect */
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  border-radius: 12px;
+}
+
+.profile-sidebar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding-right: 2rem;
+}
+
+.profile-avatar {
+  font-size: 6rem; /* Large user icon */
+  color: #FFFFFF;
+  margin-bottom: 1rem;
+}
+
+.profile-name {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #FFFFFF;
+  margin-bottom: 0.25rem;
+}
+
+.profile-username {
+  font-size: 1rem;
+  color: #AAAAAA;
+  margin-bottom: 1.5rem;
+}
+
+.membership-badge {
+  padding: 0.4rem 1rem;
+  border-radius: 20px;
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+.membership-badge.regular {
+  background-color: rgba(255, 255, 255, 0.15);
+  color: #FFFFFF;
+}
+
+.membership-badge.premium {
+  background-color: #F92672;
+  color: #FFFFFF;
+}
+
+.profile-form {
+  border-left: 1px solid rgba(255, 255, 255, 0.2);
+  padding-left: 2rem;
+}
+
+.form-section-title {
+  font-size: 1.5rem;
+  font-weight: 500;
+  color: #FFFFFF;
+  margin-bottom: 1.5rem;
+}
+
+/* Responsive adjustments for smaller screens */
+@media (max-width: 767px) {
+  .profile-form {
+    border-left: none;
+    padding-left: 0;
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+  }
+  .profile-sidebar {
+    padding-right: 0;
+  }
+}
+
+
+/* --- Booking Screen Styles --- */
+
+.booking-page {
+  padding: 1rem 0 3rem 0;
+}
+
+/* Left Column: Show Info Card */
+.show-info-card {
+  /* Glassmorphism Effect */
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  overflow: hidden; /* To keep poster corners rounded */
+}
+
+.info-card-poster {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 2 / 3;
+  object-fit: cover;
+}
+
+.info-card-body {
+  padding: 1.5rem;
+}
+
+.info-card-body h2 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.info-card-body p {
+  margin-bottom: 0.75rem;
+  color: #DDDDDD;
+  display: flex;
+  align-items: center;
+}
+
+.info-card-body .fas {
+  margin-right: 0.75rem;
+  color: #F92672;
+  width: 20px;
+  text-align: center;
+}
+
+.discount-info {
+  color: #F92672 !important;
+  font-weight: 500;
+}
+
+/* Right Column: Booking Details Card */
+.booking-details-card {
+  padding: 2rem;
+  /* Glassmorphism Effect */
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+}
+
+.booking-section-title {
+  font-size: 1.5rem;
+  font-weight: 500;
+  color: #FFFFFF;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.cinema-screen {
+  width: 80%;
+  margin: 0 auto 1.5rem auto;
+  padding: 0.5rem;
+  text-align: center;
+  font-weight: 700;
+  letter-spacing: 0.2rem;
+  color: #F92672;
+  border-top: 2px solid #F92672;
+  border-bottom: 2px solid #F92672;
+}
+
+.cinema-hall {
+  padding: 1rem;
+  background-color: rgba(0,0,0,0.2);
+  border-radius: 8px;
+}
+
+/* Styling for SeatItem and SeatBox (assuming their structure) */
+/* You may need to adjust these based on the components' actual code */
+.seat-item, .seat-box {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.seat-item {
+  background-color: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+.seat-item:hover {
+  background-color: rgba(255, 255, 255, 0.4);
+}
+.seat-item.selected {
+  background-color: #F92672;
+  color: #FFFFFF;
+  border-color: #F92672;
+}
+.seat-item.taken {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-color: transparent;
+  color: #666;
+  cursor: not-allowed;
+}
+
+.selected-seats-container {
+  margin-top: 1.5rem;
+}
+.no-seats-text {
+  color: #AAAAAA;
+  font-style: italic;
+}
+.seat-box {
+  background-color: #F92672;
+  color: #FFFFFF;
+  margin: 0.25rem;
+  width: 35px;
+  height: 35px;
+  font-size: 0.9rem;
+}
+
+/* Price Summary Styling */
+.price-summary {
+  margin: 2rem 0;
+}
+.price-item {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+  font-size: 1.1rem;
+}
+.price-item span:first-child {
+  color: #DDDDDD;
+}
+.price-item span:last-child {
+  font-weight: 500;
+  color: #FFFFFF;
+}
+.price-item.discount span {
+  color: #F92672 !important;
+}
+.price-divider {
+  border-color: rgba(255, 255, 255, 0.2) !important;
+  margin: 1rem 0;
+}
+.price-item.total span {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #FFFFFF;
+}
+
+
+/* --- Dropdown Icon Styling --- */
+
+.dropdown-item {
+  display: flex !important;
+  align-items: center !important;
+}
+
+.dropdown-icon {
+  margin-right: 10px;
+  width: 20px; /* Ensures alignment */
+  text-align: center;
+  color: #F92672; /* Use accent color for icons */
+}
+
+/* On hover, make the icon white to match the text color */
+.dropdown-item:hover .dropdown-icon {
+  color: #FFFFFF;
+}
+
+/* --- Centered Navbar SearchBox Layout --- */
+
+/* Apply the flex layout only on large screens and up */
+@media (min-width: 992px) {
+  .nav-container-flex {
+    display: flex;
+    align-items: center;
+  }
+
+  .nav-section {
+    flex: 1 1 0; /* Each section takes up equal space */
+    display: flex;
+    align-items: center;
+  }
+
+  .nav-section.left {
+    justify-content: flex-start;
+  }
+
+  .nav-section.center {
+    justify-content: center;
+  }
+
+  .nav-section.right {
+    justify-content: flex-end;
+  }
+}
+
+/* On mobile, ensure the search box and other items have some space */
+@media (max-width: 991.98px) {
+  .nav-section {
+    padding: 0.5rem 0;
+  }
+  .nav-section.right .d-flex {
+    flex-direction: column;
+    align-items: flex-start !important;
+    gap: 0.5rem;
+  }
+}
+
+
+/* --- Showtime By Location Screen Styles --- */
+
+.showtime-page {
+  padding: 1rem 0 3rem 0;
+}
+
+.location-filter-group {
+  max-width: 400px;
+  margin-bottom: 2.5rem;
+}
+
+.location-filter-group .form-label {
+  color: #FFFFFF;
+  font-weight: 500;
+}
+
+.location-filter-group .form-control {
+  background-color: rgba(0, 0, 0, 0.3) !important;
+  color: #FFFFFF !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+}
+
+.location-filter-group .form-control:focus {
+  border-color: #F92672 !important;
+  box-shadow: 0 0 0 0.25rem rgba(249, 38, 114, 0.25) !important;
+}
+
+/* Showtime Card Styling */
+.showtime-card {
+  padding: 1.5rem;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+
+  /* Glassmorphism Effect */
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+}
+
+.showtime-movie-title {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #FFFFFF;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  padding-bottom: 1rem;
+}
+
+.showtime-details-list {
+  list-style: none;
+  padding: 0;
+  flex-grow: 1; /* Pushes the button to the bottom */
+}
+
+.showtime-details-list li {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.75rem;
+  color: #DDDDDD;
+}
+
+.showtime-details-list .fas {
+  color: #F92672; /* Accent color for icons */
+  margin-right: 1rem;
+  width: 20px;
+  text-align: center;
+}
+
+.btn-book-now {
+  background-color: #F92672 !important;
+  border-color: #F92672 !important;
+  color: #FFFFFF !important;
+  font-weight: 500 !important;
+  width: 100%;
+  padding: 0.6rem !important;
+  margin-top: 1rem;
+}
+
+.btn-book-now:hover {
+  background-color: #e02366 !important;
+  border-color: #e02366 !important;
+}
+
+
+/* --- Showtime Admin/User Screen Styles --- */
+
+.showtime-admin-page {
+  padding: 1rem 0 3rem 0;
+}
+
+.btn-cancel-show {
+  background-color: #a4262c !important; /* A darker, more subtle red */
+  border-color: #a4262c !important;
+  color: #FFFFFF !important;
+  font-size: 0.9rem !important;
+  padding: 0.4rem 0.8rem !important;
+  transition: background-color 0.2s ease;
+}
+
+.btn-cancel-show:hover {
+  background-color: #c02d34 !important;
+  border-color: #c02d34 !important;
+}
+
+
+/* --- Typing Animation for AI Summary --- */
+
+.typing-cursor {
+  display: inline-block;
+  width: 10px;
+  height: 1.1rem; /* Adjust to match the line-height */
+  background-color: #F92672; /* Use our theme's accent color */
+  animation: blink 1s step-end infinite;
+  margin-left: 4px;
+  vertical-align: text-bottom;
+}
+
+@keyframes blink {
+  from, to {
+    background-color: transparent;
+  }
+  50% {
+    background-color: #F92672;
+  }
+}
