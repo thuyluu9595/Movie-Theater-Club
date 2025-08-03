@@ -1,52 +1,3 @@
-// import React from 'react';
-// import { Link } from 'react-router-dom';
-// import Card from 'react-bootstrap/Card';
-// import Button from 'react-bootstrap/Button';
-//
-//
-//
-// export default function Movie(props){
-//   const {movie, buttonName, disable} = props;
-//   return (
-//     <Card>
-//       <Link to={`/movie/${movie.id}`}>
-//         <img
-//           src={movie.posterUrl}
-//           className='card-img-top'
-//           alt={movie.title}
-//           width="500" height="500"
-//           />
-//       </Link>
-//         {buttonName === "Edit" ? (
-//                 <Card.Body>
-//                     <Link to={`/manage-movies/${movie.id}`}>
-//                         <Card.Title>{movie.title}</Card.Title>
-//                     </Link>
-//                     <Link to={`/manage-movies/${movie.id}`}>
-//                         <Button>{buttonName}</Button>
-//                     </Link>
-//                 </Card.Body>
-//
-//         ) : (
-//             <Card.Body>
-//                     <Link to={`/movie/${movie.id}`}>
-//                 <Card.Title>{movie.title}</Card.Title>
-//             </Link>
-//                 {
-//                     disable ? null : (
-//                         <Link to={`/showtimes/${movie.id}`}>
-//                             <Button>{buttonName}</Button>
-//                         </Link>
-//
-//                     )
-//                 }
-//             </Card.Body>
-//         )}
-//
-//     </Card>
-//   )
-// }
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
@@ -73,7 +24,7 @@ export default function Movie(props) {
             {/* Container for the movie title and action button */}
             <div className="movie-info">
                 <div className="movie-title-container">
-                    <Link to={`/movie/${movie._id}`}>
+                    <Link to={`/movie/${movie.id}`}>
                         <h5 className="movie-title">{movie.title}</h5>
                     </Link>
                 </div>
@@ -84,15 +35,13 @@ export default function Movie(props) {
                             <Button>{buttonName}</Button>
                         </Link>
                     ) : (
-                        !disable && (
-                            <Link to={`/showtimes/${movie._id}`}>
+                        !disable ? (
+                            <Link to={`/showtimes/${movie.id}`}>
                                 <Button>{buttonName}</Button>
                             </Link>
+                        ) : (
+                            <Button disabled>Coming Soon</Button>
                         )
-                    )}
-                    {/* Show a disabled button for upcoming movies for better UX */}
-                    {disable && (
-                        <Button disabled>Coming Soon</Button>
                     )}
                 </div>
             </div>

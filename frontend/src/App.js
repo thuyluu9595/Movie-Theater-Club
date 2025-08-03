@@ -1,9 +1,9 @@
 import { BrowserRouter, Link, Route, Routes } from "react-router-dom";
 import React, { useContext, useEffect, useReducer } from "react";
-import { Navbar, Nav, Container, NavDropdown } from "react-bootstrap";
+import {Navbar, Nav, Container, NavDropdown, Image} from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import axios from 'axios';
-
+import { ReactComponent as BrandLogo } from './assets/cinema-film-movie-movies-svgrepo-com.svg';
 // Component & Screen Imports
 import HomeScreen from "./screens/HomeScreen";
 import MovieScreen from "./screens/MovieScreen";
@@ -108,7 +108,10 @@ export default function App() {
                     <Navbar expand="lg" className="app-header">
                         <Container>
                             <LinkContainer to="/">
-                                <Navbar.Brand>THC Theater</Navbar.Brand>
+                                <Navbar.Brand>
+                                    <BrandLogo className="brand-icon" />
+                                    <span/> THC Theater
+                                </Navbar.Brand>
                             </LinkContainer>
                             <Navbar.Toggle aria-controls="basic-navbar-nav" />
                             <Navbar.Collapse id="basic-navbar-nav">
@@ -204,7 +207,7 @@ export default function App() {
                     </Container>
                 </main>
                 <footer className="app-footer">
-                    <div>© 2024 THC Theater, Inc. All Rights Reserved.</div>
+                    <div>© 2025 THC Theater, Inc. All Rights Reserved.</div>
                 </footer>
             </div>
         </BrowserRouter>
