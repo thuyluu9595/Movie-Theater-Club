@@ -2,6 +2,7 @@ package com.example.MovieTheaterAPI.booking;
 
 import com.example.MovieTheaterAPI.movie.model.Movie;
 import com.example.MovieTheaterAPI.screen.utils.ResourceNotFoundException;
+import com.example.MovieTheaterAPI.shared.DTOs.GetBookingDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -70,7 +71,7 @@ public class BookingController {
     @GetMapping("/user/{id}")
     public ResponseEntity<?> getBookingsByUserId(@PathVariable Long id) {
         try {
-            List<Booking> bookingList = bookingService.getBookingsByUserId(id);
+            List<GetBookingDTO> bookingList = bookingService.getBookingsByUserId(id);
             return ResponseEntity.ok(bookingList);
         }
         catch (ResourceNotFoundException e) {

@@ -1,6 +1,6 @@
 package com.example.MovieTheaterAPI.showtime;
 
-import com.example.MovieTheaterAPI.showtime.dto.GetShowtimeDTO;
+import com.example.MovieTheaterAPI.shared.DTOs.GetShowtimeDTO;
 import com.example.MovieTheaterAPI.showtime.dto.ShowTimeDTO;
 
 import java.time.LocalDate;

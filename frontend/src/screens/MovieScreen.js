@@ -204,6 +204,10 @@ export default function MovieScreen() {
                     </Col>
                     <Col md={8} className="details-content mt-4 mt-md-0">
                         <h1>{movie.title}</h1>
+                        <div className="details-meta-item"><strong>Genres: </strong>
+                        {movie.genres.map(genre => (
+                            <span key={genre}>{genre}, </span>
+                        ))}</div>
                         <div className="details-meta-item"><strong>Release Day:</strong> {new Date(movie.releaseDate).toLocaleDateString()}</div>
                         <div className="details-meta-item"><strong>Duration:</strong> {movie.duration} minutes</div>
                         <p className="details-description">{movie.description}</p>

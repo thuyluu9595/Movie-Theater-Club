@@ -1,4 +1,4 @@
-package com.example.MovieTheaterAPI.showtime.dto;
+package com.example.MovieTheaterAPI.shared.DTOs;
 
 import lombok.Data;
 

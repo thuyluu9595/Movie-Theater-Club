@@ -2,8 +2,7 @@ package com.example.MovieTheaterAPI.showtime;
 
 import com.example.MovieTheaterAPI.screen.ScreenService;
 import com.example.MovieTheaterAPI.screen.utils.ResourceNotFoundException;
-import com.example.MovieTheaterAPI.showtime.dto.GetScreenDTO;
-import com.example.MovieTheaterAPI.showtime.dto.GetShowtimeDTO;
+import com.example.MovieTheaterAPI.shared.DTOs.GetShowtimeDTO;
 import com.example.MovieTheaterAPI.showtime.dto.ShowTimeDTO;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;

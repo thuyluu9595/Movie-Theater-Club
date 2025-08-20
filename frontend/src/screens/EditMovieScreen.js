@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useReducer, useState } from 'react';
 import { Helmet } from 'react-helmet';
-import { Form, Button, Container, Col, Row } from 'react-bootstrap';
+import {Form, Button, Container, Col, Row, FormText, Badge} from 'react-bootstrap';
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import moment from "moment";
@@ -19,7 +19,9 @@ const reducer = (state, action) => {
         case 'FETCH_REQUEST':
             return { ...state, loading: true };
         case 'FETCH_SUCCESS':
-            return { ...state, movie: action.payload, loading: false };
+            const movieData = action.payload;
+            movieData.genres = Array.isArray(movieData.genres) ? movieData.genres : [];
+            return { ...state, movie: movieData, loading: false };
         case 'FETCH_FAIL':
             return { ...state, loading: false, error: action.payload };
 
@@ -49,7 +51,7 @@ export default function EditMovieScreen() {
     const { userInfo } = storeState;
 
     const [{ loading, error, movie, loadingUpdate, errorUpdate, successUpdate }, dispatch] = useReducer(reducer, {
-        movie: {},
+        movie: { genres: [] },
         loading: true,
         error: '',
         loadingUpdate: false,
@@ -58,6 +60,7 @@ export default function EditMovieScreen() {
     });
 
     const [showModal, setShowModal] = useState(false);
+    const [currentGenre, setCurrentGenre] = useState('');
 
     useEffect(() => {
         const fetchData = async () => {
@@ -83,7 +86,8 @@ export default function EditMovieScreen() {
                 title: movie.title,
                 description: movie.description,
                 duration_in_minutes: movie.duration,
-                release_date: moment(movie.releaseDate, "YYYY-MM-DD").format("MM/DD/YYYY")
+                release_date: moment(movie.releaseDate, "MM/DD/YYYY").format("YYYY-MM-DD"),
+                genres: movie.genres
             }, {
                 headers: { 'Authorization': `Bearer ${userInfo.token}` }
             });
@@ -112,6 +116,20 @@ export default function EditMovieScreen() {
         dispatch({ type: 'UPDATE_FIELD', field, payload: value });
     };
 
+    const handleAddGenre = (e) => {
+        if (e.key === 'Enter' && currentGenre.trim() !== '') {
+            e.preventDefault();
+            const genreList = [...movie.genres, currentGenre.trim()];
+            handleFieldChange('genres', genreList);
+            setCurrentGenre('');
+        }
+    }
+
+    const handleRemoveGenre = (genreToRemove) => {
+        const remainingGenres = movie.genres.filter(genre => genre !== genreToRemove);
+        handleFieldChange('genres', remainingGenres);
+    }
+
     return (
         <Container className="edit-movie-page">
             <Helmet>
@@ -138,6 +156,25 @@ export default function EditMovieScreen() {
                                 <Form.Group className='mb-3' controlId='title'>
                                     <Form.Label>Movie Title</Form.Label>
                                     <Form.Control value={movie.title || ''} onChange={(e) => handleFieldChange('title', e.target.value)} required />
+                                </Form.Group>
+
+                                <Form.Group className='mb-3' controlId='genres'>
+                                    <Form.Label>Genres</Form.Label>
+                                    <Form.Control
+                                        type="text"
+                                        value={currentGenre}
+                                        onChange={(e) => setCurrentGenre(e.target.value)}
+                                        onKeyDown={handleAddGenre}
+                                        placeholder="Type a genre and press Enter"
+                                    />
+                                    <div className="genres-container mt-2">
+                                        {movie.genres?.map((genre, index) => (
+                                            <Badge key={index} pill className="genre-badge">
+                                                {genre}
+                                                <span className="remove-genre-btn" onClick={() => handleRemoveGenre(genre)}>×</span>
+                                            </Badge>
+                                        ))}
+                                    </div>
                                 </Form.Group>
 
                                 <Form.Group className='mb-3' controlId='description'>

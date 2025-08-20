@@ -1,0 +1,2 @@
+ALTER TABLE movies
+ADD COLUMN genres VARCHAR(255) DEFAULT '';

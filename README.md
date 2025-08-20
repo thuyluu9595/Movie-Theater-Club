@@ -39,3 +39,6 @@ Make sure you have the following installed:
 `sudo lsof -i :5432`
 ### Kill processes using this port
 `sudo kill -9 PID`
+
+### Clean old generated packages
+`mvn clean package`

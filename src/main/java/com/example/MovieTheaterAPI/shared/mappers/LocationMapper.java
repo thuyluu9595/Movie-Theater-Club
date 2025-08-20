@@ -1,7 +1,7 @@
-package com.example.MovieTheaterAPI.showtime.mapper;
+package com.example.MovieTheaterAPI.shared.mappers;
 
 import com.example.MovieTheaterAPI.location.Location;
-import com.example.MovieTheaterAPI.showtime.dto.GetLocationDTO;
+import com.example.MovieTheaterAPI.shared.DTOs.GetLocationDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

@@ -2,6 +2,8 @@ package com.example.MovieTheaterAPI.booking;
 
 import com.example.MovieTheaterAPI.movie.model.Movie;
 import com.example.MovieTheaterAPI.screen.utils.ResourceNotFoundException;
+import com.example.MovieTheaterAPI.shared.DTOs.GetBookingDTO;
+import com.example.MovieTheaterAPI.shared.mappers.BookingMapper;
 import com.example.MovieTheaterAPI.showtime.ShowTime;
 import com.example.MovieTheaterAPI.showtime.ShowTimeRepository;
 import com.example.MovieTheaterAPI.user.Tier;
@@ -22,11 +24,17 @@ public class BookingServiceImpl implements BookingService{
     private final BookingRepository bookingRepository;
     private final UserRepository userRepository;
     private final ShowTimeRepository showTimeRepository;
+    private final BookingMapper bookingMapper;
 
-    public BookingServiceImpl(BookingRepository bookingRepository, UserRepository userRepository, ShowTimeRepository showTimeRepository) {
+    public BookingServiceImpl(BookingRepository bookingRepository,
+                              UserRepository userRepository,
+                              ShowTimeRepository showTimeRepository,
+                              BookingMapper bookingMapper
+    ) {
         this.bookingRepository = bookingRepository;
         this.userRepository = userRepository;
         this.showTimeRepository = showTimeRepository;
+        this.bookingMapper = bookingMapper;
     }
 
     @Override
@@ -153,9 +161,9 @@ public class BookingServiceImpl implements BookingService{
     }
 
     @Override
-    public List<Booking> getBookingsByUserId(Long userId) {
+    public List<GetBookingDTO> getBookingsByUserId(Long userId) {
         userRepository.findById(userId).orElseThrow(ResourceNotFoundException::new);
-        return bookingRepository.findByUserId(userId);
+        return bookingRepository.findByUserId(userId).stream().map(bookingMapper::getBookingDTO).toList();
     }
 
     @Override

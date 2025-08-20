@@ -1,6 +1,5 @@
 package com.example.MovieTheaterAPI.security;
 
-
 import com.example.MovieTheaterAPI.user.Role;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;

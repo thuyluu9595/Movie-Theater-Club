@@ -4,7 +4,6 @@ import com.example.MovieTheaterAPI.review.dto.GetReviewDTO;
 import com.example.MovieTheaterAPI.review.dto.ReviewDTO;
 import com.example.MovieTheaterAPI.review.entities.Review;
 import com.example.MovieTheaterAPI.review.service.ReviewService;
-import com.example.MovieTheaterAPI.screen.utils.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
