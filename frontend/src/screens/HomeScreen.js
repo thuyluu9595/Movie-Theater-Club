@@ -15,15 +15,23 @@ import { URL } from "../Constants";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import image from "../assets/AdobeStock_626224006.jpeg";
+import {getError} from "../utils";
 
 const reducer = (state, action) => {
     switch (action.type) {
-        case 'FETCH_REQUEST':
-            return { ...state, loading: true };
-        case 'FETCH_SUCCESS':
-            return { ...state, movies: action.payload, loading: false };
-        case 'FETCH_FAIL':
-            return { ...state, loading: false, error: action.payload };
+        case 'FETCH_MOVIE_REQUEST':
+            return { ...state, loadingMovies: true };
+        case 'FETCH_MOVIE_SUCCESS':
+            return { ...state, movies: action.payload, loadingMovies: false };
+        case 'FETCH_MOVIE_FAIL':
+            return { ...state, loadingMovies: false, error: action.payload };
+
+        case 'FETCH_SUGGESTED_MOVIE_REQUEST':
+            return { ...state, loadSuggestedMovies: true };
+        case 'FETCH_SUGGESTED_MOVIE_SUCCESS':
+            return { ...state, loadSuggestedMovies: false, suggestedMovies: action.payload };
+        case 'FETCH_SUGGESTED_MOVIE_FAIL':
+            return { ...state, loadSuggestedMovies: false, errorSuggestedMovies: action.payload };
         default:
             return state;
     }
@@ -31,26 +39,30 @@ const reducer = (state, action) => {
 
 const initialState = {
     movies: [],
-    loading: true,
+    loadingMovies: true,
     error: null,
+    loadSuggestedMovies: true,
+    suggestedMovies: [],
+    errorSuggestedMovies: null,
 }
 
 export default function HomeScreen() {
     const { state: ctxState } = useContext(Store);
     const { userInfo } = ctxState;
 
-    const [{ loading, error, movies }, dispatch] = useReducer(reducer, initialState);
+    const [{ loadingMovies, error, movies, loadSuggestedMovies, suggestedMovies, errorSuggestedMovies }, dispatch] = useReducer(reducer, initialState);
     const [upcomingMovies, setUpcomingMovies] = useState([]);
+    const [isShowSuggestedMovie, setShowSuggestedMovie] = useState(false);
 
     useEffect(() => {
         const fetchData = async () => {
-            dispatch({ type: 'FETCH_REQUEST' });
+            dispatch({ type: 'FETCH_MOVIE_REQUEST' });
             try {
                 // Gets currently showing movies
                 const response = await axios.get(`${URL}/movies/`);
-                dispatch({ type: 'FETCH_SUCCESS', payload: response.data });
+                dispatch({ type: 'FETCH_MOVIE_SUCCESS', payload: response.data });
             } catch (err) {
-                dispatch({ type: 'FETCH_FAIL', payload: err.message });
+                dispatch({ type: 'FETCH_MOVIE_FAIL', payload: err.message });
             }
         };
 
@@ -82,6 +94,18 @@ export default function HomeScreen() {
 
     // Use some of the upcoming movies for the hero carousel
     const heroMovies = upcomingMovies.slice(0, 3);
+
+    const submitSuggestedMoviesHandler = async (e, userId) => {
+        e.preventDefault();
+        dispatch({ type: 'FETCH_SUGGESTED_MOVIE_REQUEST'});
+        setShowSuggestedMovie(true);
+        try {
+            const { data } = await axios.get(`${URL}/movies/similar-movies/${userId}`);
+            dispatch({ type: 'FETCH_SUGGESTED_MOVIE_SUCCESS', payload: data});
+        } catch (err) {
+            dispatch({ type: 'FETCH_SUGGESTED_MOVIE_FAIL', payload: getError(err)});
+        }
+    };
 
     return (
         <div>
@@ -116,7 +140,7 @@ export default function HomeScreen() {
 
             {/* Now Showing Section */}
             <h1 className="section-title">Now Showing</h1>
-            {loading ? (
+            {loadingMovies ? (
                 <LoadingBox />
             ) : error ? (
                 <MessageBox variant='danger'>{error}</MessageBox>
@@ -148,6 +172,27 @@ export default function HomeScreen() {
                             </div>
                         ))}
                     </Slider>
+                </div>
+            )}
+
+            <Button className="btn-suggested-movies" onClick={(e) => submitSuggestedMoviesHandler(e, userInfo.id)}>Show Suggest Movies For You</Button>
+            {isShowSuggestedMovie && (
+                <div className="upcoming-movies-section">
+                    <h2 className="section-title">Suggested Movies</h2>
+                    {loadSuggestedMovies ? <LoadingBox />
+                        :
+                        (
+                            <Slider {...sliderSettings}>
+                                {suggestedMovies.map((movie) => (
+                                    <div key={movie._id} className="movie-grid-item">
+                                        <Movie
+                                            movie={movie}
+                                            buttonName="Get Tickets"
+                                        />
+                                    </div>
+                                ))}
+                            </Slider>
+                        )}
                 </div>
             )}
         </div>

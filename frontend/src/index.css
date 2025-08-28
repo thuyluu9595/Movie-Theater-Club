@@ -1615,3 +1615,15 @@ main {
 .remove-genre-btn:hover {
   color: #fdd8e6; /* A lighter pink on hover */
 }
+
+.btn-suggested-movies {
+  background-color: #F92672 !important;
+  opacity: initial;
+  border-color: #F92672 !important;
+  color: white !important;
+  font-weight: 500 !important;
+  width: 20%;
+  padding: 0.6rem !important;
+  margin-top: 3rem;
+  margin-bottom: 1rem;
+}
