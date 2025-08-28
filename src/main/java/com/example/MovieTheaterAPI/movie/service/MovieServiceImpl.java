@@ -58,7 +58,6 @@ public class MovieServiceImpl implements MovieService{
     @Override
     public List<MovieResponseDTO> getAllMovies() {
          List<Movie> movies = movieRepository.findAll();
-         log.info("Movies found: " + movies.toString());
          List<MovieResponseDTO> movieResponseDTOs = new ArrayList<>();
          for (Movie movie : movies){
              movieResponseDTOs.add(movieToMovieResponseDTO(movie));

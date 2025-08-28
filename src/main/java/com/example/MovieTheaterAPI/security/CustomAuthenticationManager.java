@@ -29,11 +29,8 @@ public class CustomAuthenticationManager implements AuthenticationManager {
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
 
         String username = authentication.getName();
-        log.info("Authenticating user {}", username);
         try {
             User user = userService.getUser(username);
-            log.info(authentication.getCredentials().toString());
-            log.info(user.getPassword());
 
             if (!bCryptPasswordEncoder.matches(authentication.getCredentials().toString(), user.getPassword())) {
                 throw new BadCredentialsException("You provided an incorrect password");
@@ -52,7 +49,6 @@ public class CustomAuthenticationManager implements AuthenticationManager {
                     authorities
             );
         } catch (Exception e) {
-            log.error(e.getMessage());
             throw new BadCredentialsException(e.getMessage());
         }
 
