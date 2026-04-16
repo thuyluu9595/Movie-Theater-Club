@@ -1,14 +1,16 @@
-import React, {useContext, useEffect, useState} from "react";
-import {Button, Container, Form} from "react-bootstrap";
-import {Link, useLocation, useNavigate} from "react-router-dom";
-import Helmet from 'react-helmet';
-import {Store} from "../Stores";
+import React, { useContext, useEffect, useState } from "react";
+import { Button, Form } from "react-bootstrap";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Helmet } from 'react-helmet';
 import axios from "axios";
-import {URL} from "../Constants";
+import { Store } from "../Stores";
+import { URL } from "../Constants";
+import { getError } from "../utils";
+import MessageBox from "../components/MessageBox";
 
 export default function RegisterScreen() {
     const navigate = useNavigate();
-    const {search} = useLocation();
+    const { search } = useLocation();
     const redirectInUrl = new URLSearchParams(search).get('redirect');
     const redirect = redirectInUrl ? redirectInUrl : '/';
 
@@ -17,26 +19,41 @@ export default function RegisterScreen() {
     const [username, setUserName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
 
-    const {state, dispatch: ctxDispatch} = useContext(Store);
-    const {userInfo} = state;
+    // State for handling success and error messages
+    const [error, setError] = useState('');
+    const [success, setSuccess] = useState('');
+
+    const { state } = useContext(Store);
+    const { userInfo } = state;
 
     const submitHandler = async (e) => {
         e.preventDefault();
+        setError('');
+        setSuccess('');
+
+        // Check if passwords match
+        if (password !== confirmPassword) {
+            setError('Passwords do not match.');
+            return;
+        }
+
         try {
-            const {data} = await axios.post(`${URL}/user/`, {
+            await axios.post(`${URL}/user/`, {
                 firstname,
                 lastname,
                 username,
                 email,
                 password,
             });
-            ctxDispatch({type: 'USER_SINGIN', payload: data});
-            // localStorage.setItem('userInfo', JSON.stringify(data));
-            alert('Account create successful');
-            navigate('/signin');
+            setSuccess('Account created successfully! Redirecting to sign in...');
+            // Redirect to sign-in page after a short delay
+            setTimeout(() => {
+                navigate('/signin');
+            }, 2000);
         } catch (err) {
-            alert('Invalid username or password');
+            setError(getError(err));
         }
     };
 
@@ -47,67 +64,75 @@ export default function RegisterScreen() {
     }, [navigate, redirect, userInfo]);
 
     return (
-        <Container className='small-container'>
+        // Using the same container as the SigninScreen for consistency
+        <div className="auth-container">
             <Helmet>
                 <title>Register</title>
             </Helmet>
-            <h1>Create an Account</h1>
+            <h1 className="auth-title">Create an Account</h1>
             <Form onSubmit={submitHandler}>
-                <Form.Group controlId="first_name">
+                {/* Display error or success messages */}
+                {error && <MessageBox variant="danger">{error}</MessageBox>}
+                {success && <MessageBox variant="success">{success}</MessageBox>}
+
+                <Form.Group className="mb-3" controlId="first_name">
                     <Form.Label>First Name</Form.Label>
                     <Form.Control
                         type="text"
-                        placeholder="Enter first name"
                         onChange={(e) => setFirstName(e.target.value)}
                         required
                     />
                 </Form.Group>
-                <Form.Group controlId="last_name">
+                <Form.Group className="mb-3" controlId="last_name">
                     <Form.Label>Last Name</Form.Label>
                     <Form.Control
                         type="text"
-                        placeholder="Enter last name"
                         onChange={(e) => setLastName(e.target.value)}
                         required
                     />
                 </Form.Group>
-                <Form.Group controlId="username">
+                <Form.Group className="mb-3" controlId="username">
                     <Form.Label>Username</Form.Label>
                     <Form.Control
                         type="text"
-                        placeholder="Enter username"
                         onChange={(e) => setUserName(e.target.value)}
                         required
                     />
                 </Form.Group>
-
-                <Form.Group controlId="email">
-                    <Form.Label>Email address</Form.Label>
+                <Form.Group className="mb-3" controlId="email">
+                    <Form.Label>Email Address</Form.Label>
                     <Form.Control
                         type="email"
-                        placeholder="Enter email"
                         onChange={(e) => setEmail(e.target.value)}
                         required
                     />
                 </Form.Group>
-                <Form.Group controlId="password">
+                <Form.Group className="mb-3" controlId="password">
                     <Form.Label>Password</Form.Label>
                     <Form.Control
                         type="password"
-                        placeholder="Enter password"
                         onChange={(e) => setPassword(e.target.value)}
                         required
                     />
                 </Form.Group>
-                <div className="mb-3">
-                    <Button type="submit">Create Account</Button>
+                <Form.Group className="mb-4" controlId="confirmPassword">
+                    <Form.Label>Confirm Password</Form.Label>
+                    <Form.Control
+                        type="password"
+                        onChange={(e) => setConfirmPassword(e.target.value)}
+                        required
+                    />
+                </Form.Group>
+                <div className="d-grid mb-3">
+                    <Button type="submit" className="auth-button" disabled={!!success}>
+                        Create Account
+                    </Button>
                 </div>
-                <div className="mb-3">
+                <div className="auth-switch-link">
                     Already have an account?{' '}
-                    <Link to={`/signin?redirect=${redirect}`}>Sign-In</Link>
+                    <Link to={`/signin?redirect=${redirect}`}>Sign In</Link>
                 </div>
             </Form>
-        </Container>
+        </div>
     );
 }
-

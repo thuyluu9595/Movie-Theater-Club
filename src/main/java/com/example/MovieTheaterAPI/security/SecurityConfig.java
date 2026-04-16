@@ -1,6 +1,5 @@
 package com.example.MovieTheaterAPI.security;
 
-
 import com.example.MovieTheaterAPI.user.Role;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -44,6 +43,8 @@ public class SecurityConfig{
                         .requestMatchers(HttpMethod.GET, "/api/locations/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/showtime/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/screens/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/reviews/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/reviews/**").permitAll()
                         .requestMatchers(HttpMethod.POST, SecurityConstants.REGISTER_PATH).permitAll()
                         .requestMatchers(HttpMethod.POST, SecurityConstants.ADMIN_REGISTER_PATH).permitAll()
                         .requestMatchers(HttpMethod.PUT, "/api/user/**").permitAll()

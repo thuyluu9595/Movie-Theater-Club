@@ -2,7 +2,6 @@ package com.example.MovieTheaterAPI.movie.controller;
 
 import com.example.MovieTheaterAPI.movie.DTOs.MovieDTO;
 import com.example.MovieTheaterAPI.movie.DTOs.MovieResponseDTO;
-import com.example.MovieTheaterAPI.movie.model.Movie;
 import com.example.MovieTheaterAPI.movie.service.MovieServiceImpl;
 import com.example.MovieTheaterAPI.movie.utils.MovieExistedException;
 import com.example.MovieTheaterAPI.movie.utils.MovieNotFoundException;
@@ -13,20 +12,27 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/movies")
 public class MovieController {
     private final MovieServiceImpl movieService;
+
     public MovieController(MovieServiceImpl movieService) {
         this.movieService = movieService;
     }
-
 
     @GetMapping("/")
     public ResponseEntity<?> getAllMovies() {
         return ResponseEntity.ok(movieService.getAllMovies());
     }
+
+//    @GetMapping("/embedding")
+//    public ResponseEntity<EmbeddingResponse> getGenresEmbeddings(@RequestParam(value = "message", defaultValue = "Hello World") String message){
+//        EmbeddingResponse embeddingMap = embeddingService.getEmbedding(message);
+//        return ResponseEntity.ok(embeddingMap);
+//    }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getMovieById(@PathVariable Long id) {
@@ -55,7 +61,7 @@ public class MovieController {
 
     @PutMapping("/{id}")
     public ResponseEntity<?> updateMovie(@PathVariable Long id, @RequestBody MovieDTO movie) {
-        if (movie == null || !MovieValidator.isValidMovie(movie)) { // Check if movie is valid
+        if (movie == null || !MovieValidator.isValidMovie(movie)) {
             return ResponseEntity.badRequest().build();
         }
         try {
@@ -104,6 +110,12 @@ public class MovieController {
             return ResponseEntity.badRequest().build();
         }
 
+    }
+
+    @GetMapping("/similar-movies/{id}")
+    public ResponseEntity<?> getSimilarMoviesByUserId(@PathVariable Long id) {
+        List<MovieResponseDTO> movies = movieService.getSimilarMoviesByUserId(id);
+        return ResponseEntity.ok(movies);
     }
 }
 

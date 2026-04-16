@@ -1,6 +1,7 @@
 package com.example.MovieTheaterAPI.booking;
 
 import com.example.MovieTheaterAPI.movie.model.Movie;
+import com.example.MovieTheaterAPI.shared.DTOs.GetBookingDTO;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -14,7 +15,7 @@ public interface BookingService {
 //    void deleteBooking(Long id);
     void cancelBooking(Long id);
     void payBooking(Long id);
-    List<Booking> getBookingsByUserId(Long userId);
+    List<GetBookingDTO> getBookingsByUserId(Long userId);
     List<Booking> getBookingsByAfterBookingDate(Long id, LocalDate bookingDate);
 //    List<Booking> getBookingsByShowTimeId(Long showTimeId);
 //    List<Booking> getBookingsByShowTimeIdAndUserId(Long showTimeId, Long userId);

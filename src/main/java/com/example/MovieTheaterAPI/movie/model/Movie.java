@@ -1,11 +1,16 @@
 package com.example.MovieTheaterAPI.movie.model;
 
+import com.example.MovieTheaterAPI.review.entities.UserMovieReview;
+import com.example.MovieTheaterAPI.utils.StringListConvertor;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 import java.time.Duration;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -32,6 +37,20 @@ public class Movie {
 
     @Column(name = "poster_url")
     private String posterUrl;
+
+    @Column(name = "review_summary")
+    private String reviewSummary;
+
+    @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<UserMovieReview> userMovieReviews;
+
+    @Column(name = "genres")
+    @Convert(converter = StringListConvertor.class)
+    private List<String> genres;
+
+    @Column(columnDefinition = "vector(1536)")
+    @JdbcTypeCode(SqlTypes.VECTOR)
+    private float[] embedding;
 
     @Override
     public String toString() {

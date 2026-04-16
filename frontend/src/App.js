@@ -1,24 +1,24 @@
-import {BrowserRouter, Link, Route, Routes, useLocation, useNavigate} from "react-router-dom";
-import React, {useContext, useEffect, useReducer} from "react";
-import {Navbar, Nav, Container, NavDropdown, NavItem} from "react-bootstrap";
-import LinkContainer from "react-router-bootstrap/LinkContainer";
+import { BrowserRouter, Link, Route, Routes } from "react-router-dom";
+import React, { useContext, useEffect, useReducer } from "react";
+import {Navbar, Nav, Container, NavDropdown, Image} from "react-bootstrap";
+import { LinkContainer } from "react-router-bootstrap";
+import axios from 'axios';
+import { ReactComponent as BrandLogo } from './assets/cinema-film-movie-movies-svgrepo-com.svg';
+// Component & Screen Imports
 import HomeScreen from "./screens/HomeScreen";
 import MovieScreen from "./screens/MovieScreen";
 import SigninScreen from "./screens/SigninScreen";
 import ShowTimeScreen from "./screens/ShowTimeScreen";
 import RegisterScreen from "./screens/RegisterScreen";
-import {Store} from "./Stores";
 import SearchBox from "./components/SearchBox";
 import BookingScreen from "./screens/BookingScreen";
-import {LocationScreen} from "./screens/LocationScreen";
+import { LocationScreen } from "./screens/LocationScreen";
 import PaymentScreen from "./screens/PaymentScreen";
 import ProfileScreen from "./screens/ProfileScreen";
 import PremiumScreen from "./screens/PremiumScreen";
 import HistoryScreen from "./screens/HistoryScreen";
 import ScreenScreen from "./screens/ScreenScreen";
 import AnalyticsScreen from "./screens/AnalyticsScreen";
-import axios from 'axios';
-import {URL} from "./Constants";
 import CancelPremiumScreen from "./screens/CancelPremiumScreen";
 import StripeScreen from "./screens/StripeScreen";
 import MembershipOptionsScreen from "./screens/MembershipOptionsScreen";
@@ -32,15 +32,18 @@ import Discount from "./screens/Discount";
 import Admin from "./components/Admin";
 import Private from "./components/Private";
 
+// Context and Constants
+import { Store } from "./Stores";
+import { URL } from "./Constants";
 
 const reducer = (state, action) => {
     switch (action.type) {
         case "FETCH_REQUEST":
-            return {...state, loading: true};
+            return { ...state, loading: true };
         case "FETCH_SUCCESS":
-            return {...state, info: action.payload, loading: false};
+            return { ...state, info: action.payload, loading: false };
         case "FETCH_FAIL":
-            return {...state, loading: false, error: action.payload};
+            return { ...state, loading: false, error: action.payload };
         default:
             return state;
     }
@@ -53,38 +56,37 @@ const initialState = {
 };
 
 export default function App() {
-    const {state: ctxState, dispatch: ctxDispatch} = useContext(Store);
-    const {userInfo} = ctxState;
+    const { state: ctxState, dispatch: ctxDispatch } = useContext(Store);
+    const { userInfo } = ctxState;
 
     const [state, dispatch] = useReducer(reducer, initialState);
+    const { info } = state;
 
     const signoutHandler = () => {
-        ctxDispatch({type: "USER_SIGNOUT"});
+        ctxDispatch({ type: "USER_SIGNOUT" });
         localStorage.removeItem("userInfo");
-        localStorage.removeItem("paymenMethod");
+        localStorage.removeItem("paymentMethod");
     };
-
-    const getInfo = async () => {
-        dispatch({type: "FETCH_REQUEST"});
-        try {
-            const response = await axios.get(`${URL}/user/info`, {
-                headers: {Authorization: `Bearer ${userInfo.token}`},
-            });
-            dispatch({type: "FETCH_SUCCESS", payload: response.data});
-        } catch (error) {
-            dispatch({type: "FETCH_FAIL", payload: error.message});
-        }
-    };
-
 
     useEffect(() => {
-        if (userInfo) getInfo();
-    }, [userInfo])
+        const getInfo = async () => {
+            if (userInfo) {
+                dispatch({ type: "FETCH_REQUEST" });
+                try {
+                    const response = await axios.get(`${URL}/user/info`, {
+                        headers: { Authorization: `Bearer ${userInfo.token}` },
+                    });
+                    dispatch({ type: "FETCH_SUCCESS", payload: response.data });
+                } catch (error) {
+                    dispatch({ type: "FETCH_FAIL", payload: error.message });
+                }
+            }
+        };
+        getInfo();
+    }, [userInfo]);
 
-
-    const {info} = state;
     const generateButton = () => {
-        if (info && info.member.membershipTier == "Regular") {
+        if (info && info.member.membershipTier === "Regular") {
             return (
                 <LinkContainer to="/membership-options">
                     <NavDropdown.Item>Upgrade Account</NavDropdown.Item>
@@ -93,139 +95,119 @@ export default function App() {
         } else {
             return (
                 <LinkContainer to="/cancel">
-                    <NavDropdown.Item>Cancel Premium</NavDropdown.Item>
+                    <NavDropdown.Item><i className="fas fa-times-circle dropdown-icon"></i>Cancel Premium</NavDropdown.Item>
                 </LinkContainer>
             );
         }
-    }
+    };
 
     return (
         <BrowserRouter>
-            <div className="d-flex flex-column site-container">
+            <div className="site-container">
                 <header>
-                    <Navbar
-                        style={{
-                            backgroundColor: "#9d1010",
-                            fontFamily: "Luminari, fantasy",
-                            color: "white",
-                        }}
-                    >
+                    <Navbar expand="lg" className="app-header">
                         <Container>
                             <LinkContainer to="/">
-                                <Navbar.Brand>THC Theater</Navbar.Brand>
+                                <Navbar.Brand>
+                                    <BrandLogo className="brand-icon" />
+                                    <span/> THC Theater
+                                </Navbar.Brand>
                             </LinkContainer>
-                            <SearchBox/>
-                            <Nav className="me-auto">
-                                {userInfo ? (
-                                    <NavDropdown
-                                        title={
-                                            userInfo.role === "Employee"
-                                                ? "Admin"
-                                                : `${userInfo.firstname} (${info && info.member.membershipTier})`
-                                        }
-                                        id="basic-nav-dropdown"
-                                    >
-                                        {userInfo.role === "Employee" ? (
-                                            <div>
-                                                <LinkContainer to="/locations">
-                                                    <NavDropdown.Item>Location</NavDropdown.Item>
-                                                </LinkContainer>
-                                                <LinkContainer to="/discount">
-                                                    <NavDropdown.Item>Discount</NavDropdown.Item>
-                                                </LinkContainer>
-                                                <LinkContainer to="/manage-movies">
-                                                    <NavDropdown.Item>Manage Movies</NavDropdown.Item>
-                                                </LinkContainer>
-                                                <LinkContainer to="/analytics">
-                                                    <NavDropdown.Item>Analytics</NavDropdown.Item>
-                                                </LinkContainer>
-                                            </div>
+                            <Navbar.Toggle aria-controls="basic-navbar-nav" />
+                            <Navbar.Collapse id="basic-navbar-nav">
+                                {/* NEW: Flex container for the 3-section layout */}
+                                <div className="nav-container-flex w-100">
+                                    {/* Left Section (empty for balance) */}
+                                    <div className="nav-section left"></div>
+
+                                    {/* Center Section */}
+                                    <div className="nav-section center">
+                                        <SearchBox />
+                                    </div>
+
+                                    {/* Right Section */}
+                                    <div className="nav-section right">
+                                        {userInfo ? (
+                                            <NavDropdown
+                                                className="user-dropdown"
+                                                title={
+                                                    userInfo.role === "Employee"
+                                                        ? "Admin Panel"
+                                                        : `${userInfo.firstname} (${info ? info.member.membershipTier : '...'})`
+                                                }
+                                                id="basic-nav-dropdown"
+                                            >
+                                                {/* Dropdown items remain the same */}
+                                                {userInfo.role === "Employee" ? (
+                                                    <>
+                                                        <LinkContainer to="/locations"><NavDropdown.Item>Location</NavDropdown.Item></LinkContainer>
+                                                        <LinkContainer to="/discount"><NavDropdown.Item>Discount</NavDropdown.Item></LinkContainer>
+                                                        <LinkContainer to="/manage-movies"><NavDropdown.Item>Manage Movies</NavDropdown.Item></LinkContainer>
+                                                        <LinkContainer to="/analytics"><NavDropdown.Item>Analytics</NavDropdown.Item></LinkContainer>
+                                                    </>
+                                                ) : (
+                                                    <>
+                                                        <LinkContainer to="/profile"><NavDropdown.Item>User Profile</NavDropdown.Item></LinkContainer>
+                                                        <LinkContainer to="/history"><NavDropdown.Item>Booking History</NavDropdown.Item></LinkContainer>
+                                                        <LinkContainer to="/watched30"><NavDropdown.Item>Watched History</NavDropdown.Item></LinkContainer>
+                                                        <LinkContainer to="/changepw"><NavDropdown.Item>Change Password</NavDropdown.Item></LinkContainer>
+                                                        {userInfo && info && generateButton()}
+                                                    </>
+                                                )}
+                                                <NavDropdown.Divider />
+                                                <Link
+                                                    className="dropdown-item"
+                                                    to="#signout"
+                                                    onClick={signoutHandler}
+                                                >
+                                                    Sign Out
+                                                </Link>
+                                            </NavDropdown>
                                         ) : (
-                                            <div>
-                                                <LinkContainer to="/profile">
-                                                    <NavDropdown.Item>User Profile</NavDropdown.Item>
-                                                </LinkContainer>
-                                                <LinkContainer to="/history">
-                                                    <NavDropdown.Item>History</NavDropdown.Item>
-                                                </LinkContainer>
-                                                <LinkContainer to="/watched30">
-                                                    <NavDropdown.Item>Watched History</NavDropdown.Item>
-                                                </LinkContainer>
-                                                <LinkContainer to="/changepw">
-                                                    <NavDropdown.Item>Change Password</NavDropdown.Item>
-                                                </LinkContainer>
-                                                {userInfo && generateButton()}
+                                            <div className="d-flex align-items-center">
+                                                <Link className="nav-link-custom" to="/showtime">Showtime</Link>
+                                                <Link className="nav-link-custom" to="/membership-options">Membership</Link>
+                                                <Link className="nav-link-custom nav-link-signin" to="/signin">Sign In</Link>
                                             </div>
                                         )}
-                                        <NavDropdown.Divider/>
-                                        <Link
-                                            className="dropdown-item"
-                                            to="#signout"
-                                            onClick={signoutHandler}
-                                        >
-                                            Sign Out
-                                        </Link>
-                                    </NavDropdown>
-                                ) : (
-                                    <>
-                                        <Link className="member-options" to="/showtime">
-                                            Showtime
-                                        </Link>
-                                        <Link className="member-options" to="/membership-options">
-                                            Membership
-                                        </Link>
-                                        <Link className="nav-Link" to="/signin">
-                                            Sign In
-                                        </Link>
-                                    </>
-                                )}
-                            </Nav>
+                                    </div>
+                                </div>
+                            </Navbar.Collapse>
                         </Container>
                     </Navbar>
                 </header>
                 <main>
-                    <Container className="mt-3">
+                    <Container className="mt-4">
                         <Routes>
-                            <Route path="/" element={<HomeScreen/>}/>
-                            <Route path="/movie/:id" element={<MovieScreen/>}/>
-                            <Route path="/signin" element={<SigninScreen/>}/>
-                            <Route path="/showtimes/:id" element={<ShowTimeScreen/>}/>
-                            <Route path="/register" element={<RegisterScreen/>}/>
-                            <Route path="/showtime" element={<ShowtimeByLocationScreen/>}/>
-                            <Route path="/bookings/:id" element={<Private><BookingScreen/></Private>}/>
-                            <Route path="/locations" element={<Admin><LocationScreen/></Admin>}/>
-                            <Route path="/payment/:id" element={<Private><PaymentScreen/></Private>}/>
-                            <Route path="/analytics" element={<Admin><AnalyticsScreen/></Admin>}/>
-                            <Route path="/cancel" element={<Private><CancelPremiumScreen/></Private>}/>
-                            <Route path="/payment/stripe/:id" element={<Private><StripeScreen/></Private>}/>
-                            <Route path="/membership-options" element={<MembershipOptionsScreen/>}/>
-                            <Route path="/profile" element={<Private><ProfileScreen/></Private>}/>
-                            <Route path="/premium" element={<Private><PremiumScreen/></Private>}/>
-                            <Route path="/history" element={<Private><HistoryScreen/></Private>}/>
-                            <Route path="/locations/:id" element={<Admin><ScreenScreen/></Admin>}/>
-                            <Route path="/changepw" element={<Private><ChangePasswordScreen/></Private>}/>
-                            <Route path="/watched30" element={<Private><WatchedHistoryScreen/></Private>}/>
-                            <Route path="/manage-movies" element={<Admin><ManageMoviesScreen/></Admin>}/>
-                            <Route path="/manage-movies/:id" element={<Admin><EditMovieScreen/></Admin>}/>
-                            <Route path="/addmovie" element={<Admin><CreateMovieScreen/></Admin>}/>
-                            <Route path="/discount" element={<Admin><Discount/></Admin>}/>
+                            {/* All routes remain the same */}
+                            <Route path="/" element={<HomeScreen />} />
+                            <Route path="/movie/:id" element={<MovieScreen />} />
+                            <Route path="/signin" element={<SigninScreen />} />
+                            <Route path="/showtimes/:id" element={<ShowTimeScreen />} />
+                            <Route path="/register" element={<RegisterScreen />} />
+                            <Route path="/showtime" element={<ShowtimeByLocationScreen />} />
+                            <Route path="/bookings/:id" element={<Private><BookingScreen/></Private>} />
+                            <Route path="/locations" element={<Admin><LocationScreen/></Admin>} />
+                            <Route path="/payment/:id" element={<Private><PaymentScreen/></Private>} />
+                            <Route path="/analytics" element={<Admin><AnalyticsScreen/></Admin>} />
+                            <Route path="/cancel" element={<Private><CancelPremiumScreen/></Private>} />
+                            <Route path="/payment/stripe/:id" element={<Private><StripeScreen/></Private>} />
+                            <Route path="/membership-options" element={<MembershipOptionsScreen />} />
+                            <Route path="/profile" element={<Private><ProfileScreen/></Private>} />
+                            <Route path="/premium" element={<Private><PremiumScreen/></Private>} />
+                            <Route path="/history" element={<Private><HistoryScreen/></Private>} />
+                            <Route path="/locations/:id" element={<Admin><ScreenScreen/></Admin>} />
+                            <Route path="/changepw" element={<Private><ChangePasswordScreen/></Private>} />
+                            <Route path="/watched30" element={<Private><WatchedHistoryScreen/></Private>} />
+                            <Route path="/manage-movies" element={<Admin><ManageMoviesScreen/></Admin>} />
+                            <Route path="/manage-movies/:id" element={<Admin><EditMovieScreen/></Admin>} />
+                            <Route path="/addmovie" element={<Admin><CreateMovieScreen/></Admin>} />
+                            <Route path="/discount" element={<Admin><Discount/></Admin>} />
                         </Routes>
                     </Container>
                 </main>
-                <footer>
-                    <Navbar
-                        style={{
-                            backgroundColor: "#9d1010",
-                            fontFamily: "Luminari, fantasy",
-                            color: "white",
-                        }}
-                    >
-                        <Container className="d-flex justify-content-center align-items-center flex-grow-1">
-                            <div className="text-center">
-                                2023-2024 TCH Theater , Inc - All Right Reserver
-                            </div>
-                        </Container>
-                    </Navbar>
+                <footer className="app-footer">
+                    <div>© 2025 THC Theater, Inc. All Rights Reserved.</div>
                 </footer>
             </div>
         </BrowserRouter>

@@ -1,336 +1,286 @@
-import React, {useContext, useEffect, useReducer, useState} from "react";
-import {Button, Container, Form, Table} from "react-bootstrap";
-import {Link, useNavigate, useParams} from "react-router-dom";
-import Helmet from 'react-helmet';
+import React, { useContext, useEffect, useReducer, useState } from 'react';
+import { Helmet } from 'react-helmet';
+import { Container, Form, Button, Col, Row, Table } from 'react-bootstrap';
 import axios from 'axios';
-import {Store} from "../Stores";
-import {URL} from "../Constants";
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import moment from "moment";
+
+import { Store } from '../Stores';
+import { URL } from '../Constants';
+import { getError } from '../utils';
 import LoadingBox from "../components/LoadingBox";
 import MessageBox from "../components/MessageBox";
 
 const reducer = (state, action) => {
     switch (action.type) {
-        // Fetch Showtime
+        // Fetching main showtime list
         case 'FETCH_REQUEST':
-            return {...state, loading: true};
+            return { ...state, loading: true, error: '' };
         case 'FETCH_SUCCESS':
-            return {...state, showtimes: action.payload, loading: false};
+            return { ...state, showtimes: action.payload, loading: false };
         case 'FETCH_FAIL':
-            return {...state, loading: false, error: action.payload};
+            return { ...state, loading: false, error: action.payload };
 
-        // Fetch Location
-        case 'FETCH_LOCATION_REQUEST':
-            return {...state, loadingLocation: true};
-        case 'FETCH_LOCATION_SUCCESS':
-            return {...state, locations: action.payload, loadingLocation: false};
-        case 'FETCH_LOCATION_FAIL':
-            return {...state, loadingLocation: false, errorLocation: action.payload};
+        // Form-related fetching
+        case 'FETCH_LOCATIONS_SUCCESS':
+            return { ...state, locations: action.payload };
+        case 'FETCH_SCREENS_SUCCESS':
+            return { ...state, screens: action.payload };
 
-        // Fetch Screen
-        case 'FETCH_SCREEN_REQUEST':
-            return {...state, loadingScreen: true};
-        case 'FETCH_SCREEN_SUCCESS':
-            return {...state, loadingScreen: false, screens: action.payload};
-        case 'FETCH_SCREEN_FAIL':
-            return {...state, loadingScreen: false, errorScreen: action.payload};
+        // Add Showtime
+        case 'ADD_REQUEST':
+            return { ...state, loadingAdd: true, errorAdd: '', successAdd: '' };
+        case 'ADD_SUCCESS':
+            return {
+                ...state,
+                loadingAdd: false,
+                successAdd: 'Showtime added successfully!',
+                showtimes: [action.payload, ...state.showtimes] // Add to list instantly
+            };
+        case 'ADD_FAIL':
+            return { ...state, loadingAdd: false, errorAdd: action.payload };
 
-        // Create Showtime
-        case 'ADD_SHOWTIME_REQUEST':
-            return {...state, adding: true, addError: null};
-        case 'ADD_SHOWTIME_SUCCESS':
-            return {...state, adding: false, successAdding: true};
-        case 'ADD_SHOWTIME_FAIL':
-            return {...state, adding: false, addError: action.payload};
-        case 'ADD_SHOWTIME_RESET':
-            return {...state, successAdding: false};
-
-        // Cancel Showtim
+        // Cancel Showtime
         case 'CANCEL_REQUEST':
-            return {...state, loadingCancel: true, errorCancel: null};
+            return { ...state, loadingCancel: true, errorCancel: '', successCancel: '' };
         case 'CANCEL_SUCCESS':
-            return {...state, loadingCancel: false, successCancel: true};
+            return {
+                ...state,
+                loadingCancel: false,
+                successCancel: 'Showtime canceled successfully!',
+                showtimes: state.showtimes.filter(s => s.id !== action.payload) // Remove from list instantly
+            };
         case 'CANCEL_FAIL':
-            return {...state, loadingCancel: false, errorCancel: action.payload};
-        case 'CANCEL_RESET':
-            return {...state, successCancel: false, errorCancel: null}
+            return { ...state, loadingCancel: false, errorCancel: action.payload };
+
+        case 'CLEAR_MESSAGES':
+            return { ...state, successAdd: '', errorAdd: '', successCancel: '', errorCancel: '' };
+
         default:
             return state;
     }
-}
-
-const initialState = {
-    showtimes: [],
-    loading: false,
-    error: '',
-
-    locations: [],
-    loadingLocation: false,
-    errorLocation: null,
-
-    screens: [],
-    loadingScreen: false,
-    errorScreen: null,
-
-    adding: false,
-    successAdding: false,
-    addError: '',
-
-    loadingCancel: false,
-    successCancel: false,
-    errorCancel: null
 };
 
 export default function ShowTimeScreen() {
     const navigate = useNavigate();
-    const {state} = useContext(Store);
-    const {userInfo} = state;
-    const params = useParams();
-    const {id} = params;
-
-    // Hook declaration
-    const [screenId, setScreenId] = useState('');
-    const [locationId, setLocationId] = useState('');
-    const [date, setDate] = useState();
-    const [startTime, setStartTime] = useState('');
-    const [price, setPrice] = useState(0.00);
+    const { state: storeState } = useContext(Store);
+    const { userInfo } = storeState;
+    const { id: movieId } = useParams();
+    const isAdmin = userInfo?.role === "Employee";
 
     const [{
-        showtimes,
-        loading,
-        error,
+        showtimes, loading, error, locations, screens,
+        loadingAdd, errorAdd, successAdd,
+        loadingCancel, errorCancel, successCancel
+    }, dispatch] = useReducer(reducer, {
+        showtimes: [], loading: true, error: '', locations: [], screens: [],
+        loadingAdd: false, errorAdd: '', successAdd: '',
+        loadingCancel: false, errorCancel: '', successCancel: '',
+    });
 
-        locations,
-        loadingLocation,
-        errorLocation,
+    // Form state
+    const [locationId, setLocationId] = useState('');
+    const [screenId, setScreenId] = useState('');
+    const [date, setDate] = useState('');
+    const [startTime, setStartTime] = useState('');
+    const [price, setPrice] = useState('');
 
-        screens,
-        loadingScreen,
-        errorScreen,
-
-        adding,
-        successAdding,
-        addError,
-
-        loadingCancel,
-        successCancel,
-        errorCancel
-    }, dispatch] = useReducer(reducer, initialState);
-
-    const isAdmin = userInfo && userInfo.role === "Employee";
-
-    const fetchShowtimes = async () => {
-        dispatch({type: 'FETCH_REQUEST'});
-        try {
-            const response = await axios.get(`${URL}/showtime/${id}/movie`);
-            dispatch({type: 'FETCH_SUCCESS', payload: response.data});
-        } catch (err) {
-            dispatch({type: 'FETCH_FAIL', payload: err.message});
-        }
-    };
-
-    const fetchLocations = async () => {
-        dispatch({type: 'FETCH_LOCATION_REQUEST'});
-        try {
-            const response = await axios.get(`${URL}/locations`);
-            dispatch({type: 'FETCH_LOCATION_SUCCESS', payload: response.data});
-        } catch (err) {
-            dispatch({type: 'FETCH_LOCATION_FAIL', payload: err.message});
-        }
-    }
-
-    const fetchSccreen = async (locId) => {
-        dispatch({type: 'FETCH_SCREEN_REQUEST'})
-        try {
-            const response = await axios.get(`${URL}/screens/locations/${locId}`);
-            dispatch({type: 'FETCH_SCREEN_SUCCESS', payload: response.data});
-        } catch (err) {
-            dispatch({type: 'FETCH_SCREEN_FAIL', payload: err.message});
-        }
-    }
-
-    const addShowtime = async () => {
-        dispatch({type: 'ADD_SHOWTIME_REQUEST'});
-        try {
-            await axios.post(`${URL}/showtime`, {
-                    "movieId": id,
-                    screenId,
-                    date,
-                    startTime,
-                    price
-                },
-                {
-                    headers: {Authorization: `Bearer ${userInfo.token}`},
-                });
-
-            dispatch({type: 'ADD_SHOWTIME_SUCCESS'});
-            fetchShowtimes(); // Refresh showtimes after adding a new one
-
-            setScreenId(null);
-            setPrice(0.00);
-            setStartTime();
-            setLocationId(null);
-            setDate();
-        } catch (err) {
-            dispatch({type: 'ADD_SHOWTIME_FAIL', payload: err.message});
-        }
-    };
-
-    const locationHandler = (e) => {
-        if (e.target.value === null) return
-        else {
-            setLocationId(e.target.value);
-            fetchSccreen(e.target.value);
-            setScreenId(null);
-        }
-    }
+    // --- Data Fetching Effects ---
+    useEffect(() => {
+        const fetchInitialData = async () => {
+            dispatch({ type: 'FETCH_REQUEST' });
+            try {
+                // Fetch showtimes and locations in parallel for efficiency
+                const [showtimesRes, locationsRes] = await Promise.all([
+                    axios.get(`${URL}/showtime/${movieId}/movie`),
+                    isAdmin ? axios.get(`${URL}/locations`) : Promise.resolve({ data: [] })
+                ]);
+                dispatch({ type: 'FETCH_SUCCESS', payload: showtimesRes.data });
+                if (isAdmin) {
+                    dispatch({ type: 'FETCH_LOCATIONS_SUCCESS', payload: locationsRes.data });
+                }
+            } catch (err) {
+                dispatch({ type: 'FETCH_FAIL', payload: getError(err) });
+            }
+        };
+        fetchInitialData();
+    }, [movieId, isAdmin]);
 
     useEffect(() => {
-        fetchShowtimes();
-        if (isAdmin) fetchLocations();
-        if (successCancel) {
-            alert("Successfully cancel show.")
-            dispatch({type: 'CANCEL_RESET'})
+        if (locationId && isAdmin) {
+            const fetchScreens = async () => {
+                try {
+                    const { data } = await axios.get(`${URL}/screens/locations/${locationId}`);
+                    dispatch({ type: 'FETCH_SCREENS_SUCCESS', payload: data });
+                } catch (err) { /* Handle error */ }
+            };
+            fetchScreens();
+        } else {
+            dispatch({ type: 'FETCH_SCREENS_SUCCESS', payload: [] }); // Clear screens if no location
         }
-        if (successAdding) {
-            alert("Successfully add show.")
-            dispatch({type: 'ADD_SHOWTIME_RESET'})
-        }
+    }, [locationId, isAdmin]);
 
-    }, [successCancel, successAdding]);
-
-    async function cancelShowHandler(id) {
-        dispatch({type: 'CANCEL_REQUEST'});
+    // --- Event Handlers ---
+    const addShowtimeHandler = async (e) => {
+        e.preventDefault();
+        dispatch({ type: 'ADD_REQUEST' });
         try {
-            const response = axios.delete(`${URL}/showtime/${id}`, {
-                headers: {Authorization: `Bearer ${userInfo.token}`},
-            });
-            dispatch({type: 'CANCEL_SUCCESS'});
-        } catch (error) {
-            dispatch({type: 'CANCEL_FAIL', payload: error.message});
+            const { data } = await axios.post(`${URL}/showtime`, {
+                movieId,
+                screenId,
+                date: moment(date).format("MM/DD/YYYY"), // Format date on submission
+                startTime: startTime + ":00",
+                price
+            }, { headers: { Authorization: `Bearer ${userInfo.token}` } });
+
+            dispatch({ type: 'ADD_SUCCESS', payload: data });
+
+            // Reset form state after successful submission
+            setLocationId('');
+            setScreenId('');
+            setDate('');
+            setStartTime('');
+            setPrice('');
+
+            setTimeout(() => dispatch({ type: 'CLEAR_MESSAGES' }), 3000);
+        } catch (err) {
+            dispatch({ type: 'ADD_FAIL', payload: getError(err) });
         }
-    }
+    };
 
-    return (
-        <Container className='mt-3'>
-            <Helmet>
-                <title>Showtimes</title>
-            </Helmet>
-            <h1>Showtimes</h1>
+    const cancelShowHandler = async (showtimeId) => {
+        if (window.confirm('Are you sure you want to cancel this showtime?')) {
+            dispatch({ type: 'CANCEL_REQUEST' });
+            try {
+                await axios.delete(`${URL}/showtime/${showtimeId}`, {
+                    headers: { Authorization: `Bearer ${userInfo.token}` }
+                });
+                dispatch({ type: 'CANCEL_SUCCESS', payload: showtimeId });
+                setTimeout(() => dispatch({ type: 'CLEAR_MESSAGES' }), 3000);
+            } catch (err) {
+                dispatch({ type: 'CANCEL_FAIL', payload: getError(err) });
+            }
+        }
+    };
 
-            {(loadingCancel || adding) && <LoadingBox/>}
-            {errorCancel && <MessageBox variant={"danger"}>{errorCancel}</MessageBox>}
-            {addError && <MessageBox variant={"danger"}>{addError}</MessageBox>}
+    // --- Sub-components for clean rendering ---
+    const AdminView = () => (
+        <Row>
+            <Col lg={8} className="mb-4">
+                <ShowtimeTable />
+            </Col>
+            <Col lg={4}>
+                <AddShowtimeForm />
+            </Col>
+        </Row>
+    );
 
-            {loading ? (
-                <LoadingBox/>
-            ) : error ? (
-                <MessageBox variant={"danger"}>{error}</MessageBox>
-            ) : (
-                <Table striped bordered hover>
+    const UserView = () => (
+        <Row>
+            <Col>
+                <ShowtimeTable />
+            </Col>
+        </Row>
+    );
+
+    const ShowtimeTable = () => (
+        <div className="table-card">
+            <h3 className="table-card-title">Available Showtimes</h3>
+            {successCancel && <MessageBox variant="success">{successCancel}</MessageBox>}
+            {errorCancel && <MessageBox variant="danger">{errorCancel}</MessageBox>}
+            {loading ? <LoadingBox /> : error ? <MessageBox variant="danger">{error}</MessageBox> : showtimes.length === 0 ? <MessageBox variant="info">No showtimes available for this movie yet.</MessageBox> : (
+                <Table responsive className="data-table">
                     <thead>
                     <tr>
-                        <th>Movie Name</th>
                         <th>Location</th>
                         <th>Room</th>
-                        <th>Show Date</th>
-                        <th>Show Time</th>
-                        <th></th>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th className="text-center">Action</th>
                     </tr>
                     </thead>
                     <tbody>
-                    {showtimes.map((showtime) => (
-                        <tr key={showtime.id}>
-                            <td>{showtime.movie.title}</td>
-                            <td>{showtime.screen.location.city}, {showtime.screen.location.state}</td>
-                            <td>{showtime.screen.name}</td>
-                            <td>{showtime.date}</td>
-                            <td>{showtime.startTime}</td>
-                            <td>
-                                {userInfo.role === "Employee" ?
-                                    <Button onClick={() => cancelShowHandler(showtime.id)}>
-                                        Cancel Show
+                    {showtimes.map((show) => (
+                        <tr key={show.id}>
+                            <td>{show.screen.location.city}, {show.screen.location.state}</td>
+                            <td>{show.screen.name}</td>
+                            <td>{show.date}</td>
+                            <td>{show.startTime}</td>
+                            <td className="text-center">
+                                {isAdmin ? (
+                                    <Button className="btn-cancel-show" onClick={() => cancelShowHandler(show.id)} disabled={loadingCancel}>
+                                        Cancel
                                     </Button>
-                                    :
-                                    <Button>
-                                        <Link to={`/bookings/${showtime.id}`}>Book</Link>
+                                ) : (
+                                    <Button className="btn-table-action" onClick={() => navigate(`/bookings/${show.id}`)}>
+                                        Book
                                     </Button>
-                                }
-
+                                )}
                             </td>
                         </tr>
                     ))}
                     </tbody>
                 </Table>
             )}
+        </div>
+    );
 
-            {isAdmin && (
-                <Form onSubmit={(e) => {
-                    e.preventDefault();
-                    addShowtime();
-                    e.target.reset();
-                }}>
+    const AddShowtimeForm = () => (
+        <div className="form-card">
+            <h3 className="form-card-title">Add New Showtime</h3>
+            <Form onSubmit={addShowtimeHandler}>
+                {errorAdd && <MessageBox variant="danger">{errorAdd}</MessageBox>}
+                {successAdd && <MessageBox variant="success">{successAdd}</MessageBox>}
 
-                    <Form.Group controlId="locationId">
-                        <Form.Label>Location</Form.Label>
-                        {loadingLocation && <LoadingBox/>}
-                        {errorLocation && <MessageBox variant={"danger"}>{errorLocation}</MessageBox>}
-                        <Form.Select
-                            onChange={e => locationHandler(e)}
-                            required={true}
-                        >
-                            <option value={null}>Select Location</option>
-                            {locations.map((location) => (
-                                <option value={location.id}>{`${location.city}, ${location.state}`}</option>
-                            ))}
-                        </Form.Select>
-                    </Form.Group>
-                    <Form.Group controlId="screenId">
-                        <Form.Label>Screen</Form.Label>
-                        {loadingScreen && <LoadingBox/>}
-                        {errorScreen && <MessageBox variant={"danger"}>{errorScreen}</MessageBox>}
-                        <Form.Select
-                            onChange={e => setScreenId(e.target.value)}
-                            required={true}
-                        >
-                            <option value={null}>Select Screen</option>
-                            {screens.map((screen) => (
-                                <option value={screen.id}>{screen.name}</option>
-                            ))}
-                        </Form.Select>
-                    </Form.Group>
-                    <Form.Group controlId="showDate">
-                        <Form.Label>Show Date</Form.Label>
-                        <Form.Control
-                            type="date"
-                            onChange={(e) => setDate(moment(e.target.value).format("MM/DD/yyyy"))}
-                            required
-                        />
-                    </Form.Group>
-                    <Form.Group controlId="showTime">
-                        <Form.Label>Show Time</Form.Label>
-                        <Form.Control
-                            type="time"
-                            onChange={(e) => setStartTime(e.target.value + ":00")}
-                            required
-                        />
-                    </Form.Group>
-                    <Form.Group controlId="price">
-                        <Form.Label>Ticket Price</Form.Label>
-                        <Form.Control
-                            type="number"
-                            step={0.01}
-                            min={0}
-                            onChange={(e) => setPrice(e.target.value)}
-                            required
-                        />
-                    </Form.Group>
-                    <Button type="submit" disabled={adding}>
-                        {adding ? 'Adding...' : 'Add Showtime'}
+                <Form.Group className="mb-3" controlId="locationId">
+                    <Form.Label>Location</Form.Label>
+                    <Form.Select value={locationId} onChange={(e) => { setLocationId(e.target.value); setScreenId(''); }} required>
+                        <option value="">Select Location...</option>
+                        {locations.map((loc) => (<option key={loc.id} value={loc.id}>{`${loc.city}, ${loc.state}`}</option>))}
+                    </Form.Select>
+                </Form.Group>
+
+                <Form.Group className="mb-3" controlId="screenId">
+                    <Form.Label>Screen</Form.Label>
+                    <Form.Select value={screenId} onChange={(e) => setScreenId(e.target.value)} required disabled={!locationId}>
+                        <option value="">Select Screen...</option>
+                        {screens.map((s) => (<option key={s.id} value={s.id}>{s.name}</option>))}
+                    </Form.Select>
+                </Form.Group>
+
+                <Form.Group className="mb-3" controlId="showDate">
+                    <Form.Label>Show Date</Form.Label>
+                    <Form.Control type="date" value={date} onChange={(e) => setDate(e.target.value)} required />
+                </Form.Group>
+
+                <Form.Group className="mb-3" controlId="showTime">
+                    <Form.Label>Show Time</Form.Label>
+                    <Form.Control type="time" value={startTime} onChange={(e) => setStartTime(e.target.value)} required />
+                </Form.Group>
+
+                <Form.Group className="mb-4" controlId="price">
+                    <Form.Label>Ticket Price</Form.Label>
+                    <Form.Control type="number" step="0.01" min="0" placeholder="$0.00" value={price} onChange={(e) => setPrice(e.target.value)} required />
+                </Form.Group>
+
+                <div className="d-grid">
+                    <Button type="submit" className="auth-button" disabled={loadingAdd}>
+                        {loadingAdd ? <LoadingBox isButton={true} /> : 'Add Showtime'}
                     </Button>
-                    {addError && <div className="text-danger">{addError}</div>}
-                </Form>
-            )}
+                </div>
+            </Form>
+        </div>
+    );
+
+    return (
+        <Container fluid className="showtime-admin-page">
+            <Helmet>
+                <title>Showtimes</title>
+            </Helmet>
+            <div className="page-header">
+                <h1 className="page-title">{isAdmin ? 'Manage Showtimes' : 'Available Showtimes'}</h1>
+            </div>
+            {isAdmin ? <AdminView /> : <UserView />}
         </Container>
     );
 }

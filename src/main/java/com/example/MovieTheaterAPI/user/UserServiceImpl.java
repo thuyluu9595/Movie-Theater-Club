@@ -2,11 +2,13 @@ package com.example.MovieTheaterAPI.user;
 
 import com.example.MovieTheaterAPI.user.dto.ChangePasswordDTO;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+
 
 @Service
 @AllArgsConstructor

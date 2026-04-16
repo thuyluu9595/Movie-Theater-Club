@@ -1,118 +1,129 @@
-import React, {useContext, useReducer} from 'react'
+import React, { useContext, useState } from 'react';
 import { Helmet } from 'react-helmet';
-import {Form, Button, Container} from 'react-bootstrap'
-import {useNavigate} from "react-router-dom";
+import { Form, Button, Container } from 'react-bootstrap';
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { URL } from "../Constants"
-import {Store} from "../Stores";
-import moment from "moment";
+import { URL } from "../Constants";
+import { Store } from "../Stores";
+import { getError } from '../utils';
+import MessageBox from '../components/MessageBox';
+import LoadingBox from '../components/LoadingBox';
 
-const reducer = (state, action) => {
-    switch (action.type) {
-        case 'FETCH_SUCCESS':
-            return {...state, movie: action.payload, loading: false};
-        case 'FETCH_TITLE':
-            return {...state, movie: {...state.movie, title:action.payload}, loading: false};
-        case 'FETCH_DESCRIPTION':
-            return {...state, movie: {...state.movie, description:action.payload}, loading: false};
-        case 'FETCH_DURATION':
-            return {...state, movie: {...state.movie, duration:action.payload}, loading: false};
-        case 'FETCH_RELEASE_DATE':
-            return {...state, movie: {...state.movie, releaseDate:action.payload}, loading: false};
-        case 'FETCH_FAIL':
-            return {...state,loading:false, error: action.payload};
-        default:
-            return state;
-    }
-}
 export default function CreateMovieScreen() {
-
-    const {state} = useContext(Store);
-    const {userInfo} = state;
     const navigate = useNavigate();
+    const { state } = useContext(Store);
+    const { userInfo } = state;
 
-    const  [{ loading, error, movie}, dispatch] = useReducer(reducer, {
-        movie: {},
-        loading : true,
-        error: '',
-    });
+    // Use useState for simpler form state management
+    const [title, setTitle] = useState('');
+    const [description, setDescription] = useState('');
+    const [duration, setDuration] = useState('');
+    const [releaseDate, setReleaseDate] = useState('');
+    const [posterUrl, setPosterUrl] = useState('');
 
-    const {title, description, duration, releaseDate} = movie;
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState('');
+
     const submitCreateHandler = async (e) => {
         e.preventDefault();
+        setLoading(true);
+        setError('');
         try {
-            const data = {
-                "title": title,
-                "description": description,
-                "duration_in_minutes": duration,
-                "release_date":  moment(releaseDate).format("MM/DD/YYYY"),
-                "poster_url": "https://t4.ftcdn.net/jpg/04/73/25/49/360_F_473254957_bxG9yf4ly7OBO5I0O5KABlN930GwaMQz.jpg"
-            }
-            console.log(data);
-            const response = await axios.post(`${URL}/movies`,data , {
-                headers: { 'Authorization': `Bearer ${userInfo.token}` }
-            });
-            alert('Movie created successfully');
-            navigate(`/manage-movies/${response.data.id}`);
+            const { data: createdMovie } = await axios.post(
+                `${URL}/movies`,
+                {
+                    title,
+                    description,
+                    duration_in_minutes: duration,
+                    release_date: releaseDate, // Assuming backend can handle YYYY-MM-DD
+                    poster_url: posterUrl,
+                },
+                {
+                    headers: { 'Authorization': `Bearer ${userInfo.token}` }
+                }
+            );
+            setLoading(false);
+            // Use a toast or message on the next screen for success feedback
+            navigate(`/manage-movies/${createdMovie.id}`);
         } catch (err) {
-            alert(err.message);
+            setLoading(false);
+            setError(getError(err));
         }
     };
 
-
-
     return (
-        <Container className='create-movie'>
+        <Container className='create-movie-page'>
             <Helmet>
                 <title>Create Movie</title>
             </Helmet>
-            <h1 className='my-3'>Create Movie</h1>
-            {(
-                    <div>
-                        <Form onSubmit={submitCreateHandler}>
-                            <Form.Group className='mb-3' controlId='title'>
-                                <Form.Label>Movie Title</Form.Label>
-                                <Form.Control
-                                    value={title}
-                                    placeholder={title}
-                                    onChange={(e) => dispatch({type: 'FETCH_TITLE', payload: e.target.value})}
-                                    required />
-                            </Form.Group>
-                            <Form.Group className='mb-3' controlId='description'>
-                                <Form.Label>Description</Form.Label>
-                                <Form.Control
-                                    as="textarea"
-                                    rows={3}
-                                    value={description}
-                                    placeholder={description}
-                                    onChange={(e) => dispatch({type: 'FETCH_DESCRIPTION', payload: e.target.value})}
-                                    required />
-                            </Form.Group>
-                            <Form.Group className='mb-3' controlId='duration'>
-                                <Form.Label>Duration (in minutes)</Form.Label>
-                                <Form.Control
-                                    type="number"
-                                    value={duration}
-                                    placeholder={duration}
-                                    step={1}
-                                    min={1}
-                                    onChange={(e) => dispatch({type: 'FETCH_DURATION', payload: e.target.value})}
-                                    required />
-                            </Form.Group>
-                            <Form.Group className='mb-3' controlId='release_date'>
-                                <Form.Label>Release Date</Form.Label>
-                                <Form.Control
-                                    type="date"
-                                    value={moment(releaseDate, "MM/DD/YYYY").format("YYYY-MM-DD")}
-                                    onChange={(e) => dispatch({type: 'FETCH_RELEASE_DATE', payload: moment(e.target.value, "YYYY-MM-DD").format("MM/DD/YYYY")})}
-                                    required />
-                            </Form.Group>
-                            <Button type='submit'>Create Movie</Button>
+            <div className="page-header">
+                <h1 className='page-title'>Create New Movie</h1>
+            </div>
 
-                        </Form>
+            {/* Re-using the auth-container style for a consistent form UI */}
+            <div className="auth-container">
+                <Form onSubmit={submitCreateHandler}>
+                    {error && <MessageBox variant="danger">{error}</MessageBox>}
+
+                    <Form.Group className='mb-3' controlId='title'>
+                        <Form.Label>Movie Title</Form.Label>
+                        <Form.Control
+                            value={title}
+                            onChange={(e) => setTitle(e.target.value)}
+                            required
+                        />
+                    </Form.Group>
+
+                    <Form.Group className='mb-3' controlId='posterUrl'>
+                        <Form.Label>Poster URL</Form.Label>
+                        <Form.Control
+                            value={posterUrl}
+                            onChange={(e) => setPosterUrl(e.target.value)}
+                            placeholder="https://example.com/poster.jpg"
+                            required
+                        />
+                    </Form.Group>
+
+                    <Form.Group className='mb-3' controlId='description'>
+                        <Form.Label>Description</Form.Label>
+                        <Form.Control
+                            as="textarea"
+                            rows={4}
+                            value={description}
+                            onChange={(e) => setDescription(e.target.value)}
+                            required
+                        />
+                    </Form.Group>
+
+                    <Form.Group className='mb-3' controlId='duration'>
+                        <Form.Label>Duration (in minutes)</Form.Label>
+                        <Form.Control
+                            type="number"
+                            value={duration}
+                            step={1}
+                            min={1}
+                            onChange={(e) => setDuration(e.target.value)}
+                            required
+                        />
+                    </Form.Group>
+
+                    <Form.Group className='mb-4' controlId='release_date'>
+                        <Form.Label>Release Date</Form.Label>
+                        <Form.Control
+                            type="date"
+                            value={releaseDate}
+                            onChange={(e) => setReleaseDate(e.target.value)}
+                            required
+                        />
+                    </Form.Group>
+
+                    <div className="d-grid">
+                        <Button type='submit' className="auth-button" disabled={loading}>
+                            {loading ? <LoadingBox isButton={true} /> : 'Create Movie'}
+                        </Button>
                     </div>
-                )
-            }
+                </Form>
+            </div>
         </Container>
     );
 }

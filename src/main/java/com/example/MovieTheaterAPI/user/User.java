@@ -1,11 +1,13 @@
 package com.example.MovieTheaterAPI.user;
 
 
+import com.example.MovieTheaterAPI.review.entities.UserMovieReview;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
 
 
 @Setter
@@ -13,7 +15,7 @@ import lombok.*;
 @RequiredArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "user")
+@Table(name = "users")
 public class User {
 
     @Id
@@ -50,6 +52,10 @@ public class User {
 
     @OneToOne(mappedBy = "user", optional = true)
     private Member member;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private List<UserMovieReview> userMovieReviews;
 
 //    @JsonIgnore
 //    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)

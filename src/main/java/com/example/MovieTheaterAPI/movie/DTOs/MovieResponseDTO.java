@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Data
 public class MovieResponseDTO {
@@ -21,4 +22,7 @@ public class MovieResponseDTO {
     @JsonFormat(pattern = "MM/dd/yyyy")
     @JsonProperty("releaseDate")
     private LocalDate releaseDate;
+
+    private String reviewSummary;
+    private List<String> genres;
 }
